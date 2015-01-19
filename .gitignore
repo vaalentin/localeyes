@@ -3,3 +3,4 @@ node_modules
 /gulpfile.js
 app/src
 assets
+/package.json
