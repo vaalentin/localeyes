@@ -55,6 +55,7 @@ Backbone.BetterView = Backbone.View.extend({
   render () {
     if (this.model) this.$el.html(this.template(this.model.toJSON()));
     else this.$el.html(this.template());
+    if (this.onRender) this.onRender.apply(this, arguments);
     return this;
-  }
+  },
 });
