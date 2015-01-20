@@ -1,25 +1,31 @@
-.menu {
-  position: fixed;
-  z-index: 2;
-  right: 60px;
-  bottom: 60px;
-  left: 60px;
-
-  padding: 0;
-}
-
 .menu__icon {
-  position: relative;
+  position: absolute;
+  z-index: 2;
 
   width: 40px;
   height: 40px;
   margin: 0 5px;
+  padding: 10px 5px;
+
+  border: 1px solid #fff;
 }
 
-.menu__icon--left {
-  float: left;
+.menu__icon--topLeft {
+  top: 60px;
+  left: 60px;
 }
 
-.menu__icon--right {
-  float: right;
+.menu__icon--topRight {
+  top: 60px;
+  right: 60px;
+}
+
+.menu__icon--bottomLeft {
+  bottom: 60px;
+  left: 60px;
+}
+
+.menu__icon--bottomRight {
+  right: 60px;
+  bottom: 60px;
 }

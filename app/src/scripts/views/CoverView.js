@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'underscore';
 import Backbone from 'backbone';
 
 export default Backbone.BetterView.extend({
@@ -7,14 +8,49 @@ export default Backbone.BetterView.extend({
 
   template: `
     <div class="cover__overlay"></div>
-    <a href="#/local/<%= localSlug %>" class="cover__link">
-      <h1 class="cover__text">
-        <% print(name.toUpperCase()); %>
-      </h1>
+    <a href="#/city/<%= slug %>" class="cover__link">
+      <div class="cover__title">
+        <h1 class="cover__name"> <% print(name.toUpperCase()); %> </h1>
+        <h2 class="cover__country"> <% print(country.toUpperCase()); %> </h2>
+      </div>
     </a>
     <% if (cover) { %>
       <div class="cover__background"
         style="background-image:url(<%= cover %>)"></div>
     <% } %>
-  `
+  `,
+
+  events: {
+    'mouseover': 'onMouseover',
+    'mouseout': 'onMouseout'
+  },
+
+  onInitialize (options) {
+    _.extend(this, _.pick(options, 'type'));
+  },
+
+  onMouseover () {
+    this.$('.cover__overlay').velocity('stop').velocity({ opacity: 0.6 }, 400);
+    this.$('.cover__background').velocity('stop').velocity({ scale: 1.1 }, 400);
+    this.$('.cover__name').velocity('stop').velocity({ opacity: 1, top: 0 }, 300);
+    this.$('.cover__country').velocity('stop').velocity({ opacity: 1, top: 0 }, 200);
+  },
+
+  onMouseout () {
+    this.$('.cover__overlay').velocity('stop').velocity({ opacity: 0 }, 400);
+    this.$('.cover__background').velocity('stop').velocity({ scale: 1 }, 400);
+    this.$('.cover__name').velocity('stop').velocity({ opacity: 0, top: -30 }, 300);
+    this.$('.cover__country').velocity('stop').velocity({ opacity: 0, top: 30 }, 200);
+  },
+
+  in (delay) {
+    return new Promise((resolve, reject) => {
+      this.$el.css('opacity', 0)
+        .velocity({ opacity: 1 }, { duration: 500, delay: delay || 0, complete: resolve })
+    });
+  },
+
+  onRender () {
+    this.$el.addClass(`cover cover--type${this.type}`);
+  }
 });
