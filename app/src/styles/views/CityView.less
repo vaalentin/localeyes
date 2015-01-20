@@ -1,6 +1,7 @@
 @import '../mixins/inlineBlock';
 @import '../mixins/backgroundSize';
 @import '../mixins/transform';
+@import '../mixins/willChange';
 
 .city {
   position: absolute;
@@ -42,6 +43,7 @@
 
   .transform(scale(1.2));
   .background-size(cover);
+  .will-change(transform);
 }
 
 .ie .city__content {

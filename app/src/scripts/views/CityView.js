@@ -61,16 +61,104 @@ export default Backbone.BetterView.extend({
   },
 
   in () {
-    
+    this.$squareTopLeft.css({ top: '50%', left: '50%', opacity: 0 })
+      .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
+      .velocity({ top: 0 }, { duration: 400, delay: 200 });
+
+    this.$squareTopRight.css({ top: '50%', right: '50%', opacity: 0 })
+      .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
+      .velocity({ top: 0 }, { duration: 400, delay: 200 });
+
+    this.$squareBottomLeft.css({ bottom: '50%', left: '50%', opacity: 0 })
+      .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
+      .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
+
+    this.$squareBottomRight.css({ bottom: '50%', right: '50%', opacity: 0 })
+      .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
+      .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
+
+    this.$name.css({ opacity: 0, top: -90 })
+      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1100 });
+
+    this.$country.css({ opacity: 0, top: 50 })
+      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1200 });
+
+    this.$icon.css({ top: -150 })
+      .velocity({ top: -90 }, { duration: 1500, delay: 500 });
+
+    this.$button.css({ opacity: 0, top: 50 })
+      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1400 });
+
+    this.$bordersTopBottom.css('width', 0)
+      .velocity({ width: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
+
+    this.$bordersLeftRight.css('height', 0)
+      .velocity({ height: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
+
+    this.$background.velocity({ scale: 1.2 }, 0).velocity({ scale: 1 }, 2500);
+
+    this.$svgs.each(function () {
+      jQuery('path', this).each(function () {
+        var $path = jQuery(this);
+        var length = $path[0].getTotalLength();
+
+        $path.velocity({
+            'stroke-dashoffset': length,
+            'stroke-dasharray': length + ',' + length,
+            fillOpacity: 0,
+            strokeOpacity: 1
+          }, 0)
+          .velocity({ 'stroke-dashoffset': 0 }, { duration: 2000, delay: 500 })
+          .velocity({ fillOpacity: 1 }, { duration: 500, delay: 2000, queue: false });
+      });
+    });
   },
 
   out () {
-    
+    console.log('out');
+
+    this.$squareTopLeft.css({ top: '50%', left: '50%', opacity: 0 });
+    this.$squareTopRight.css({ top: '50%', right: '50%', opacity: 0 });
+    this.$squareBottomLeft.css({ bottom: '50%', left: '50%', opacity: 0 })
+    this.$squareBottomRight.css({ bottom: '50%', right: '50%', opacity: 0 })
+    this.$name.css({ opacity: 0, top: -90 })
+    this.$country.css({ opacity: 0, top: 50 })
+    this.$icon.css({ top: -150 })
+    this.$button.css({ opacity: 0, top: 50 })
+    this.$bordersTopBottom.css('width', 0)
+    this.$bordersLeftRight.css('height', 0)
+    this.$background.velocity({ scale: 1.2 }, 0);
+    this.$svgs.each(function () {
+      jQuery('path', this).each(function () {
+        var $path = jQuery(this);
+        var length = $path[0].getTotalLength();
+
+        $path.velocity({
+          'stroke-dashoffset': length,
+          'stroke-dasharray': length + ',' + length,
+          fillOpacity: 0,
+          strokeOpacity: 1
+        }, 0);
+      });
+    });
   },
 
   render () {
     this.$el.html(this.template(this.model.toJSON()));
     this.setPosition();
+
+    this.$squareTopLeft = this.$('.city__square--topLeft');
+    this.$squareTopRight = this.$('.city__square--topRight');
+    this.$squareBottomLeft = this.$('.city__square--bottomLeft');
+    this.$squareBottomRight = this.$('.city__square--bottomRight');
+    this.$name = this.$('.city__name');
+    this.$country = this.$('.city__country');
+    this.$icon = this.$('.city__icon');
+    this.$button = this.$('.city__button');
+    this.$bordersTopBottom = this.$('.city__border--top, .city__border--bottom');
+    this.$bordersLeftRight = this.$('.city__border--left, .city__border--right');
+    this.$background = this.$('.city__background');
+    this.$svgs = this.$('svg');
     return this;
   }
 });
