@@ -46,10 +46,7 @@ export default Backbone.ContentView.extend({
     this.isOpen = false;
 
     // touch screen
-    this.hammer = new Hammer.Manager(this.$el[0], {
-      dragLockToAxis: true,
-      preventDefault: true
-    });
+    this.hammer = new Hammer.Manager(this.$el[0], { dragLockToAxis: true });
     this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
 
     this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
@@ -61,77 +58,68 @@ export default Backbone.ContentView.extend({
     this.translateY;
     this.width;
     this.height;
-    this.panX;
-    this.panY;
+    this.panY = false;
+    this.panX = false;
   },
 
   onPanHorizontal (e) {
-    if (this.isSliding) return false;
     if (this.panY) return false;
-    if (!this.width || !this.height) this.onResize();
 
     this.panX = true;
 
-    var dragDistance = (100 / this.width) * e.deltaX;
+    e.preventDefault();
 
-    if (e.direction === 2) {
-      if (!this.frame.model.get('east')) dragDistance *= 0.2;
-    } else if (e.direction === 4) {
-      if (!this.frame.model.get('west')) dragDistance *= 0.2;
-    }
+    if (!this.width || !this.height) this.onResize();
+    var dragDistance = (100 / this.width) * e.deltaX;
 
     var dragged = this.translateX + dragDistance;
     this.$('.cities__content').velocity({ translateX: dragged + '%' }, 0);
   },
 
   onPanVertical (e) {
-    if (this.isSliding) return false;
     if (this.panX) return false;
-    if (!this.width || !this.height) this.onResize();
 
     this.panY = true;
 
+    e.preventDefault();
+
+    if (!this.width || !this.height) this.onResize();
     var dragDistance = (100 / this.height) * e.deltaY;
-
-    if (e.direction === 8) {
-      if (!this.frame.model.get('south')) dragDistance *= 0.2;
-    } else if (e.direction === 16) {
-      if (!this.frame.model.get('north')) dragDistance *= 0.2;
-    }
-
     var dragged = this.translateY + dragDistance;
     this.$('.cities__content').velocity({ translateY: dragged + '%' }, 0);
   },
 
   onPanend (e) {
+    var direction = this.panX ? 'horizontal' : 'vertical';
+
     this.panX = false;
     this.panY = false;
 
-    switch (e.direction) {
-      case 2:
-        var dragDistance = (100 / this.width) * e.deltaX;
-        if (Math.abs(dragDistance) > 40 && this.frame.model.get('east')) this.frame.click('right');
-        else this.setPosition();
-        break;
+    var dragDistance = direction === 'horizontal'
+      ? (100 / this.width) * e.deltaX
+      : (100 / this.height) * e.deltaY;
 
-      case 4:
-        var dragDistance = (100 / this.width) * e.deltaX;
-        if (Math.abs(dragDistance) > 40 && this.frame.model.get('west')) this.frame.click('left');
-        else this.setPosition();
-        break;
-
-      case 8:
-        var dragDistance = (100 / this.height) * e.deltaY;
-        if (Math.abs(dragDistance) > 40 && this.frame.model.get('south')) this.frame.click('bottom');
-        else this.setPosition();
-        break;
-
-      case 16:
-        var dragDistance = (100 / this.height) * e.deltaY;
-        if (Math.abs(dragDistance) > 40 && this.frame.model.get('north')) this.frame.click('top');
-        else this.setPosition();
-        break;
+    if (Math.abs(dragDistance) < 40) {
+      return this.setPosition();
     }
+
+    var directions = this.map.getDirections(this.activeCity);
+
+    if (direction === 'horizontal') {
+      if (dragDistance < 0) {
+        this.changeCity(directions.east);
+      } else {
+        this.changeCity(directions.west);
+      }
+    } else {
+      if (dragDistance < 0) {
+        this.changeCity(directions.south);
+      } else {
+        this.changeCity(directions.north);
+      }
+    }
+
+    this.setPosition();
   },
 
   onSwipe (e) {
@@ -217,7 +205,7 @@ export default Backbone.ContentView.extend({
   },
 
   changeCity (slug) {
-    if (slug === this.activeCity) return false;
+    if (!slug || slug === this.activeCity) return false;
 
     var model = this.collection.findWhere({ slug: slug });
     var view = _.findWhere(this.cities, { model: model });
@@ -237,7 +225,7 @@ export default Backbone.ContentView.extend({
     this.setDirections();
   },
 
-  setPosition (transition=true) {
+  setPosition (transition=true, speed=800) {
     var position = this.map.getPosition(this.activeCity);
 
     if (!position) return false;
@@ -255,8 +243,13 @@ export default Backbone.ContentView.extend({
     return new Promise((resolve, reject) => {
        this.$('.cities__content').velocity('stop')
         .velocity(props, {
-          duration: transition ? 800 : 0,
-          complete: () => { this.isSliding = false; resolve(); }
+          duration: transition ? speed : 0,
+          easing: 'ease-out',
+          complete: () => {
+            this.isSliding = false;
+            resolve();
+            Backbone.trigger('router:navigate', `/city/${this.activeCity}`);
+          }
         });
     });
   },

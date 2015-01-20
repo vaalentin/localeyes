@@ -55,6 +55,10 @@ export default Backbone.Model.extend({
     this.set(map);
   },
 
-  getPosition (slug) { return this.get(slug).position; },
-  getDirections (slug) { return this.get(slug).directions }
+  getPosition (slug) {
+    if (this.has(slug)) return this.get(slug).position;
+  },
+  getDirections (slug) {
+    if (this.has(slug)) return this.get(slug).directions
+  }
 });

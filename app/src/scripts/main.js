@@ -19,6 +19,7 @@ import LocalsView from './views/LocalsView';
 var app = new AppView({ el: 'body' });
 
 var router = new AppRouter();
+Backbone.on('router:navigate', url => router.navigate(url));
 
 var citiesView;
 
