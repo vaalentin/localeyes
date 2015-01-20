@@ -122,10 +122,6 @@ export default Backbone.ContentView.extend({
     this.setPosition();
   },
 
-  onSwipe (e) {
-    console.log('swipe');
-  },
-
   onRemove () {
     this.cities.forEach(city => city.remove());
     jQuery(document).off('keydown', this.onKeydown);
@@ -219,13 +215,13 @@ export default Backbone.ContentView.extend({
     }
 
     this.activeCity = slug;
-    this.setPosition().then(() => {
-      if (previousView) previousView.out();
-    });
+    this.setPosition(true, () => { if (previousView) previousView.out() });
     this.setDirections();
   },
 
-  setPosition (transition=true, speed=800) {
+  setPosition (transition=true, callback) {
+    if (this.isSliding) return false;
+    
     var position = this.map.getPosition(this.activeCity);
 
     if (!position) return false;
@@ -240,18 +236,16 @@ export default Backbone.ContentView.extend({
 
     this.isSliding = true;
 
-    return new Promise((resolve, reject) => {
-       this.$('.cities__content').velocity('stop')
-        .velocity(props, {
-          duration: transition ? speed : 0,
-          easing: 'ease-out',
-          complete: () => {
-            this.isSliding = false;
-            resolve();
-            Backbone.trigger('router:navigate', `/city/${this.activeCity}`);
-          }
-        });
-    });
+    this.$('.cities__content').velocity('stop')
+      .velocity(props, {
+        duration: transition ? 800 : 0,
+        easing: 'ease-out',
+        complete: () => {
+          this.isSliding = false;
+          if (callback) callback();
+          Backbone.trigger('router:navigate', `/city/${this.activeCity}`);
+        }
+      });
   },
 
   setDirections () {
