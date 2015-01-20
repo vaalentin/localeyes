@@ -4,6 +4,7 @@ import Backbone from 'backbone';
 
 export default Backbone.BetterView.extend({
   template: `
+    <div class="menu">
       <a href="#/locals" class="menu__icon menu__icon--bottomRight menu__icon--locals">
         <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
           <line stroke="#ffffff" stroke-width="1" x1="5.8" y1="10.2" x2="34.2" y2="10.2"/>
@@ -43,5 +44,6 @@ export default Backbone.BetterView.extend({
           <circle fill="#ffffff" cx="20" cy="10.8" r="2.2"/>
         </svg>
       </a>
+    </div>
   `,
 });

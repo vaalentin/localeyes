@@ -9,6 +9,16 @@ export default Backbone.PageView.extend({
 
   name: 'locals',
 
+  template2: `
+    <div class="locals__wrapper">
+      <div class="locals__outerContainer">
+        <div class="locals__innerContainer">
+          <div class="locals__content"></div>
+        </div>
+      </div>
+    </div>
+  `,
+
   template: `
     <div class="locals__bars">
       <div class="locals__bar locals__bar--top"></div>
@@ -37,6 +47,15 @@ export default Backbone.PageView.extend({
 
   onRemove () {
     this.covers.forEach(cover => cover.remove());
+  },
+
+  in () {
+    return new Promise((resolve, reject) => {
+      this.covers.forEach((cover, i) => {
+        cover.in((i * 200) + 200);
+      });
+      resolve();
+    });
   },
 
   render () {

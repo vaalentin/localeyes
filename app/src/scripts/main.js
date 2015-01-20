@@ -13,7 +13,6 @@ import AppView from './views/AppView';
 import LocalView from './views/LocalView';
 import HelpView from './views/HelpView';
 import LoaderView from './views/LoaderView';
-import ExploreView from './views/ExploreView';
 import CitiesView from './views/CitiesView';
 import LocalsView from './views/LocalsView';
 
@@ -21,46 +20,35 @@ var app = new AppView({ el: 'body' });
 
 var router = new AppRouter();
 
-router.on('route:default', () => {
-  app.changeContent(new LoaderView())
-});
-
-router.on('route:help', () => {
-  app.changeContent(new HelpView())
-});
-
-router.on('route:local', slug => {
-  var local = Store.getLocals().findWhere({ slug: slug });
-  if (!local) return false;
-  app.changeContent(new LocalView({ model: local }));
-});
-
-
-var exploreView;
 var citiesView;
 
 router.on('route:city', slug => {
-  if (app.getContent().name !== 'explore' || !exploreView) {
-    if (!exploreView) exploreView = new ExploreView();
-    app.changeContent(exploreView);
-  }
-
-  if (exploreView.getContent().name === 'cities' && citiesView) {
+  var currentView = app.getContent();
+  if (currentView && currentView.name === 'cities' && citiesView) {
     citiesView.changeCity(slug);
   } else {
     citiesView = new CitiesView({ collection: Store.getCities(), activeCity: slug });
-    exploreView.changeContent(citiesView);
+    app.changeContent(citiesView);
+  }
+
+  var citiesCurrentView = citiesView.getContent();
+  if (citiesCurrentView) {
+    citiesView.removeContent();
   }
 });
 
 router.on('route:locals', () => {
-  if (app.getContent().name !== 'explore' || !exploreView) {
-    if (!exploreView) exploreView = new ExploreView();
-    app.changeContent(exploreView);
+  var currentView = app.getContent();
+
+ var localsView = new LocalsView({ collection: Store.getCities() });
+
+  if (currentView && currentView.name === 'cities' && citiesView) {
+    return citiesView.changeContent(localsView);
   }
-  
-  var localsView = new LocalsView({ collection: Store.getCities() });
-  exploreView.changeContent(localsView);
+
+  citiesView = new CitiesView({ collection: Store.getCities(), activeCity: 'paris' });
+  app.changeContent(citiesView);
+  citiesView.changeContent(localsView);
 });
 
 Backbone.history.start();

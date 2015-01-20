@@ -5,41 +5,137 @@ import Backbone from 'backbone';
 import Hammer from 'hammer';
 
 import MapModel from '../models/MapModel';
+import FrameModel from '../models/FrameModel';
+
 import CityView from './CityView';
+import MenuView from './MenuView';
+import FrameView from './FrameView';
 
-import EventBus from '../modules/EventBusModule';
-
-export default Backbone.PageView.extend({
+export default Backbone.ContentView.extend({
   name: 'cities',
   
   className: 'cities',
 
+  content: '.cities__overlay',
+
   template: `
+    <div class="cities__outerOverlay">
+      <div class="cities__overlay"></div>
+    </div>
+    <div class="cities__frame"></div>
+    <div class="cities__menu"></div>
     <div class="cities__content"></div>
   `,
 
   onInitialize (options) {
     _.extend(this, _.pick(options, 'activeCity'));
+    
     this.map = new MapModel({ collection: this.collection });
+
+    this.menu = new MenuView();
+    this.frame = new FrameView({ model: new FrameModel() });
     this.cities = this.collection.map(city => {
-      return new CityView({
-        model: city,
-        position: this.map.getPosition(city.get('slug'))
-      });
+      return new CityView({ model: city, position: this.map.getPosition(city.get('slug')) });
     });
 
-    this.listenTo(EventBus, 'frame:over', this.onFrameOver);
-    this.listenTo(EventBus, 'frame:out', this.onFrameOut);
+    this.listenTo(this.frame, 'frame:over', this.onFrameOver);
+    this.listenTo(this.frame, 'frame:out', this.onFrameOut);
     jQuery(document).on('keydown', this.onKeydown.bind(this));
 
     this.isSliding = false;
     this.isOpen = false;
 
+    // touch screen
     this.hammer = new Hammer.Manager(this.$el[0], {
-      prevent_default: true
+      dragLockToAxis: true,
+      preventDefault: true
     });
-    this.hammer.add(new Hammer.Swipe({ direction: Hammer.DIRECTION_ALL }));
-    this.hammer.on('swipe', this.onSwipe);
+    this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
+
+    this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
+    this.hammer.on('panup pandown', this.onPanVertical.bind(this));
+    this.hammer.on('panend', this.onPanend.bind(this));
+    jQuery(window).on('resisze', this.onResize.bind(this));
+
+    this.translateX;
+    this.translateY;
+    this.width;
+    this.height;
+    this.panX;
+    this.panY;
+  },
+
+  onPanHorizontal (e) {
+    if (this.isSliding) return false;
+    if (this.panY) return false;
+    if (!this.width || !this.height) this.onResize();
+
+    this.panX = true;
+
+    var dragDistance = (100 / this.width) * e.deltaX;
+
+    if (e.direction === 2) {
+      if (!this.frame.model.get('east')) dragDistance *= 0.2;
+    } else if (e.direction === 4) {
+      if (!this.frame.model.get('west')) dragDistance *= 0.2;
+    }
+
+    var dragged = this.translateX + dragDistance;
+    this.$('.cities__content').velocity({ translateX: dragged + '%' }, 0);
+  },
+
+  onPanVertical (e) {
+    if (this.isSliding) return false;
+    if (this.panX) return false;
+    if (!this.width || !this.height) this.onResize();
+
+    this.panY = true;
+
+    var dragDistance = (100 / this.height) * e.deltaY;
+
+    if (e.direction === 8) {
+      if (!this.frame.model.get('south')) dragDistance *= 0.2;
+    } else if (e.direction === 16) {
+      if (!this.frame.model.get('north')) dragDistance *= 0.2;
+    }
+
+    var dragged = this.translateY + dragDistance;
+    this.$('.cities__content').velocity({ translateY: dragged + '%' }, 0);
+  },
+
+  onPanend (e) {
+    this.panX = false;
+    this.panY = false;
+
+    switch (e.direction) {
+      case 2:
+        var dragDistance = (100 / this.width) * e.deltaX;
+        if (Math.abs(dragDistance) > 40 && this.frame.model.get('east')) this.frame.click('right');
+        else this.setPosition();
+        break;
+
+      case 4:
+        var dragDistance = (100 / this.width) * e.deltaX;
+        if (Math.abs(dragDistance) > 40 && this.frame.model.get('west')) this.frame.click('left');
+        else this.setPosition();
+        break;
+
+      case 8:
+        var dragDistance = (100 / this.height) * e.deltaY;
+        if (Math.abs(dragDistance) > 40 && this.frame.model.get('south')) this.frame.click('bottom');
+        else this.setPosition();
+        break;
+
+      case 16:
+        var dragDistance = (100 / this.height) * e.deltaY;
+        if (Math.abs(dragDistance) > 40 && this.frame.model.get('north')) this.frame.click('top');
+        else this.setPosition();
+        break;
+    }
+  },
+
+  onSwipe (e) {
+    console.log('swipe');
   },
 
   onRemove () {
@@ -92,37 +188,23 @@ export default Backbone.PageView.extend({
 
     switch (charcode) {
       case 38:
-        EventBus.trigger('frame:click', 'top');
+        this.frame.click('top');
         break;
       case 39:
-        EventBus.trigger('frame:click', 'right');
+        this.frame.click('right');
         break;
       case 40:
-        EventBus.trigger('frame:click', 'bottom');
+        this.frame.click('bottom');
         break;
       case 37:
-        EventBus.trigger('frame:click', 'left');
+        this.frame.click('left');
         break;
     }
   },
 
-  onSwipe (e) {
-    if (this.isSliding) return;
-    
-    switch (e.direction) {
-      case 8:
-        EventBus.trigger('frame:click', 'bottom');
-        break;
-      case 4:
-        EventBus.trigger('frame:click', 'left');
-        break;
-      case 16:
-        EventBus.trigger('frame:click', 'top');
-        break;
-      case 2:
-        EventBus.trigger('frame:click', 'right');
-        break;
-    }
+  onResize (e) {
+    this.width = this.$el.width();
+    this.height = this.$el.height();
   },
 
   setCity () {
@@ -160,35 +242,35 @@ export default Backbone.PageView.extend({
 
     if (!position) return false;
 
-    var props = {
-      translateY: -1 * (position.top * 100) + '%',
-      translateX: -1 * (position.left * 100) + '%'
-    };
+    this.translateX = -1 * (position.left * 100);
+    this.translateY = -1 * (position.top * 100);
 
-    var $content = this.$('.cities__content');
+    var props = {
+      translateX: this.translateX + '%',
+      translateY: this.translateY + '%'
+    };
 
     this.isSliding = true;
 
     return new Promise((resolve, reject) => {
-      $content.velocity('stop')
+       this.$('.cities__content').velocity('stop')
         .velocity(props, {
           duration: transition ? 800 : 0,
-          complete: () => {
-            this.isSliding = false;
-            resolve();
-          }
+          complete: () => { this.isSliding = false; resolve(); }
         });
     });
   },
 
   setDirections () {
     var directions = this.map.getDirections(this.activeCity);
-    EventBus.trigger('frame:update', directions);
+    this.frame.model.set(directions);
   },
 
   render () {
     this.$el.html(this.template());
     this.append(this.cities, '.cities__content');
+    this.assign(this.menu, '.cities__menu');
+    this.assign(this.frame, '.cities__frame');
     this.setCity();
     return this;
   }

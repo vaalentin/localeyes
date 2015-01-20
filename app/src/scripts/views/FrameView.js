@@ -2,8 +2,6 @@
 
 import Backbone from 'backbone';
 
-import EventBus from '../modules/EventBusModule';
-
 export default Backbone.BetterView.extend({
   template: `
     <div class="frame">
@@ -80,8 +78,6 @@ export default Backbone.BetterView.extend({
 
   onInitialize () {
     this.listenTo(this.model, 'change', this.onChange);
-    this.listenTo(EventBus, 'frame:update', this.onUpdate);
-    this.listenTo(EventBus, 'frame:click', this.onClick);
   },
 
   onMouseover (e) {
@@ -89,12 +85,12 @@ export default Backbone.BetterView.extend({
     var direction = $el.attr('data-direction');
 
     if (direction) {
-      EventBus.trigger('frame:over', direction);
+      this.trigger('frame:over', direction);
     }
   },
 
   onMouseout () {
-    EventBus.trigger('frame:out');
+    this.trigger('frame:out');
   },
 
   onChange () {
@@ -110,7 +106,7 @@ export default Backbone.BetterView.extend({
     });
   },
 
-  onClick (position) {
+  click (position) {
     var $el = this.$(`.frame__bar--${position}`);
     $el[0].click();
     return false;

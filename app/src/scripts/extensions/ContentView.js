@@ -28,5 +28,14 @@ Backbone.ContentView = Backbone.PageView.extend({
     } else {
       next();
     }
+  },
+
+  removeContent () {
+    if (!this.currentView) return false;
+
+    this.currentView.out().then(() => {
+      this.currentView.remove();
+      this.currentView = null;
+    });
   }
 });
