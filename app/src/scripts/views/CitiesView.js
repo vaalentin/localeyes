@@ -163,20 +163,22 @@ export default Backbone.ContentView.extend({
   onKeydown (e) {
     if (this.isSliding) return;
 
+    var directions = this.map.getDirections(this.activeCity);
+
     var charcode = e.charcode ? e.charcode : e.keyCode;
 
     switch (charcode) {
       case 38:
-        this.frame.click('top');
+        this.changeCity(directions.north);
         break;
       case 39:
-        this.frame.click('right');
+        this.changeCity(directions.east);
         break;
       case 40:
-        this.frame.click('bottom');
+        this.changeCity(directions.south);
         break;
       case 37:
-        this.frame.click('left');
+        this.changeCity(directions.west);
         break;
     }
   },
@@ -216,7 +218,7 @@ export default Backbone.ContentView.extend({
 
   setPosition (transition=true, callback) {
     if (this.isSliding) return false;
-    
+
     var position = this.map.getPosition(this.activeCity);
 
     if (!position) return false;
@@ -257,6 +259,7 @@ export default Backbone.ContentView.extend({
     this.assign(this.menu, '.cities__menu');
     this.assign(this.frame, '.cities__frame');
     this.setCity();
+    this.menu.in();
     this.frame.in();
     return this;
   }
