@@ -65,42 +65,44 @@ export default Backbone.BetterView.extend({
   },
 
   in () {
-    this.$squareTopLeft.css({ top: '50%', left: '50%', opacity: 0 })
     this.$el.css('z-index', 2);
+
+    this.$squareTopLeft.velocity('stop')
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
-    this.$squareTopRight.css({ top: '50%', right: '50%', opacity: 0 })
+    this.$squareTopRight.velocity('stop')
       .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
-    this.$squareBottomLeft.css({ bottom: '50%', left: '50%', opacity: 0 })
+    this.$squareBottomLeft.velocity('stop')
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
 
-    this.$squareBottomRight.css({ bottom: '50%', right: '50%', opacity: 0 })
+    this.$squareBottomRight.velocity('stop')
       .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
 
-    this.$name.css({ opacity: 0, top: -90 })
+    this.$name.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1100 });
 
-    this.$country.css({ opacity: 0, top: 50 })
+    this.$country.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1200 });
 
-    this.$icon.css({ top: -150 })
-      .velocity({ top: -90 }, { duration: 1500, delay: 500 });
+    this.$icon.velocity('stop')
+      .velocity({ top: -90, opacity: 1 }, { duration: 1500, delay: 500 });
 
-    this.$button.css({ opacity: 0, top: 50 })
+    this.$button.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1400 });
 
-    this.$bordersTopBottom.css('width', 0)
+    this.$bordersTopBottom.velocity('stop')
       .velocity({ width: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
 
-    this.$bordersLeftRight.css('height', 0)
+    this.$bordersLeftRight.velocity('stop')
       .velocity({ height: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
 
-    this.$background.velocity({ scale: 1.2 }, 0).velocity({ scale: 1 }, 2500);
+    this.$background.velocity('stop')
+      .velocity({ scale: 1.2 }, 0).velocity({ scale: 1 }, 2500);
 
     this.$svgs.each(function () {
       jQuery('path', this).each(function () {
@@ -128,20 +130,18 @@ export default Backbone.BetterView.extend({
   },
 
   out () {
-    console.log('out');
-
-    this.$squareTopLeft.css({ top: '50%', left: '50%', opacity: 0 });
-    this.$squareTopRight.css({ top: '50%', right: '50%', opacity: 0 });
-    this.$squareBottomLeft.css({ bottom: '50%', left: '50%', opacity: 0 })
-    this.$squareBottomRight.css({ bottom: '50%', right: '50%', opacity: 0 })
-    this.$name.css({ opacity: 0, top: -90 })
-    this.$country.css({ opacity: 0, top: 50 })
-    this.$icon.css({ top: -150 })
-    this.$button.css({ opacity: 0, top: 50 })
-    this.$bordersTopBottom.css('width', 0)
-    this.$bordersLeftRight.css('height', 0)
-    this.$background.velocity({ scale: 1.2 }, 0);
     this.$el.css('z-index', 1);
+    this.$squareTopLeft.velocity('stop').css({ top: '50%', left: '50%', opacity: 0 });
+    this.$squareTopRight.velocity('stop').css({ top: '50%', right: '50%', opacity: 0 });
+    this.$squareBottomLeft.velocity('stop').css({ bottom: '50%', left: '50%', opacity: 0 })
+    this.$squareBottomRight.velocity('stop').css({ bottom: '50%', right: '50%', opacity: 0 })
+    this.$name.velocity('stop').css({ opacity: 0, top: -90 })
+    this.$country.velocity('stop').css({ opacity: 0, top: 50 })
+    this.$icon.velocity('stop').css({ top: -150, opacity: 0 })
+    this.$button.velocity('stop').css({ opacity: 0, top: 50 })
+    this.$bordersTopBottom.velocity('stop').css('width', 0)
+    this.$bordersLeftRight.velocity('stop').css('height', 0)
+    this.$background.velocity('stop').velocity({ scale: 1.2 }, 0);
     this.$svgs.each(function () {
       jQuery('path', this).each(function () {
         var $path = jQuery(this);
