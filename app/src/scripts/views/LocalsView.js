@@ -51,9 +51,28 @@ export default Backbone.PageView.extend({
 
   in () {
     return new Promise((resolve, reject) => {
+      this.$el.css('opacity', 0)
+        .velocity({ opacity: 1 }, 1000);
+
+      this.$('.locals__bar--top').css('right', '100%')
+        .velocity({ right: 150 }, { duration: 2000 });
+
+      this.$('.locals__bar--bottom').css('left', '100%')
+        .velocity({ left: 150 }, { duration: 2000 });
+      
+      this.$('.locals__bar--left').css('bottom', '100%')
+        .velocity({ bottom: 0 }, { duration: 1500 });
+
+      this.$('.locals__bar--right').css('top', '100%')
+        .velocity({ top: 0 }, { duration: 1500 });
+
+      this.$('.locals__icon--close').css({ opacity: 0, top: 100 })
+        .velocity({ top: 0, opacity: 1 }, { duration: 1000, delay: 500 });
+
       this.covers.forEach((cover, i) => {
-        cover.in((i * 200) + 200);
+        cover.in((i * 100) + 800);
       });
+
       resolve();
     });
   },

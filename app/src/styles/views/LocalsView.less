@@ -1,4 +1,5 @@
 // @import '../mixins/inlineBlock';
+@import '../mixins/perspective';
 
 // .locals {
 //   position: relative;
@@ -40,6 +41,7 @@
   padding: 0;
 
   list-style-type: none;
+  .perspective(500px);
 }
 
 // icon
@@ -76,18 +78,18 @@
 .locals__bar--left,
 .locals__bar--right {
   z-index: 3;
-  top: 120px;
-  bottom: 120px;
+  top: 0;
+  bottom: 0;
 
   width: 10px;
 }
 
 .locals__bar--top {
-  top: 120px;
+  top: 0;
 }
 
 .locals__bar--bottom {
-  bottom: 120px;
+  bottom: 0;
 }
 
 .locals__bar--left {

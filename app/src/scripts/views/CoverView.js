@@ -45,8 +45,15 @@ export default Backbone.BetterView.extend({
 
   in (delay) {
     return new Promise((resolve, reject) => {
-      this.$el.css('opacity', 0)
-        .velocity({ opacity: 1 }, { duration: 500, delay: delay || 0, complete: resolve })
+      var z = this.type === 1 || this.type === 3 ? -300 : 300;
+
+      this.$el.velocity({ translateZ: z, opacity: 0 }, 0)
+        .velocity({ translateZ: 1, opacity: 1 }, {
+          duration: 800,
+          delay: delay || 0,
+          complete: resolve,
+          easing: 'ease-out'
+        });
     });
   },
 
