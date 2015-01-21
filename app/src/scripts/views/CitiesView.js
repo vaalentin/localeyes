@@ -62,40 +62,38 @@ export default Backbone.ContentView.extend({
     this.panX = false;
   },
 
+  onRemove () {
+    this.cities.forEach(city => city.remove());
+    jQuery(document).off('keydown', this.onKeydown);
+    jQuery(window).off('resize', this.onResize);
+    this.hammer.destroy();
+  },
   onPanHorizontal (e) {
     if (this.panY) return false;
-
     this.panX = true;
 
-    e.preventDefault();
-
     if (!this.width || !this.height) this.onResize();
-    var dragDistance = (100 / this.width) * e.deltaX;
 
+    var dragDistance = (100 / this.width) * e.deltaX;
     var dragged = this.translateX + dragDistance;
+
     this.$('.cities__content').velocity({ translateX: dragged + '%' }, 0);
   },
 
   onPanVertical (e) {
     if (this.panX) return false;
-
     this.panY = true;
 
-    e.preventDefault();
-
     if (!this.width || !this.height) this.onResize();
+
     var dragDistance = (100 / this.height) * e.deltaY;
     var dragged = this.translateY + dragDistance;
+
     this.$('.cities__content').velocity({ translateY: dragged + '%' }, 0);
   },
 
   onPanend (e) {
-    var direction = this.panX ? 'horizontal' : 'vertical';
-
-    this.panX = false;
-    this.panY = false;
-
-    var dragDistance = direction === 'horizontal'
+    var dragDistance = this.panX
       ? (100 / this.width) * e.deltaX
       : (100 / this.height) * e.deltaY;
 
@@ -105,7 +103,7 @@ export default Backbone.ContentView.extend({
 
     var directions = this.map.getDirections(this.activeCity);
 
-    if (direction === 'horizontal') {
+    if (this.panX) {
       if (dragDistance < 0) {
         this.changeCity(directions.east);
       } else {
@@ -120,12 +118,9 @@ export default Backbone.ContentView.extend({
     }
 
     this.setPosition();
-  },
 
-  onRemove () {
-    this.cities.forEach(city => city.remove());
-    jQuery(document).off('keydown', this.onKeydown);
-    this.hammer.destroy();
+    this.panX = false;
+    this.panY = false;
   },
 
   onFrameOver (direction) {
@@ -225,6 +220,9 @@ export default Backbone.ContentView.extend({
     var position = this.map.getPosition(this.activeCity);
 
     if (!position) return false;
+
+    var previousTranslateX = this.translateX;
+    var previousTranslateY = this.translateY;
 
     this.translateX = -1 * (position.left * 100);
     this.translateY = -1 * (position.top * 100);
