@@ -11,13 +11,17 @@ export default Backbone.BetterView.extend({
         <div class="city__title">
           <div class="city__icon">
             <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
-              <% _.each(paths, function(path) { %>
+              <% _.each(icon, function(el) { %>
               <path fill="#ffffff"
                 stroke="#ffffff"
                 stroke-width="1"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="<%= path %>"/>
+                d="<%= el.path %>"
+                <% if (el.length) { %>
+                data-length="<%= el.length %>"
+                <% } %>
+                />
               <% }); %>
             </svg>
           </div>
@@ -62,6 +66,7 @@ export default Backbone.BetterView.extend({
 
   in () {
     this.$squareTopLeft.css({ top: '50%', left: '50%', opacity: 0 })
+    this.$el.css('z-index', 2);
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
@@ -100,11 +105,19 @@ export default Backbone.BetterView.extend({
     this.$svgs.each(function () {
       jQuery('path', this).each(function () {
         var $path = jQuery(this);
-        var length = $path[0].getTotalLength();
+        var data = $path.attr('data-length');
+        
+        var length;
+        if (data) {
+          length = parseFloat(data);
+        } else {
+          length = $path[0].getTotalLength();
+          $path.attr('data-length', length);
+        }
 
-        $path.velocity({
+        $path.velocity('stop').velocity({
             'stroke-dashoffset': length,
-            'stroke-dasharray': length + ',' + length,
+            'stroke-dasharray': `${length},${length}`,
             fillOpacity: 0,
             strokeOpacity: 1
           }, 0)
@@ -128,14 +141,24 @@ export default Backbone.BetterView.extend({
     this.$bordersTopBottom.css('width', 0)
     this.$bordersLeftRight.css('height', 0)
     this.$background.velocity({ scale: 1.2 }, 0);
+    this.$el.css('z-index', 1);
     this.$svgs.each(function () {
       jQuery('path', this).each(function () {
         var $path = jQuery(this);
-        var length = $path[0].getTotalLength();
+        var data = $path.attr('data-length');
+        
+        var length;
+        if (data) {
+          length = parseFloat(data);
+        } else {
+          length = $path[0].getTotalLength();
+          $path.attr('data-length', length);
+        }
 
-        $path.velocity({
+        $path.velocity('stop')
+          .velocity({
           'stroke-dashoffset': length,
-          'stroke-dasharray': length + ',' + length,
+          'stroke-dasharray': `${length},${length}`,
           fillOpacity: 0,
           strokeOpacity: 1
         }, 0);
