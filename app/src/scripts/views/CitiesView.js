@@ -38,8 +38,8 @@ export default Backbone.ContentView.extend({
       return new CityView({ model: city, position: this.map.getPosition(city.get('slug')) });
     });
 
-    this.listenTo(this.frame, 'frame:over', this.onFrameOver);
-    this.listenTo(this.frame, 'frame:out', this.onFrameOut);
+    this.listenTo(this.frame, 'mouseover', this.onFrameOver);
+    this.listenTo(this.frame, 'mouseout', this.onFrameOut);
     jQuery(document).on('keydown', this.onKeydown.bind(this));
 
     this.isSliding = false;

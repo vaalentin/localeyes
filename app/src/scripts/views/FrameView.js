@@ -83,14 +83,11 @@ export default Backbone.BetterView.extend({
   onMouseover (e) {
     var $el = jQuery(e.currentTarget);
     var direction = $el.attr('data-direction');
-
-    if (direction) {
-      this.trigger('frame:over', direction);
-    }
+    if (direction) this.trigger('mouseover', direction);
   },
 
   onMouseout () {
-    this.trigger('frame:out');
+    this.trigger('mouseout');
   },
 
   onChange () {
