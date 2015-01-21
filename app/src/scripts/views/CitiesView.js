@@ -257,6 +257,7 @@ export default Backbone.ContentView.extend({
     this.assign(this.menu, '.cities__menu');
     this.assign(this.frame, '.cities__frame');
     this.setCity();
+    this.frame.in();
     return this;
   }
 });

@@ -111,5 +111,20 @@ export default Backbone.BetterView.extend({
 
   onUpdate (directions) {
     this.model.set(directions);
+  },
+
+  in () {
+    this.$('.frame__bar--top').css('top', -40)
+      .velocity({ top: 0 }, { duration: 800 });
+
+    this.$('.frame__bar--bottom').css('bottom', -40)
+      .velocity({ bottom: 0 }, { duration: 800 });
+
+    this.$('.frame__bar--left').css('left', -40)
+      .velocity({ left: 0 }, { duration: 800 });
+
+    this.$('.frame__bar--right').css('right', -40)
+      .velocity({ right: 0 }, { duration: 800 });
+
   }
 });
