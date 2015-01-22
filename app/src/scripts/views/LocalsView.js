@@ -39,13 +39,13 @@ export default Backbone.PageView.extend({
     </div>
   `,
 
-  onInitialize () {
+  didInitialize () {
     this.covers = this.collection.map((city, i) => {
       return new CoverView({ model: city, type: i % 4 });
     });
   },
 
-  onRemove () {
+  willRemove () {
     this.covers.forEach(cover => cover.remove());
   },
 
@@ -77,9 +77,7 @@ export default Backbone.PageView.extend({
     });
   },
 
-  render () {
-    this.$el.html(this.template());
+  didRender () {
     this.append(this.covers, '.locals__content');
-    return this;
   }
 });

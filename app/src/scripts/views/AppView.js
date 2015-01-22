@@ -11,7 +11,7 @@ export default Backbone.ContentView.extend({
     </div>
   `,
 
-  onInitialize () {
+  didInitialize () {
     this.render();
   }
 });

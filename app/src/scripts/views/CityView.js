@@ -53,8 +53,8 @@ export default Backbone.BetterView.extend({
     <% } %>
   `,
 
-  onInitialize (options) {
-    this.position = options.position;
+  didInitialize (options) {
+    _.extend(this, _.pick(options, 'position'));
   },
 
   setPosition () {
@@ -166,8 +166,7 @@ export default Backbone.BetterView.extend({
     });
   },
 
-  render () {
-    this.$el.html(this.template(this.model.toJSON()));
+  didRender () {
     this.setPosition();
 
     this.$squareTopLeft = this.$('.city__square--topLeft');

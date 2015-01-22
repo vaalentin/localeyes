@@ -25,7 +25,7 @@ export default Backbone.BetterView.extend({
     'mouseout': 'onMouseout'
   },
 
-  onInitialize (options) {
+  didInitialize (options) {
     _.extend(this, _.pick(options, 'type'));
   },
 
@@ -57,7 +57,7 @@ export default Backbone.BetterView.extend({
     });
   },
 
-  onRender () {
+  didRender () {
     this.$el.addClass(`cover cover--type${this.type}`);
   }
 });

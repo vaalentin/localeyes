@@ -76,10 +76,9 @@ export default Backbone.BetterView.extend({
     'mouseleave .menu__button--bottomLeft': 'onShareOut'
   },
 
-  onInitialize () {
-    // share icon expandable area
-    this.shareExplandableHeight;
-    this.shareIconHeight;
+  didInitialize () {
+    this.expandableHeight;
+    this.iconHeight;
   },
 
   onClick (e) {

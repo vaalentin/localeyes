@@ -28,6 +28,7 @@ export default Backbone.ContentView.extend({
   `,
 
   onInitialize (options) {
+  didInitialize (options) {
     _.extend(this, _.pick(options, 'activeCity'));
     
     this.map = new MapModel({ collection: this.collection });
@@ -62,7 +63,7 @@ export default Backbone.ContentView.extend({
     this.panX = false;
   },
 
-  onRemove () {
+  willRemove () {
     this.cities.forEach(city => city.remove());
     jQuery(document).off('keydown', this.onKeydown);
     jQuery(window).off('resize', this.onResize);
@@ -253,14 +254,13 @@ export default Backbone.ContentView.extend({
     this.frame.model.set(directions);
   },
 
-  render () {
-    this.$el.html(this.template());
+  didRender () {
     this.append(this.cities, '.cities__content');
     this.assign(this.menu, '.cities__menu');
     this.assign(this.frame, '.cities__frame');
+
     this.setCity();
     this.menu.in();
     this.frame.in();
-    return this;
   }
 });

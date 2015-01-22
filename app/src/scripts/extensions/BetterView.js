@@ -5,19 +5,31 @@ import Backbone from 'backbone';
 
 Backbone.BetterView = Backbone.View.extend({
   initialize () {
+    if (this.willInitialize)
+      this.willInitialize.apply(this.arguments);
+
     this.template = _.template(this.template);
-    if (this.onInitialize) this.onInitialize.apply(this, arguments);
     Backbone.View.prototype.initialize.apply(this, arguments);
+
+    if (this.didInitialize)
+      this.didInitialize.apply(this, arguments);
   },
 
   remove () {
-    if (this.onRemove) this.onRemove.apply(this, arguments);
+    if (this.willRemove)
+      this.willRemove.apply(this, arguments);
+
     Backbone.View.prototype.remove.apply(this, arguments);
+
+    if (this.didRemove)
+      this.didRemove.apply(this, arguments);
   },
 
   assign (view, selector) {
-    if (!selector) view.setElement(this.$el.render());
-    else view.setElement(this.$(selector)).render()
+    if (!selector)
+      view.setElement(this.$el.render());
+    else
+      view.setElement(this.$(selector)).render()
   },
 
   unassign () {
@@ -31,12 +43,13 @@ Backbone.BetterView = Backbone.View.extend({
    * @param {String} [selector]
    */
   append (views, selector) {
-    if (!_.isArray(views)) views = [views];
-    if (!selector) {
+    if (!_.isArray(views))
+      views = [views];
+
+    if (!selector)
       views.forEach(view => this.$el.append(view.render().el));
-    } else {
+    else
       views.forEach(view => this.$(selector).append(view.render().el));
-    }
   },
 
   /**
@@ -44,18 +57,26 @@ Backbone.BetterView = Backbone.View.extend({
    * @param {String} [selector]
    */
   prepend (views, selector) {
-    if (!_.isArray(views)) views = [views];
-    if (!selector) {
+    if (!_.isArray(views))
+      views = [views];
+
+    if (!selector)
       views.forEach(view => this.$el.prepend(view.render().el));
-    } else {
+    else
       views.forEach(view => this.$(selector).prepend(view.render().el));
-    }
   },
 
   render () {
-    if (this.model) this.$el.html(this.template(this.model.toJSON()));
-    else this.$el.html(this.template());
-    if (this.onRender) this.onRender.apply(this, arguments);
+    if (this.willRender)
+      this.willRender.apply(this, arguments);
+
+    if (this.model)
+      this.$el.html(this.template(this.model.toJSON()));
+    else
+      this.$el.html(this.template());
+    if (this.didRender)
+      this.didRender.apply(this, arguments);
+
     return this;
   },
 });

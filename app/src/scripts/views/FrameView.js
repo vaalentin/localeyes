@@ -76,7 +76,7 @@ export default Backbone.BetterView.extend({
     'mouseout .frame__bar': 'onMouseout'
   },
 
-  onInitialize () {
+  didInitialize () {
     this.listenTo(this.model, 'change', this.onChange);
   },
 
