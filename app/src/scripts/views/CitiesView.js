@@ -118,30 +118,31 @@ export default Backbone.ContentView.extend({
       : (100 / this.height) * e.deltaY;
 
     if (Math.abs(dragDistance) < 40) {
-      return this.setPosition();
+      this.dragFactorA = this.dragFactorB = null;
+      this.panX = this.panY = false;
+      return this.setPosition({ easing: 'ease-out' });
     }
 
     var directions = this.map.getDirections(this.activeCity);
 
     if (this.panX) {
       if (dragDistance < 0) {
-        this.changeCity(directions.east);
+        this.changeCity(directions.east, 'ease-out');
       } else {
-        this.changeCity(directions.west);
+        this.changeCity(directions.west, 'ease-out');
       }
     } else {
       if (dragDistance < 0) {
-        this.changeCity(directions.south);
+        this.changeCity(directions.south, 'ease-out');
       } else {
-        this.changeCity(directions.north);
+        this.changeCity(directions.north, 'ease-out');
       }
     }
 
-    this.setPosition();
+    this.setPosition({ easing: 'ease-out' });
 
-    this.panX = false;
-    this.panY = false;
     this.dragFactorA = this.dragFactorB = null;
+    this.panX = this.panY = false;
   },
 
   onFrameOver (direction) {
@@ -214,11 +215,11 @@ export default Backbone.ContentView.extend({
     var view = _.findWhere(this.cities, { model: model });
     if (view) view.in();
 
-    this.setPosition(false);
+    this.setPosition({ transition: false });
     this.setDirections();
   },
 
-  changeCity (slug) {
+  changeCity (slug, easing='ease-in-out') {
     if (!slug || slug === this.activeCity) return false;
 
     var model = this.collection.findWhere({ slug: slug });
@@ -233,12 +234,29 @@ export default Backbone.ContentView.extend({
     }
 
     this.activeCity = slug;
-    this.setPosition(true, () => { if (previousView) previousView.out() });
+    this.setPosition({
+      transition: true,
+      complete: () => { if (previousView) previousView.out() },
+      easing: easing
+    });
     this.setDirections();
   },
 
-  setPosition (transition=true, callback) {
+  /**
+   * @param {Object} [otpions]
+   * @param {Boolean} [options.transition=true]
+   * @param {Number} [options.duration=800]
+   * @param {Function} [options.easing='ease-in-out']
+   * @param {Function} [options.complete]
+   */
+  setPosition (options) {
     if (this.isSliding) return false;
+
+    var params = _.extend({
+      transition: true,
+      duration: 800,
+      easing: 'ease-in-out'
+    }, options);
 
     var position = this.map.getPosition(this.activeCity);
 
@@ -259,11 +277,11 @@ export default Backbone.ContentView.extend({
 
     this.els.$content.velocity('stop')
       .velocity(props, {
-        duration: transition ? 800 : 0,
-        easing: 'ease-out',
+        duration: params.transition ? params.duration : 0,
+        easing: params.easing,
         complete: () => {
           this.isSliding = false;
-          if (callback) callback();
+          if (params.complete) params.complete();
           Backbone.trigger('router:navigate', `/city/${this.activeCity}`);
         }
       });
