@@ -78,7 +78,7 @@ export default Backbone.PageView.extend({
   },
 
   out (done) {
-    this.$win.scrollTop(this.scrollTop);
+    jQuery('html,body').scrollTop(this.scrollTop);
     
     return new Promise((resolve, reject) => {
       setTimeout(done, 400);
