@@ -5,8 +5,7 @@ import Backbone from 'backbone';
 export default Backbone.Router.extend({
   routes: {
     '': 'default',
-    'help': 'help',
-    'locals': 'locals',
+    'welcome': 'welcome',
     'local/:slug': 'local',
     'city': 'city',
     'city/:slug': 'city'
