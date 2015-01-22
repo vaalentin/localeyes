@@ -1,6 +1,9 @@
 'use strict';
 
+import _ from 'underscore';
 import Backbone from 'backbone';
+
+import Loader from '../modules/Loader';
 
 export default Backbone.BetterView.extend({
   className: 'city',
@@ -36,7 +39,7 @@ export default Backbone.BetterView.extend({
       <% if (localSlug) { %>
       <div class="city__content__section city__content__section--button">
         <div class="city__button">
-          <a href="#/local/<%= localSlug %>" class="city__link">
+          <a href="#local/<%= localSlug %>" class="city__link">
             DÉCOUVRIR <% print(local.toUpperCase()); %>
           </a>
           <div class="city__border city__border--top"></div>
@@ -70,6 +73,10 @@ export default Backbone.BetterView.extend({
 
   didInitialize (options) {
     _.extend(this, _.pick(options, 'position'));
+  },
+
+  onLoad () {
+    this.loaded = true;
   },
 
   setPosition () {
@@ -184,5 +191,9 @@ export default Backbone.BetterView.extend({
 
   didRender () {
     this.setPosition();
+
+    this.loaded = false;
+    this.loader = new Loader([ this.model.get('background') ]);
+    this.loader.load().then(this.onLoad.bind(this));
   }
 });
