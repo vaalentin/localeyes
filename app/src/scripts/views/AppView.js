@@ -7,6 +7,8 @@ import AppRouter from '../routers/AppRouter';
 import Store from '../modules/StoreModule';
 
 import CitiesView from '../views/CitiesView';
+import LocalView from '../views/LocalView';
+
 export default Backbone.ContentView.extend({
   content: '.app__content',
   
@@ -40,6 +42,16 @@ export default Backbone.ContentView.extend({
         this.changeContent(this.citiesView);
       }
     });
+
+    this.router.on('route:local', slug => {
+      var localModel = Store.getLocals().findWhere({ slug: slug });
+
+      if (localModel) {
+        var localView = new LocalView({ model: localModel });
+        this.changeContent(localView);
+      }
+    });
+
     Backbone.on('router:navigate', url => this.router.navigate(url));
 
     Backbone.history.start();

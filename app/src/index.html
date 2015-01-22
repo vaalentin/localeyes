@@ -11,11 +11,30 @@
     window.locals = [
       {
         "name": "James",
-        "bio": "The defaults hash (or function) can be used to specify the default attributes for your model."
+        "images": [
+          {
+            "type": 3,
+            "urls": ["./app/public/images/local-type2-02.jpg"]
+          },
+          {
+            "type": 1,
+            "urls": ["./app/public/images/local-type1.jpg"]
+          },
+          {
+            "type": 2,
+            "urls": [
+              "./app/public/images/local-type2-01.jpg",
+              "./app/public/images/local-type2-02.jpg"
+            ]
+          },
+          {
+            "type": 3,
+            "urls": ["./app/public/images/local-type3.jpg"]
+          }
+        ]
       },
       {
-        "name": "Blake",
-        "bio": "When creating an instance of the model, any unspecified attributes will be set to their default value."
+        "name": "Blake"
       },
       {
         "name": "Henry"
@@ -37,7 +56,7 @@
         "north": null,
         "east": null,
         "south": "Paris",
-        "east": null,
+        "west": null,
         "local": "James",
         "icon": [
           {

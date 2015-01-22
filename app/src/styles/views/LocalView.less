@@ -1,10 +1,64 @@
+@import '../mixins/clear';
+@import '../mixins/inlineBlock';
+@import '../mixins/backgroundSize';
+
 .local {
-  position: absolute;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.local__content {
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+// blocks
+.local__block {
+  padding: 0 50px;
+  margin: 50px 0;
+  .clear;
+}
+
+// images
+.local__image {
+  max-width: 100%;
+  position: relative;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
+}
 
-  width: 100%;
-  height: 100%;
+// columns
+.local__column--half {
+  width: 50%;
+}
 
-  background-color: pink;
+.local__column--left {
+  float: left;
+}
+
+.local__column--right {
+  float: right;
+}
+
+.local__column--mask {
+  overflow: hidden;
+  .inline-block;
+}
+
+// columns content
+.local__column--left .local__column__content {
+  margin: 20px 10px 20px 0;
+}
+
+.local__column--right .local__column__content {
+  margin: 20px 0 20px 10px;
+}
+
+// next
+.local__next {
+  height: 150px;
+  .background-size(cover);
 }
