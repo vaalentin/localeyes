@@ -5,7 +5,6 @@ import Backbone from 'backbone';
 export default Backbone.BetterView.extend({
   template: `
     <div class="menu">
-
       <a href="#/locals" class="menu__button menu__button--bottomRight" data-button="locals">
         <div class="menu__icon menu__icon--locals">
           <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
@@ -18,12 +17,12 @@ export default Backbone.BetterView.extend({
         <div class="menu__icon menu__icon--map">
           <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
             <path fill="none"
-              stroke-width="1"
+              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M35.2,30.3L26.4 34.6 14.4 28.4 4.8 33.2 4.8 10.1 14.4 5.4 26.4 11.6 35.2 7.2 z"/>
-            <line stroke-width="1" x1="14.4" y1="5.4" x2="14.4" y2="28.4"/>
-            <line stroke-width="1" x1="26.4" y1="11.6" x2="26.4" y2="34.6"/>
+            <line stroke-width="2" stroke-width="1" x1="14.4" y1="5.4" x2="14.4" y2="28.4"/>
+            <line stroke-width="2" stroke-width="1" x1="26.4" y1="11.6" x2="26.4" y2="34.6"/>
           </svg>
         </div>
       </a>
@@ -49,11 +48,11 @@ export default Backbone.BetterView.extend({
         <div class="menu__icon menu__icon--share">
           <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
             <path fill="none"
-              stroke-width="1"
+              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
               d="M17.2,22.9L3.1 17.2 36.9 3.1 22.8 36.9 z"/>
-            <line stroke-width="1" x1="17.2" y1="22.9" x2="36.9" y2="3.1"/>
+            <line stroke-width="2" x1="17.2" y1="22.9" x2="36.9" y2="3.1"/>
           </svg>
         </div>
       </a>
@@ -66,7 +65,6 @@ export default Backbone.BetterView.extend({
           </svg>
         </div>
       </a>
-      
     </div>
   `,
 
