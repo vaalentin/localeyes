@@ -58,6 +58,8 @@ export default Backbone.ContentView.extend({
     this.hammer.on('panend', this.onPanend.bind(this));
     jQuery(window).on('resisze', this.onResize.bind(this));
 
+    this.dragFactorA;
+    this.dragFactorB;
     this.translateX;
     this.translateY;
     this.width;
@@ -76,9 +78,16 @@ export default Backbone.ContentView.extend({
     if (this.panY) return false;
     this.panX = true;
 
+    if (!this.dragFactorA || !this.dragFactorB) {
+      var directions = this.map.getDirections(this.activeCity);
+      this.dragFactorA = directions.west ? 1 : 0.2;
+      this.dragFactorB = directions.east ? 1 : 0.2;
+    }
+
     if (!this.width || !this.height) this.onResize();
 
-    var dragDistance = (100 / this.width) * e.deltaX;
+    var factor = e.direction === 2 ? this.dragFactorB : this.dragFactorA;
+    var dragDistance = ((100 / this.width) * e.deltaX) * factor;
     var dragged = this.translateX + dragDistance;
 
     this.els.$content.velocity({ translateX: dragged + '%' }, 0);
@@ -88,9 +97,16 @@ export default Backbone.ContentView.extend({
     if (this.panX) return false;
     this.panY = true;
 
+    if (!this.dragFactorA || !this.dragFactorB) {
+      var directions = this.map.getDirections(this.activeCity);
+      this.dragFactorA = directions.north ? 1 : 0.2;
+      this.dragFactorB = directions.south ? 1 : 0.2;
+    }
+
     if (!this.width || !this.height) this.onResize();
 
-    var dragDistance = (100 / this.height) * e.deltaY;
+    var factor = e.direction === 8 ? this.dragFactorB : this.dragFactorA;
+    var dragDistance = ((100 / this.height) * e.deltaY) * factor;
     var dragged = this.translateY + dragDistance;
 
     this.els.$content.velocity({ translateY: dragged + '%' }, 0);
@@ -125,6 +141,7 @@ export default Backbone.ContentView.extend({
 
     this.panX = false;
     this.panY = false;
+    this.dragFactorA = this.dragFactorB = null;
   },
 
   onFrameOver (direction) {
