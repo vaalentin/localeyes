@@ -3,6 +3,21 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
 
+/**
+ * Backbone BetterView
+ *
+ * Improved Backbone view
+ * With auto template, helpers and lifecycle
+ *
+ * Lifecycle:
+ * willInitialize: Right before the view is initialized
+ * didInitialize: Right after the view is initialized
+ * willRender: Right before the view is rendered
+ * willRender: Right after the view is rendered
+ * cache: Right after the view is rendered, cache DOM
+ * willRemove: Right before the view is removed
+ * didRemove: Right after the view is removed
+ */
 Backbone.BetterView = Backbone.View.extend({
   initialize () {
     if (this.willInitialize)
@@ -25,6 +40,13 @@ Backbone.BetterView = Backbone.View.extend({
       this.didRemove.apply(this, arguments);
   },
 
+  /**
+   * Assign a view to el itself or to a specific element
+   *
+   * @method assign
+   * @param {Backbone.View} [view] Single view
+   * @param {String} [selector]
+   */
   assign (view, selector) {
     if (!selector)
       view.setElement(this.$el.render());
@@ -32,6 +54,11 @@ Backbone.BetterView = Backbone.View.extend({
       view.setElement(this.$(selector)).render()
   },
 
+  /**
+   * Unassign the view
+   *
+   * @method unassign
+   */
   unassign () {
     this.$el.empty().off();
     this.stopListening();
@@ -39,6 +66,9 @@ Backbone.BetterView = Backbone.View.extend({
   },
 
   /**
+   * Append one or more views to el itself or to a specific element
+   *
+   * @method append
    * @param {Backbone.View} [views] Single view or array of views
    * @param {String} [selector]
    */
@@ -53,6 +83,9 @@ Backbone.BetterView = Backbone.View.extend({
   },
 
   /**
+   * Prepend a view to el itself or to a specific element
+   *
+   * @method prepend
    * @param {Backbone.View} [views] Single view or array of views
    * @param {String} [selector]
    */

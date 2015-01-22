@@ -42,6 +42,8 @@ export default Backbone.Model.extend({
           map[targetSlug].position = targetPosition;
 
           var targetCity = this.collection.findWhere({ slug: targetSlug });
+          map[targetSlug].directions = {};
+          
           map[targetSlug].directions = {
             north: targetCity.get('northSlug'),
             east: targetCity.get('eastSlug'),
@@ -56,9 +58,11 @@ export default Backbone.Model.extend({
   },
 
   getPosition (slug) {
-    if (this.has(slug)) return this.get(slug).position;
+    if (this.has(slug))
+      return this.get(slug).position;
   },
   getDirections (slug) {
-    if (this.has(slug)) return this.get(slug).directions
+    if (this.has(slug))
+      return this.get(slug).directions
   }
 });
