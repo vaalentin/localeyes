@@ -3,6 +3,7 @@
 import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
+import skrollr from 'skrollr';
 
 import Store from '../modules/StoreModule';
 import Loader from '../modules/Loader';
@@ -68,6 +69,8 @@ export default Backbone.PageView.extend({
 
   willRemove () {
     this.$win.off('scroll', this.onScroll);
+    skrollr.init().destroy();
+  },
 
   in () {
     if (!this.loaded) return false;
@@ -90,6 +93,9 @@ export default Backbone.PageView.extend({
 
   onLoad () {
     this.loaded = true;
+    _.defer(() => {
+      this.skrollr = skrollr.init({ forceHeight: false });
+    });
     this.in();
   },
 
