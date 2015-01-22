@@ -76,6 +76,11 @@ export default Backbone.BetterView.extend({
     'mouseleave .menu__button--bottomLeft': 'onShareOut'
   },
 
+  els: {
+    '$expandable': '.menu__expandable',
+    '$icon': '.menu__icon--share'
+  },
+
   didInitialize () {
     this.expandableHeight;
     this.iconHeight;
@@ -87,31 +92,25 @@ export default Backbone.BetterView.extend({
   },
 
   onShareOver (e) {
-    var $el = jQuery(e.currentTarget);
-    var $expandable = $el.find('.menu__expandable');
-    var $icon = $el.find('.menu__icon--share');
-    
-    if (!this.shareExplandableHeight) {
-      this.shareExplandableHeight = $expandable.css('height', 'auto').height();
-      $expandable.css('height', 0);
-    }
+    if (!this.expandableHeight)
+      this.expandableHeight = this.els.$expandable.css('height', 'auto').height();
+      this.els.$expandable.css('height', 0);
 
-    if (!this.shareIconHeight) this.shareIconHeight = $icon.outerHeight();
+    if (!this.iconHeight)
+      this.iconHeight = this.els.$icon.outerHeight();
     
-    $expandable.velocity('stop')
-      .velocity({ height: this.shareExplandableHeight }, 300);
+    this.els.$expandable.velocity('stop')
+      .velocity({ height: this.expandableHeight }, 300);
 
-    $icon.velocity('stop')
-      .velocity({ marginBottom: -this.shareIconHeight }, 400);
+    this.els.$icon.velocity('stop')
+      .velocity({ marginBottom: -this.iconHeight }, 400);
   },
 
   onShareOut (e) {
-    var $el = jQuery(e.currentTarget);
-    var $expandable = $el.find('.menu__expandable');
-    $expandable.velocity('stop')
+    this.els.$expandable.velocity('stop')
       .velocity({ height: 0 }, 300);
 
-    $el.find('.menu__icon--share').velocity('stop')
+    this.els.$icon.velocity('stop')
       .velocity({ marginBottom: 0 }, 400);
   },
 

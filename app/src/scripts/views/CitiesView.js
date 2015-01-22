@@ -27,7 +27,10 @@ export default Backbone.ContentView.extend({
     <div class="cities__content"></div>
   `,
 
-  onInitialize (options) {
+  els: {
+    '$content': '.cities__content'
+  },
+
   didInitialize (options) {
     _.extend(this, _.pick(options, 'activeCity'));
     
@@ -78,7 +81,7 @@ export default Backbone.ContentView.extend({
     var dragDistance = (100 / this.width) * e.deltaX;
     var dragged = this.translateX + dragDistance;
 
-    this.$('.cities__content').velocity({ translateX: dragged + '%' }, 0);
+    this.els.$content.velocity({ translateX: dragged + '%' }, 0);
   },
 
   onPanVertical (e) {
@@ -90,7 +93,7 @@ export default Backbone.ContentView.extend({
     var dragDistance = (100 / this.height) * e.deltaY;
     var dragged = this.translateY + dragDistance;
 
-    this.$('.cities__content').velocity({ translateY: dragged + '%' }, 0);
+    this.els.$content.velocity({ translateY: dragged + '%' }, 0);
   },
 
   onPanend (e) {
@@ -144,7 +147,7 @@ export default Backbone.ContentView.extend({
 
     if (props) {
       this.isOpen = true;
-      this.$('.cities__content').velocity('stop').velocity(props, { duration: 400 });
+      this.els.$content.velocity('stop').velocity(props, { duration: 400 });
     }
   },
 
@@ -158,7 +161,7 @@ export default Backbone.ContentView.extend({
       translateY: `${-1 * (position.top * 100)}%`
     };
 
-    this.$('.cities__content').velocity('stop').velocity(props, { duration: 400 });
+    this.els.$content.velocity('stop').velocity(props, { duration: 400 });
   },
 
   onKeydown (e) {
@@ -237,7 +240,7 @@ export default Backbone.ContentView.extend({
 
     this.isSliding = true;
 
-    this.$('.cities__content').velocity('stop')
+    this.els.$content.velocity('stop')
       .velocity(props, {
         duration: transition ? 800 : 0,
         easing: 'ease-out',

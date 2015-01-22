@@ -53,6 +53,21 @@ export default Backbone.BetterView.extend({
     <% } %>
   `,
 
+  els: {
+    '$squareTopLeft': '.city__square--topLeft',
+    '$squareTopRight': '.city__square--topRight',
+    '$squareBottomLeft': '.city__square--bottomLeft',
+    '$squareBottomRight': '.city__square--bottomRight',
+    '$name': '.city__name',
+    '$country': '.city__country',
+    '$icon': '.city__icon',
+    '$button': '.city__button',
+    '$bordersTopBottom': '.city__border--top, .city__border--bottom',
+    '$bordersLeftRight': '.city__border--left, .city__border--right',
+    '$background': '.city__background',
+    '$svgs': 'svg'
+  },
+
   didInitialize (options) {
     _.extend(this, _.pick(options, 'position'));
   },
@@ -67,44 +82,44 @@ export default Backbone.BetterView.extend({
   in () {
     this.$el.css('z-index', 2);
 
-    this.$squareTopLeft.velocity('stop')
+    this.els.$squareTopLeft.velocity('stop')
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
-    this.$squareTopRight.velocity('stop')
+    this.els.$squareTopRight.velocity('stop')
       .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
-    this.$squareBottomLeft.velocity('stop')
+    this.els.$squareBottomLeft.velocity('stop')
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
 
-    this.$squareBottomRight.velocity('stop')
+    this.els.$squareBottomRight.velocity('stop')
       .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
 
-    this.$name.velocity('stop')
+    this.els.$name.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1100 });
 
-    this.$country.velocity('stop')
+    this.els.$country.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1200 });
 
-    this.$icon.velocity('stop')
+    this.els.$icon.velocity('stop')
       .velocity({ top: -90, opacity: 1 }, { duration: 1500, delay: 500 });
 
-    this.$button.velocity('stop')
+    this.els.$button.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1400 });
 
-    this.$bordersTopBottom.velocity('stop')
+    this.els.$bordersTopBottom.velocity('stop')
       .velocity({ width: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
 
-    this.$bordersLeftRight.velocity('stop')
+    this.els.$bordersLeftRight.velocity('stop')
       .velocity({ height: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
 
-    this.$background.velocity('stop')
+    this.els.$background.velocity('stop')
       .velocity({ scale: 1.2 }, 0).velocity({ scale: 1 }, 2500);
 
-    this.$svgs.each(function () {
+    this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
         var $path = jQuery(this);
         var data = $path.attr('data-length');
@@ -131,18 +146,19 @@ export default Backbone.BetterView.extend({
 
   out () {
     this.$el.css('z-index', 1);
-    this.$squareTopLeft.velocity('stop').css({ top: '50%', left: '50%', opacity: 0 });
-    this.$squareTopRight.velocity('stop').css({ top: '50%', right: '50%', opacity: 0 });
-    this.$squareBottomLeft.velocity('stop').css({ bottom: '50%', left: '50%', opacity: 0 })
-    this.$squareBottomRight.velocity('stop').css({ bottom: '50%', right: '50%', opacity: 0 })
-    this.$name.velocity('stop').css({ opacity: 0, top: -90 })
-    this.$country.velocity('stop').css({ opacity: 0, top: 50 })
-    this.$icon.velocity('stop').css({ top: -150, opacity: 0 })
-    this.$button.velocity('stop').css({ opacity: 0, top: 50 })
-    this.$bordersTopBottom.velocity('stop').css('width', 0)
-    this.$bordersLeftRight.velocity('stop').css('height', 0)
-    this.$background.velocity('stop').velocity({ scale: 1.2 }, 0);
-    this.$svgs.each(function () {
+    
+    this.els.$squareTopLeft.velocity('stop').css({ top: '50%', left: '50%', opacity: 0 });
+    this.els.$squareTopRight.velocity('stop').css({ top: '50%', right: '50%', opacity: 0 });
+    this.els.$squareBottomLeft.velocity('stop').css({ bottom: '50%', left: '50%', opacity: 0 })
+    this.els.$squareBottomRight.velocity('stop').css({ bottom: '50%', right: '50%', opacity: 0 })
+    this.els.$name.velocity('stop').css({ opacity: 0, top: -90 })
+    this.els.$country.velocity('stop').css({ opacity: 0, top: 50 })
+    this.els.$icon.velocity('stop').css({ top: -150, opacity: 0 })
+    this.els.$button.velocity('stop').css({ opacity: 0, top: 50 })
+    this.els.$bordersTopBottom.velocity('stop').css('width', 0)
+    this.els.$bordersLeftRight.velocity('stop').css('height', 0)
+    this.els.$background.velocity('stop').velocity({ scale: 1.2 }, 0);
+    this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
         var $path = jQuery(this);
         var data = $path.attr('data-length');
@@ -168,19 +184,5 @@ export default Backbone.BetterView.extend({
 
   didRender () {
     this.setPosition();
-
-    this.$squareTopLeft = this.$('.city__square--topLeft');
-    this.$squareTopRight = this.$('.city__square--topRight');
-    this.$squareBottomLeft = this.$('.city__square--bottomLeft');
-    this.$squareBottomRight = this.$('.city__square--bottomRight');
-    this.$name = this.$('.city__name');
-    this.$country = this.$('.city__country');
-    this.$icon = this.$('.city__icon');
-    this.$button = this.$('.city__button');
-    this.$bordersTopBottom = this.$('.city__border--top, .city__border--bottom');
-    this.$bordersLeftRight = this.$('.city__border--left, .city__border--right');
-    this.$background = this.$('.city__background');
-    this.$svgs = this.$('svg');
-    return this;
   }
 });

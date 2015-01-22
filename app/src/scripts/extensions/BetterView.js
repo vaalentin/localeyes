@@ -74,6 +74,18 @@ Backbone.BetterView = Backbone.View.extend({
       this.$el.html(this.template(this.model.toJSON()));
     else
       this.$el.html(this.template());
+
+    // cache DOM elements
+    if (this.els) {
+      var cache = {};
+      for (var name in this.els) {
+        if (this.els.hasOwnProperty(name)) {
+          cache[name] = this.$(this.els[name]);
+        }
+      }
+      this.els = cache;
+    }
+    
     if (this.didRender)
       this.didRender.apply(this, arguments);
 
