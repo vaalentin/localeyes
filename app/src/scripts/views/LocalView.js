@@ -5,6 +5,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 
 import Store from '../modules/StoreModule';
+import Loader from '../modules/Loader';
 
 export default Backbone.PageView.extend({
   className: 'local',
@@ -67,6 +68,10 @@ export default Backbone.PageView.extend({
 
   willRemove () {
     this.$win.off('scroll', this.onScroll);
+
+  in () {
+    if (!this.loaded) return false;
+    Backbone.PageView.prototype.in.call(this);
   },
 
   out (done) {
@@ -82,6 +87,12 @@ export default Backbone.PageView.extend({
   onScroll (e) {
     this.scrollTop = this.$win.scrollTop();
   },
+
+  onLoad () {
+    this.loaded = true;
+    this.in();
+  },
+
   renderBlocks () {
     var string = '';
 
@@ -95,6 +106,18 @@ export default Backbone.PageView.extend({
   render () {
     this.$el.html(this.template({ cityBackground: this.city.get('background')}));
     this.$('.local__content').html(this.renderBlocks());
+    this.didRender();
     return this;
+  },
+
+  didRender () {
+    var images = [];
+    this.model.get('images').forEach(image => {
+      image.urls.forEach(url => images.push(url));
+    });
+
+    this.loaded = false;
+    this.loader = new Loader(images);
+    this.loader.load().then(this.onLoad.bind(this));
   },
 });
