@@ -42,6 +42,7 @@ export default Backbone.ContentView.extend({
       return new CityView({ model: city, position: this.map.getPosition(city.get('slug')) });
     });
 
+    this.listenTo(this.menu, 'click', this.onMenuClick);
     this.listenTo(this.frame, 'mouseover', this.onFrameOver);
     this.listenTo(this.frame, 'mouseout', this.onFrameOut);
     jQuery(document).on('keydown', this.onKeydown.bind(this));
@@ -74,6 +75,11 @@ export default Backbone.ContentView.extend({
     jQuery(window).off('resize', this.onResize);
     this.hammer.destroy();
   },
+
+  onMenuClick (e) {
+    console.log(e);
+  },
+
   onPanHorizontal (e) {
     if (this.panY) return false;
     this.panX = true;
@@ -267,6 +273,16 @@ export default Backbone.ContentView.extend({
 
     this.translateX = -1 * (position.left * 100);
     this.translateY = -1 * (position.top * 100);
+
+    // sequenced?
+    /**
+    if ((previousTranslateX && previousTranslateY)
+      && previousTranslateX !== this.translateX && previousTranslateY !== this.translateY) {
+      console.log('sequence');
+    } else {
+      console.log('no sequence');
+    }
+    */
 
     var props = {
       translateX: this.translateX + '%',
