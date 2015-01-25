@@ -8,6 +8,19 @@
 </head>
 <body>
   <script type="text/javascript">
+    (function () {
+      /* jshint strict: false */
+      /* jshint laxbreak: true */
+      /* jshint curly: false */
+
+      function svg () {
+        return !!document.createElementNS
+          && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+      }
+
+      if (!svg()) document.documentElement.className += 'no-svg';
+    })();
+  </script>
     window.locals = [
       {
         "name": "James",
