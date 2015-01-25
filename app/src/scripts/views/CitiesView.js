@@ -5,12 +5,16 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Hammer from 'hammer';
 
+import Store from '../modules/StoreModule';
+
 import MapModel from '../models/MapModel';
 import FrameModel from '../models/FrameModel';
 
 import CityView from './CityView';
 import MenuView from './MenuView';
 import FrameView from './FrameView';
+import InfosView from './InfosView';
+import MapView from './MapView';
 
 export default Backbone.ContentView.extend({
   name: 'cities',
@@ -20,9 +24,7 @@ export default Backbone.ContentView.extend({
   content: '.cities__overlay',
 
   template: `
-    <div class="cities__outerOverlay">
-      <div class="cities__overlay"></div>
-    </div>
+    <div class="cities__overlay"></div>
     <div class="cities__frame"></div>
     <div class="cities__menu"></div>
     <div class="cities__content"></div>
@@ -77,8 +79,25 @@ export default Backbone.ContentView.extend({
     this.hammer.destroy();
   },
 
-  onMenuClick (e) {
-    console.log(e);
+  onMenuClick (name) {
+    var view;
+
+    if (name === 'infos') {
+      view = new InfosView();
+    }
+    else if (name === 'map') {
+      view = new MapView({ collection: Store.getCities() });
+      this.listenTo(view, 'marker:click', this.changeCity);
+    }
+
+    if (!view) return false;
+
+    this.disable();
+    this.changeContent(view);
+    this.listenTo(view, 'close', () => {
+      this.enable();
+      this.removeContent();
+    });
   },
 
   onPanHorizontal (e) {
@@ -215,6 +234,26 @@ export default Backbone.ContentView.extend({
   onResize (e) {
     this.width = this.$el.width();
     this.height = this.$el.height();
+  },
+
+  disable () {
+    this.els.$content.velocity({ opacity: 0.5 }, 1000);
+    this.frame.disable();
+    
+    // touch screen
+    this.hammer.off('panleft panright', this.onPanHorizontal);
+    this.hammer.off('panup pandown', this.onPanVertical);
+    this.hammer.off('panend', this.onPanend);
+  },
+
+  enable () {
+    this.els.$content.velocity({ opacity: 1 }, 1000);
+    this.frame.enable();
+
+    // touch screen
+    this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
+    this.hammer.on('panup pandown', this.onPanVertical.bind(this));
+    this.hammer.on('panend', this.onPanend.bind(this));
   },
 
   setCity () {

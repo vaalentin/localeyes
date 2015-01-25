@@ -135,7 +135,7 @@
 .frame__arrow__container {
   position: relative;
 
-  .transition(top .5s, right .5s, bottom .5s, left .5s);
+  .transition(top .6s, right .6s, bottom .6s, left .6s);
 }
 
 .frame__arrow__container--top {
@@ -180,7 +180,7 @@
   position: relative;
   z-index: 2;
 
-  .transition(opacity .5s);
+  .transition(opacity .8s);
 }
 
 .frame__text--horizontal {
@@ -208,4 +208,14 @@
 // letter
 .frame__letter--vertical {
   display: block;
+}
+
+@media @phone {
+  .frame__bar--left, .frame__bar--right {
+    width: 25px;
+  }
+
+  .frame__bar--top, .frame__bar--bottom {
+    height: 25px;
+  }
 }

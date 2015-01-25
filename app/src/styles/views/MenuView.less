@@ -1,12 +1,14 @@
 // buttons
 .menu__button {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
 
   border: 1px solid #fff;
 
   display: block;
   overflow: hidden;
+
+  cursor: pointer;
 }
 
 .menu__button--topLeft {
@@ -87,4 +89,26 @@
 .menu__expandable {
   height: 0;
   overflow: hidden;
+}
+
+@media @phone {
+  .menu__button--topLeft {
+    top: 40px;
+    left: 40px;
+  }
+
+  .menu__button--topRight {
+    top: 40px;
+    right: 40px;
+  }
+
+  .menu__button--bottomLeft {
+    bottom: 40px;
+    left: 40px;
+  }
+
+  .menu__button--bottomRight {
+    right: 40px;
+    bottom: 40px;
+  }
 }

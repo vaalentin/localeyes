@@ -108,6 +108,25 @@ export default Backbone.BetterView.extend({
     this.model.set(directions);
   },
 
+  disable () {
+    if (this.previousValues) return false;
+
+    this.previousValues = this.model.toJSON();
+    this.model.set({
+      north: undefined,
+      east: undefined,
+      south: undefined,
+      west: undefined
+    });
+  },
+
+  enable () {
+    if (!this.previousValues) return false;
+    
+    this.model.set(this.previousValues);
+    this.previousValues = null;
+  },
+
   in () {
     this.$('.frame__bar--top').css('top', -40)
       .velocity({ top: 0 }, { duration: 800 });

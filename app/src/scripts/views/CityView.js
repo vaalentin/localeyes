@@ -41,7 +41,7 @@ export default Backbone.BetterView.extend({
       <div class="city__content__section city__content__section--button">
         <div class="city__button">
           <a href="#local/<%= localSlug %>" class="city__link">
-            DÉCOUVRIR <% print(local.toUpperCase()); %>
+            DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>
           </a>
           <div class="city__border city__border--top"></div>
           <div class="city__border city__border--left"></div>
