@@ -6,25 +6,18 @@ import AppRouter from '../routers/AppRouter';
 
 import Store from '../modules/StoreModule';
 
+import LoaderView from '../views/LoaderView';
 import CitiesView from '../views/CitiesView';
 import LocalView from '../views/LocalView';
 
 export default Backbone.ContentView.extend({
   content: '.app__content',
-  
-  template: `
-    <div class="app">
-      <div class="app__content"></div>
-    </div>
-  `,
 
   didInitialize () {
-    this.render();
-  },
-
-  didRender () {
     this.router = new AppRouter();
-    this.citiesView;
+    this.citiesView = null;
+
+    new LoaderView({ el: '.loader' });
 
     this.router.on('route:default', () => {
       this.router.navigate('/welcome', { trigger: true });

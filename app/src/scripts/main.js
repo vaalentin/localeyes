@@ -8,4 +8,4 @@ import './extensions/ContentView';
 
 import AppView from './views/AppView';
 
-jQuery(() => new AppView({ el: 'body' }));
+jQuery(() => new AppView({ el: '.app' }));

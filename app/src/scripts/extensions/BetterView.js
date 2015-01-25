@@ -23,7 +23,9 @@ Backbone.BetterView = Backbone.View.extend({
     if (this.willInitialize)
       this.willInitialize.apply(this.arguments);
 
-    this.template = _.template(this.template);
+    if (this.template)
+      this.template = _.template(this.template);
+    
     Backbone.View.prototype.initialize.apply(this, arguments);
 
     if (this.didInitialize)
@@ -103,10 +105,12 @@ Backbone.BetterView = Backbone.View.extend({
     if (this.willRender)
       this.willRender.apply(this, arguments);
 
-    if (this.model)
-      this.$el.html(this.template(this.model.toJSON()));
-    else
-      this.$el.html(this.template());
+    if (this.template) {
+      if (this.model)
+        this.$el.html(this.template(this.model.toJSON()));
+      else
+        this.$el.html(this.template());
+    }
 
     // cache DOM elements
     if (this.els) {
