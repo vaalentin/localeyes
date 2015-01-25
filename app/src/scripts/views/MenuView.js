@@ -1,11 +1,12 @@
 'use strict';
 
+import jQuery from 'jquery';
 import Backbone from 'backbone';
 
 export default Backbone.BetterView.extend({
   template: `
     <div class="menu">
-      <a href="#/locals" class="menu__button menu__button--bottomRight" data-button="locals">
+      <a class="menu__button menu__button--bottomRight" data-button="locals">
         <div class="menu__icon menu__icon--locals">
           <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
             <path d="M35.9,32C34.5,28.2,32,27.3,30,27c-1.7-0.3-3.7-0.9-4.4-1.3c0-0.3,0-1,0-2.1c0,0,0.1-0.1,0.1-0.1l0,0c1-1.3,1.4-2.5,1.7-3.4  c0.6-0.4,1.3-1.3,1.7-3c0.2-1,0.4-2.2-0.3-3.1c0,0,0,0,0-0.1c0.6-6.2-3.3-9.3-5.6-10.1l0,0l0,0c-0.9-0.3-1.7-0.4-2.5-0.4  c-0.2,0-0.4,0-0.5,0c-0.2,0-0.3,0-0.5,0c-0.8,0-1.6,0.1-2.5,0.4l0,0l0,0c-2.3,0.8-6.3,3.9-5.6,10.1c0,0,0,0,0,0.1  c-0.7,0.9-0.5,2.1-0.3,3.1c0.4,1.7,1.1,2.5,1.7,3c0.2,0.8,0.7,2,1.6,3.3v0c0,0,0,0,0,0c0.1,0.1,0.1,0.1,0.2,0.2  c0.1,1.1,0.1,1.7,0,2.1c-0.7,0.4-2.8,1-4.4,1.3c-2,0.4-4.4,1.2-5.9,5.1c-0.2,0.7-0.2,1.4,0.2,1.9c1.5,2.2,9.4,2.6,15.7,2.6  s14.2-0.5,15.7-2.6C36.1,33.4,36.2,32.7,35.9,32z M14,18.9c-0.2,0-1-0.1-1.5-2.2c-0.4-1.6,0-1.9,0.3-1.9c0.1,0,0.2,0.1,0.2,0.1  c-1.4-7.5,4.4-9.5,4.4-9.5c0.8-0.2,1.5-0.3,2-0.3c0.2,0,0.4,0,0.5,0c0.2,0,0.3,0,0.5,0c0.6,0,1.2,0.1,2,0.3c0,0,5.8,2,4.4,9.5  c0,0,0.1-0.1,0.2-0.1c0.3,0,0.7,0.3,0.3,1.9c-0.5,2.1-1.3,2.2-1.5,2.2c0,0,0,0,0,0s-0.1,2-1.9,4.1c0,0,0,0,0,0.1  c-1.4,1.4-2.8,2.1-4.3,2.1c-1.8-0.1-3.2-1.3-3.9-2c0,0,0,0,0,0C14.1,20.9,14,18.9,14,18.9C14,18.9,14,18.9,14,18.9z M20,35  c-7.5,0-15-0.8-14.4-2.4c1.2-3.2,3.1-3.8,4.7-4.1c1.5-0.3,5.3-1.2,5.6-2.1c0.1-0.3,0.1-0.8,0.1-1.3c0.9,0.7,2.2,1.4,3.7,1.4  c0.1,0,0.2,0,0.2,0c1.4,0,2.7-0.5,4-1.5c0,0.6,0,1.1,0.1,1.4c0.3,0.9,4.1,1.8,5.6,2.1c1.5,0.3,3.5,0.9,4.7,4.1  C35,34.2,27.5,35,20,35z"/>
@@ -13,7 +14,7 @@ export default Backbone.BetterView.extend({
         </div>
       </a>
 
-      <a href="#/city/paris" class="menu__button menu__button--topRight" data-button="map">
+      <a class="menu__button menu__button--topRight" data-button="map">
         <div class="menu__icon menu__icon--map">
           <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
             <path fill="none"
@@ -27,7 +28,7 @@ export default Backbone.BetterView.extend({
         </div>
       </a>
 
-      <a href="#" class="menu__button menu__button--bottomLeft" data-button="share">
+      <a class="menu__button menu__button--bottomLeft" data-button="share">
         <div class="menu__expandable">
           <div class="menu__icon menu__icon--pinterest">
             <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
@@ -57,7 +58,7 @@ export default Backbone.BetterView.extend({
         </div>
       </a>
 
-      <a href="#/infos" class="menu__button menu__button--topLeft" data-button="infos">
+      <a class="menu__button menu__button--topLeft" data-button="infos">
         <div class="menu__icon menu__icon--infos">
           <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
             <rect x="18.5" y="16.1" width="3" height="15.2"/>
@@ -80,8 +81,8 @@ export default Backbone.BetterView.extend({
   },
 
   didInitialize () {
-    this.expandableHeight;
-    this.iconHeight;
+    this.expandableHeight = null;
+    this.iconHeight = null;
   },
 
   onClick (e) {
@@ -90,9 +91,10 @@ export default Backbone.BetterView.extend({
   },
 
   onShareOver (e) {
-    if (!this.expandableHeight)
+    if (!this.expandableHeight) {
       this.expandableHeight = this.els.$expandable.css('height', 'auto').height();
       this.els.$expandable.css('height', 0);
+    }
 
     if (!this.iconHeight)
       this.iconHeight = this.els.$icon.outerHeight();

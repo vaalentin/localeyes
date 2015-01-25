@@ -1,5 +1,6 @@
 'use strict';
 
+import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 import Hammer from 'hammer';
@@ -59,12 +60,12 @@ export default Backbone.ContentView.extend({
     this.hammer.on('panend', this.onPanend.bind(this));
     jQuery(window).on('resisze', this.onResize.bind(this));
 
-    this.dragFactorA;
-    this.dragFactorB;
-    this.translateX;
-    this.translateY;
-    this.width;
-    this.height;
+    this.dragFactorA = null;
+    this.dragFactorB = null;
+    this.translateX = null;
+    this.translateY = null;
+    this.width = null;
+    this.height = null;
     this.panY = false;
     this.panX = false;
   },

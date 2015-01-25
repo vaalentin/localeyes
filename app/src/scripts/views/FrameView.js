@@ -1,5 +1,6 @@
 'use strict';
 
+import jQuery from 'jquery';
 import Backbone from 'backbone';
 
 export default Backbone.BetterView.extend({
@@ -119,6 +120,5 @@ export default Backbone.BetterView.extend({
 
     this.$('.frame__bar--right').css('right', -40)
       .velocity({ right: 0 }, { duration: 800 });
-
   }
 });

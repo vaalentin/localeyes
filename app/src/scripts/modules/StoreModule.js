@@ -14,10 +14,10 @@ export default {
   cities: new CitiesCollection(window.cities),
 
   getLocals () {
-    return this.locals
+    return this.locals;
   },
 
   getCities () {
-    return this.cities
+    return this.cities;
   }
-}
+};

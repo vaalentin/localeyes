@@ -1,5 +1,6 @@
 'use strict';
 
+import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 
@@ -156,14 +157,14 @@ export default Backbone.BetterView.extend({
     
     this.els.$squareTopLeft.velocity('stop').css({ top: '50%', left: '50%', opacity: 0 });
     this.els.$squareTopRight.velocity('stop').css({ top: '50%', right: '50%', opacity: 0 });
-    this.els.$squareBottomLeft.velocity('stop').css({ bottom: '50%', left: '50%', opacity: 0 })
-    this.els.$squareBottomRight.velocity('stop').css({ bottom: '50%', right: '50%', opacity: 0 })
-    this.els.$name.velocity('stop').css({ opacity: 0, top: -90 })
-    this.els.$country.velocity('stop').css({ opacity: 0, top: 50 })
-    this.els.$icon.velocity('stop').css({ top: -150, opacity: 0 })
-    this.els.$button.velocity('stop').css({ opacity: 0, top: 50 })
-    this.els.$bordersTopBottom.velocity('stop').css('width', 0)
-    this.els.$bordersLeftRight.velocity('stop').css('height', 0)
+    this.els.$squareBottomLeft.velocity('stop').css({ bottom: '50%', left: '50%', opacity: 0 });
+    this.els.$squareBottomRight.velocity('stop').css({ bottom: '50%', right: '50%', opacity: 0 });
+    this.els.$name.velocity('stop').css({ opacity: 0, top: -90 });
+    this.els.$country.velocity('stop').css({ opacity: 0, top: 50 });
+    this.els.$icon.velocity('stop').css({ top: -150, opacity: 0 });
+    this.els.$button.velocity('stop').css({ opacity: 0, top: 50 });
+    this.els.$bordersTopBottom.velocity('stop').css('width', 0);
+    this.els.$bordersLeftRight.velocity('stop').css('height', 0);
     this.els.$background.velocity('stop').velocity({ scale: 1.2 }, 0);
     this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
