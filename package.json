@@ -27,7 +27,10 @@
     "hammer": "./node_modules/hammerjs/hammer.js",
     "polyfills": "./node_modules/6to5/browser-polyfill.js",
     "jquery.velocity": "./node_modules/velocity-animate/velocity.js",
-    "skrollr": "./node_modules/skrollr/src/skrollr.js"
+    "skrollr": "./node_modules/skrollr/src/skrollr.js",
+    "videojs": "./node_modules/video.js/dist/video-js/video.js",
+    "videojs.youtube": "./node_modules/videojs-youtube/dist/vjs.youtube.js",
+    "videojs.background": "./node_modules/videojs-background/lib/videojs-Background.js"
   },
   "browserify-shim": {
     "jquery": {
@@ -45,15 +48,27 @@
       ]
     },
     "hammer": "global:Hammer",
-    "skrollr": "global:skrollr"
+    "skrollr": "global:skrollr",
+    "videojs": {
+      "exports": "global:videojs",
+      "depends": [
+        "videojs.youtube",
+        "videojs.background"
+      ]
+    }
   },
   "dependencies": {
     "backbone": "^1.1.2",
     "hammerjs": "^2.0.4",
+    "install": "^0.1.8",
     "jquery": "^2.1.3",
     "normalize.less": "^1.0.0",
+    "npm": "^2.2.0",
     "skrollr": "^0.6.26",
     "underscore": "^1.7.0",
-    "velocity-animate": "^1.1.0"
+    "velocity-animate": "^1.1.0",
+    "video.js": "^4.11.4",
+    "videojs-background": "git+https://github.com/matthojo/videojs-Background#77d612a007b8d5005bd134c56f7bc4852f802531",
+    "videojs-youtube": "^1.2.8"
   }
 }

@@ -15,6 +15,12 @@
       /* jshint laxbreak: true */
       /* jshint curly: false */
 
+      // video shims
+      document.createElement('video');
+      document.createElement('audio');
+      document.createElement('track');
+
+      // features
       function svg () {
         return !!document.createElementNS
           && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
@@ -23,6 +29,18 @@
       if (!svg()) document.documentElement.className += 'no-svg';
     })();
   </script>
+
+  <video id="bg-video" class="video-js vjs-default-skin"
+    style="position:absolute;top:0;left:0;overflow:hidden;z-index:-998;"
+    height="100%"
+    width="100%"
+    poster="http://video-js.zencoder.com/oceans-clip.png"
+    data-setup='{ "techOrder": ["youtube"], "src": "http://www.youtube.com/watch?v=xjS6SftYQaQ" }'
+    loop>
+    <p>
+      Your browser doesn't support video. Please <a href="http://browsehappy.com/">upgrade your browser</a> to see the example.
+    </p>
+  </video>
 
   <div class="loader"></div>
   <div class="app">
