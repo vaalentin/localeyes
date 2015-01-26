@@ -3,9 +3,8 @@
 import Backbone from 'backbone';
 
 export default Backbone.PageView.extend({
-  className: 'help',
-
   name: 'help',
+  className: 'help',
 
   template: `
     <h1> Help </h1>

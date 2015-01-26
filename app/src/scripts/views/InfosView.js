@@ -33,5 +33,20 @@ export default Backbone.PageView.extend({
 
   onCloseClick (e) {
     this.trigger('close');
+  },
+
+  in () {
+    this.$el.velocity({ translateY: 200, opacity: 0 }, 0)
+      .velocity({ translateY: 0, opacity: 1 }, 500);
+  },
+
+  out (done) {
+    setTimeout(done, 200);
+    return new Promise((resolve, reject) => {
+      this.$el.velocity({ translateY: -200, opacity: 0 }, {
+        duration: 500,
+        complete: resolve
+      });
+    });
   }
 });

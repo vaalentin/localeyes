@@ -2,7 +2,6 @@
 
 import jQuery from 'jquery';
 import Backbone from 'backbone';
-
 export default Backbone.PageView.extend({
   name: 'map',
   className: 'map',
@@ -11,6 +10,7 @@ export default Backbone.PageView.extend({
     <div class="map__wrapper">
       <div class="map__dummy"></div>
       <div class="map__container">
+        <div class="map__centerer"></div>
         <div class="map__content">
           <a class="map__icon map__icon--close">
             <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -26,6 +26,10 @@ export default Backbone.PageView.extend({
 
   events: {
     'click .map__icon--close': 'onCloseClick'
+  },
+
+  didInitialize (options) {
+    _.extend(this, _.pick(options, 'activeCity'));
   },
 
   onCloseClick (e) {
@@ -97,6 +101,8 @@ export default Backbone.PageView.extend({
       var country = city.get('country');
       var slug = city.get('slug');
 
+      var animation = slug === this.activeCity ? google.maps.Animation.BOUNCE : google.maps.Animation.DROP;
+
       geocoder.geocode({ 'address': `${name}, ${country}` }, (results, status) => {
         var coords = results[0].geometry.location;
 
@@ -110,7 +116,7 @@ export default Backbone.PageView.extend({
             position: coords,
             map: map,
             title: name,
-            animation: google.maps.Animation.DROP,
+            animation: animation,
             icon: icon
           });
 
@@ -119,6 +125,21 @@ export default Backbone.PageView.extend({
           });
         }, i * 300);
       });
+    });
+  },
+
+  in () {
+    this.$el.velocity({ translateY: 200, opacity: 0 }, 0)
+      .velocity({ translateY: 0, opacity: 1 }, 500);
+  },
+
+  out (done) {
+    setTimeout(done, 200);
+    return new Promise((resolve, reject) => {
+      this.$el.velocity({ translateY: -200, opacity: 0 }, {
+        duration: 500,
+        complete: resolve
+      })
     });
   }
 });

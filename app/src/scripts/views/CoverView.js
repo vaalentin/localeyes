@@ -25,10 +25,6 @@ export default Backbone.BetterView.extend({
     'mouseout': 'onMouseout'
   },
 
-  didInitialize (options) {
-    _.extend(this, _.pick(options, 'type'));
-  },
-
   onMouseover () {
     this.$('.cover__overlay').velocity('stop').velocity({ opacity: 0.6 }, 400);
     this.$('.cover__background').velocity('stop').velocity({ scale: 1.1 }, 400);
@@ -45,19 +41,13 @@ export default Backbone.BetterView.extend({
 
   in (delay) {
     return new Promise((resolve, reject) => {
-      var z = this.type === 1 || this.type === 3 ? -300 : 300;
-
-      this.$el.velocity({ translateZ: z, opacity: 0 }, 0)
-        .velocity({ translateZ: 1, opacity: 1 }, {
-          duration: 800,
+      this.$el.velocity({ rotateX: 90, opacity: 0 }, 0)
+        .velocity({ rotateX: 0, opacity: 1 }, {
+          duration: 500,
           delay: delay || 0,
           complete: resolve,
           easing: 'ease-out'
         });
     });
-  },
-
-  didRender () {
-    this.$el.addClass(`cover cover--type${this.type}`);
   }
 });

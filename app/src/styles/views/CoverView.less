@@ -13,11 +13,11 @@
 }
 
 .cover:first-child {
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .cover:last-child {
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 // link
@@ -38,6 +38,7 @@
 // text
 .cover__title {
   font-family: 'localeyes', 'sans-serif';
+  line-height: 1;
 
   position: relative;
 
@@ -47,12 +48,12 @@
 .cover__name {
   font-size: 104px;
   font-weight: lighter;
+  line-height: 1;
 
   position: relative;
 
   margin: 0;
   margin-right: -20px; // letter spacing fix
-  padding: 30px 0 0 0;
 
   letter-spacing: -50px;
 
@@ -69,7 +70,6 @@
   position: relative;
 
   margin: 0;
-  margin-top: 20px;
   margin-left: 20px; // leter spacing fix
 
   color: #fff;
@@ -106,20 +106,3 @@
 
   background-position: center center;
 }
-
-// cover type
-.cover--type0,
-.cover--type2 {
-  left: 20px;
-}
-
-.cover--type1,
-.cover--type3 {
-  left: -20px;
-}
-
-.cover--type0,
-.cover--type1 {
-  z-index: 3;
-}
-

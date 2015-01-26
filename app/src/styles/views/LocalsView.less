@@ -1,34 +1,65 @@
 .locals {
   position: absolute;
+  z-index: 3;
 
   width: 100%;
   height: 100%;
-
-  z-index: 1;
 }
 
-// content
 .locals__wrapper {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-
-  overflow-y: scroll;
+  position: relative;
 
   width: 100%;
+  height: 100%;
+}
+
+.locals__dummy {
+  padding-top: 100%;
+}
+
+.locals__container {
+  font: 0/0 a;
+
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  bottom: 100px;
+  left: 100px;
+
+  text-align: center;
+}
+
+.locals__centerer {
+  display: inline-block;
+
+  height: 100%;
+
+  vertical-align: middle;
 }
 
 .locals__content {
-  position: absolute;
-  right: 150px;
-  left: 150px;
+  position: relative;
 
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  display: inline-block;
 
-  list-style-type: none;
+  width: 800px;
+  max-width: 100%;
+  height: 600px;
+  max-height: 100%;
+
+  vertical-align: middle;
+
   .perspective(500px);
+}
+
+.locals__content__container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+
+  overflow-y: scroll;
 }
 
 // icon
@@ -42,11 +73,11 @@
 .locals__icon--close {
   position: absolute;
   z-index: 4;
-  top: 120px;
-  right: 150px;
+  top: 0;
+  right: 0;
 }
 
-// bars
+// bar
 .locals__bar {
   position: absolute;
 
@@ -55,34 +86,52 @@
 
 .locals__bar--top,
 .locals__bar--bottom {
-  z-index: 4;
-  right: 150px;
-  left: 150px;
-
+  width: 100%;
   height: 10px;
 }
 
 .locals__bar--left,
 .locals__bar--right {
-  z-index: 3;
-  top: 0;
-  bottom: 0;
-
   width: 10px;
+  height: 100%;
 }
 
 .locals__bar--top {
   top: 0;
+  left: 0;
 }
 
 .locals__bar--bottom {
+  right: 0;
   bottom: 0;
 }
 
 .locals__bar--left {
-  left: 150px;
+  top: 0;
+  left: 0;
 }
 
 .locals__bar--right {
-  right: 150px;
+  bottom: 0;
+  right: 0;
+}
+
+@media @phone {
+  .locals__container {
+    top: 40px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+  }
+
+  .locals__content {
+    background-color: #fff;
+  }
+
+  .locals__content__container {
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
 }

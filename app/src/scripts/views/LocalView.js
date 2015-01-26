@@ -9,9 +9,8 @@ import Store from '../modules/StoreModule';
 import Loader from '../modules/Loader';
 
 export default Backbone.PageView.extend({
-  className: 'local',
-
   name: 'local',
+  className: 'local',
 
   template: `
     <div class="local__content"></div>

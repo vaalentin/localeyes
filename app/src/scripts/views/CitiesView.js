@@ -15,12 +15,11 @@ import MenuView from './MenuView';
 import FrameView from './FrameView';
 import InfosView from './InfosView';
 import MapView from './MapView';
+import LocalsView from './LocalsView';
 
 export default Backbone.ContentView.extend({
   name: 'cities',
-  
   className: 'cities',
-
   content: '.cities__overlay',
 
   template: `
@@ -86,8 +85,11 @@ export default Backbone.ContentView.extend({
       view = new InfosView();
     }
     else if (name === 'map') {
-      view = new MapView({ collection: Store.getCities() });
+      view = new MapView({ collection: Store.getCities(), activeCity: this.activeCity });
       this.listenTo(view, 'marker:click', this.changeCity);
+    }
+    else if (name === 'locals') {
+      view = new LocalsView({ collection: Store.getCities() });
     }
 
     if (!view) return false;
@@ -308,21 +310,8 @@ export default Backbone.ContentView.extend({
 
     if (!position) return false;
 
-    var previousTranslateX = this.translateX;
-    var previousTranslateY = this.translateY;
-
     this.translateX = -1 * (position.left * 100);
     this.translateY = -1 * (position.top * 100);
-
-    // sequenced?
-    /**
-    if ((previousTranslateX && previousTranslateY)
-      && previousTranslateX !== this.translateX && previousTranslateY !== this.translateY) {
-      console.log('sequence');
-    } else {
-      console.log('no sequence');
-    }
-    */
 
     var props = {
       translateX: this.translateX + '%',
