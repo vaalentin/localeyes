@@ -1,8 +1,8 @@
 'use strict';
 
-var Backbone = require('backbone');
+import Backbone from 'backbone';
 
-var CityModel = require('../models/CityModel');
+import CityModel from '../models/CityModel';
 
 export default Backbone.Collection.extend({
   model: CityModel

@@ -1,6 +1,10 @@
 'use strict';
 
+import jQuery from 'jquery';
+import _ from 'underscore';
 import Backbone from 'backbone';
+
+import Loader from '../modules/Loader';
 
 export default Backbone.BetterView.extend({
   className: 'city',
@@ -11,13 +15,17 @@ export default Backbone.BetterView.extend({
         <div class="city__title">
           <div class="city__icon">
             <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
-              <% _.each(paths, function(path) { %>
+              <% _.each(icon, function(el) { %>
               <path fill="#ffffff"
                 stroke="#ffffff"
                 stroke-width="1"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="<%= path %>"/>
+                d="<%= el.path %>"
+                <% if (el.length) { %>
+                data-length="<%= el.length %>"
+                <% } %>
+                />
               <% }); %>
             </svg>
           </div>
@@ -32,8 +40,8 @@ export default Backbone.BetterView.extend({
       <% if (localSlug) { %>
       <div class="city__content__section city__content__section--button">
         <div class="city__button">
-          <a href="#/local/<%= localSlug %>" class="city__link">
-            DÉCOUVRIR <% print(local.toUpperCase()); %>
+          <a href="#local/<%= localSlug %>" class="city__link">
+            DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>
           </a>
           <div class="city__border city__border--top"></div>
           <div class="city__border city__border--left"></div>
@@ -49,8 +57,27 @@ export default Backbone.BetterView.extend({
     <% } %>
   `,
 
-  onInitialize (options) {
-    this.position = options.position;
+  els: {
+    '$squareTopLeft': '.city__square--topLeft',
+    '$squareTopRight': '.city__square--topRight',
+    '$squareBottomLeft': '.city__square--bottomLeft',
+    '$squareBottomRight': '.city__square--bottomRight',
+    '$name': '.city__name',
+    '$country': '.city__country',
+    '$icon': '.city__icon',
+    '$button': '.city__button',
+    '$bordersTopBottom': '.city__border--top, .city__border--bottom',
+    '$bordersLeftRight': '.city__border--left, .city__border--right',
+    '$background': '.city__background',
+    '$svgs': 'svg'
+  },
+
+  didInitialize (options) {
+    _.extend(this, _.pick(options, 'position'));
+  },
+
+  onLoad () {
+    this.loaded = true;
   },
 
   setPosition () {
@@ -61,50 +88,61 @@ export default Backbone.BetterView.extend({
   },
 
   in () {
-    this.$('.city__square--topLeft').css({ top: '50%', left: '50%', opacity: 0 })
+    this.$el.css('z-index', 2);
+
+    this.els.$squareTopLeft.velocity('stop')
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
-    this.$('.city__square--topRight').css({ top: '50%', right: '50%', opacity: 0 })
+    this.els.$squareTopRight.velocity('stop')
       .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ top: 0 }, { duration: 400, delay: 200 });
 
-    this.$('.city__square--bottomLeft').css({ bottom: '50%', left: '50%', opacity: 0 })
+    this.els.$squareBottomLeft.velocity('stop')
       .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
 
-    this.$('.city__square--bottomRight').css({ bottom: '50%', right: '50%', opacity: 0 })
+    this.els.$squareBottomRight.velocity('stop')
       .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
       .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
 
-    this.$('.city__name').css({ opacity: 0, top: -90 })
+    this.els.$name.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1100 });
 
-    this.$('.city__country').css({ opacity: 0, top: 50 })
+    this.els.$country.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1200 });
 
-    this.$('.city__icon').css({ top: -150 })
-      .velocity({ top: -90 }, { duration: 1500, delay: 500 });
+    this.els.$icon.velocity('stop')
+      .velocity({ top: -90, opacity: 1 }, { duration: 1500, delay: 500 });
 
-    this.$('.city__button').css({ opacity: 0, top: 50 })
+    this.els.$button.velocity('stop')
       .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1400 });
 
-    this.$('.city__border--top, .city__border--bottom').css('width', 0)
+    this.els.$bordersTopBottom.velocity('stop')
       .velocity({ width: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
 
-    this.$('.city__border--left, .city__border--right').css('height', 0)
+    this.els.$bordersLeftRight.velocity('stop')
       .velocity({ height: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
 
-    this.$('.city__background').velocity({ scale: 1.2 }, 0).velocity({ scale: 1 }, 1500);
+    this.els.$background.velocity('stop')
+      .velocity({ scale: 1.2 }, 0).velocity({ scale: 1 }, 2500);
 
-    this.$('svg').each(function () {
+    this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
         var $path = jQuery(this);
-        var length = $path[0].getTotalLength();
+        var data = $path.attr('data-length');
+        
+        var length;
+        if (data) {
+          length = parseFloat(data);
+        } else {
+          length = $path[0].getTotalLength();
+          $path.attr('data-length', length);
+        }
 
-        $path.velocity({
+        $path.velocity('stop').velocity({
             'stroke-dashoffset': length,
-            'stroke-dasharray': length + ',' + length,
+            'stroke-dasharray': `${length},${length}`,
             fillOpacity: 0,
             strokeOpacity: 1
           }, 0)
@@ -115,12 +153,48 @@ export default Backbone.BetterView.extend({
   },
 
   out () {
-    this.$('.city__background').velocity({ scale: 1.2 }, 0);
+    this.$el.css('z-index', 1);
+    
+    this.els.$squareTopLeft.velocity('stop').css({ top: '50%', left: '50%', opacity: 0 });
+    this.els.$squareTopRight.velocity('stop').css({ top: '50%', right: '50%', opacity: 0 });
+    this.els.$squareBottomLeft.velocity('stop').css({ bottom: '50%', left: '50%', opacity: 0 });
+    this.els.$squareBottomRight.velocity('stop').css({ bottom: '50%', right: '50%', opacity: 0 });
+    this.els.$name.velocity('stop').css({ opacity: 0, top: -90 });
+    this.els.$country.velocity('stop').css({ opacity: 0, top: 50 });
+    this.els.$icon.velocity('stop').css({ top: -150, opacity: 0 });
+    this.els.$button.velocity('stop').css({ opacity: 0, top: 50 });
+    this.els.$bordersTopBottom.velocity('stop').css('width', 0);
+    this.els.$bordersLeftRight.velocity('stop').css('height', 0);
+    this.els.$background.velocity('stop').velocity({ scale: 1.2 }, 0);
+    this.els.$svgs.each(function () {
+      jQuery('path', this).each(function () {
+        var $path = jQuery(this);
+        var data = $path.attr('data-length');
+        
+        var length;
+        if (data) {
+          length = parseFloat(data);
+        } else {
+          length = $path[0].getTotalLength();
+          $path.attr('data-length', length);
+        }
+
+        $path.velocity('stop')
+          .velocity({
+          'stroke-dashoffset': length,
+          'stroke-dasharray': `${length},${length}`,
+          fillOpacity: 0,
+          strokeOpacity: 1
+        }, 0);
+      });
+    });
   },
 
-  render () {
-    this.$el.html(this.template(this.model.toJSON()));
+  didRender () {
     this.setPosition();
-    return this;
+
+    this.loaded = false;
+    this.loader = new Loader([ this.model.get('background') ]);
+    this.loader.load().then(this.onLoad.bind(this));
   }
 });

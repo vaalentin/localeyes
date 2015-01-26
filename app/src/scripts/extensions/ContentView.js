@@ -2,15 +2,32 @@
 
 import Backbone from 'backbone';
 
+/**
+ * Backbone ContentView
+ *
+ * Page with a content area where PageView can be placed
+ */
 Backbone.ContentView = Backbone.PageView.extend({
+  /**
+   *  Selector for the content area
+   */
   content: '',
 
+  /**
+   * Get the current active page
+   *
+   * @method getContent
+   * @return {Backbone.PageView}
+   */
   getContent () {
     return this.currentView || {};
   },
 
   /**
-   * @param {Backbone.PageView} [view]
+   * Change the content
+   *
+   * @method changeContent
+   * @param {Backbone.PageView} [view] View to add
    */
   changeContent (view) {
     if (this.currentView && this.currentView.name === view.name) return false;
@@ -23,10 +40,23 @@ Backbone.ContentView = Backbone.PageView.extend({
 
     var previousView = this.currentView || null;
 
-    if (previousView) {
+    if (previousView)
       previousView.out(next).then(() => previousView.remove());
-    } else {
+    else
       next();
-    }
+  },
+
+  /**
+   * Remove the content
+   *
+   * @method removeContent
+   */
+  removeContent () {
+    if (!this.currentView) return false;
+
+    this.currentView.out().then(() => {
+      this.currentView.remove();
+      this.currentView = null;
+    });
   }
 });

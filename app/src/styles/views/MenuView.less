@@ -1,25 +1,114 @@
-.menu {
-  position: fixed;
-  z-index: 2;
+// buttons
+.menu__button {
+  position: absolute;
+  z-index: 3;
+
+  border: 1px solid #fff;
+
+  display: block;
+  overflow: hidden;
+
+  cursor: pointer;
+}
+
+.menu__button--topLeft {
+  top: 60px;
+  left: 60px;
+}
+
+.menu__button--topRight {
+  top: 60px;
   right: 60px;
+}
+
+.menu__button--bottomLeft {
   bottom: 60px;
   left: 60px;
-
-  padding: 0;
 }
 
+.menu__button--bottomRight {
+  right: 60px;
+  bottom: 60px;
+}
+
+// icons
 .menu__icon {
-  position: relative;
+  width: 20px;
+  height: 20px;
 
-  width: 40px;
-  height: 40px;
-  margin: 0 5px;
+  padding: 10px 5px;
 }
 
-.menu__icon--left {
-  float: left;
+.menu__icon--locals {
+  fill: #ffffff;  
 }
 
-.menu__icon--right {
-  float: right;
+.menu__icon--locals:hover,
+.menu__icon--locals.is-active {
+  fill: #0a0a0a;
+  background-color: #ffffff;
+}
+
+.menu__icon--map {
+  stroke: #ffffff;
+}
+
+.menu__icon--map:hover,
+.menu__icon--map.is-active {
+  stroke: #0a0a0a;
+  background-color: #ffffff;
+}
+
+.menu__icon--infos {
+  fill: #ffffff;
+}
+
+.menu__icon--infos:hover,
+.menu__icon--infos.is-active {
+  fill: #0a0a0a;
+  background-color: #ffffff;
+}
+
+.menu__icon--share {
+  stroke: #ffffff;
+}
+
+.menu__icon--pinterest {
+  fill: #ffffff;
+}
+
+.menu__icon--facebook {
+  fill: #ffffff;
+}
+
+.menu__icon--twitter {
+  fill: #ffffff;
+}
+
+// share
+.menu__expandable {
+  height: 0;
+  overflow: hidden;
+}
+
+@media @phone {
+  .menu__button--topLeft {
+    top: 40px;
+    left: 40px;
+  }
+
+  .menu__button--topRight {
+    top: 40px;
+    right: 40px;
+  }
+
+  .menu__button--bottomLeft {
+    bottom: 40px;
+    left: 40px;
+  }
+
+  .menu__button--bottomRight {
+    right: 40px;
+    bottom: 40px;
+  }
 }

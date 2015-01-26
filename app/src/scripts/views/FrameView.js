@@ -1,8 +1,7 @@
 'use strict';
 
+import jQuery from 'jquery';
 import Backbone from 'backbone';
-
-import EventBus from '../modules/EventBusModule';
 
 export default Backbone.BetterView.extend({
   template: `
@@ -78,23 +77,18 @@ export default Backbone.BetterView.extend({
     'mouseout .frame__bar': 'onMouseout'
   },
 
-  onInitialize () {
+  didInitialize () {
     this.listenTo(this.model, 'change', this.onChange);
-    this.listenTo(EventBus, 'frame:update', this.onUpdate);
-    this.listenTo(EventBus, 'frame:click', this.onClick);
   },
 
   onMouseover (e) {
     var $el = jQuery(e.currentTarget);
     var direction = $el.attr('data-direction');
-
-    if (direction) {
-      EventBus.trigger('frame:over', direction);
-    }
+    if (direction) this.trigger('mouseover', direction);
   },
 
   onMouseout () {
-    EventBus.trigger('frame:out');
+    this.trigger('mouseout');
   },
 
   onChange () {
@@ -103,20 +97,47 @@ export default Backbone.BetterView.extend({
       var direction = $el.attr('data-direction');
       
       if (this.model.has(direction)) {
-        $el.attr('href', `#/city/${this.model.get(direction)}`).removeClass('is-inactive');
+        $el.attr('href', `#city/${this.model.get(direction)}`).removeClass('is-inactive');
       } else {
         $el.attr('href', null).addClass('is-inactive');
       }
     });
   },
 
-  onClick (position) {
-    var $el = this.$(`.frame__bar--${position}`);
-    $el[0].click();
-    return false;
-  },
-
   onUpdate (directions) {
     this.model.set(directions);
+  },
+
+  disable () {
+    if (this.previousValues) return false;
+
+    this.previousValues = this.model.toJSON();
+    this.model.set({
+      north: undefined,
+      east: undefined,
+      south: undefined,
+      west: undefined
+    });
+  },
+
+  enable () {
+    if (!this.previousValues) return false;
+    
+    this.model.set(this.previousValues);
+    this.previousValues = null;
+  },
+
+  in () {
+    this.$('.frame__bar--top').css('top', -40)
+      .velocity({ top: 0 }, { duration: 800 });
+
+    this.$('.frame__bar--bottom').css('bottom', -40)
+      .velocity({ bottom: 0 }, { duration: 800 });
+
+    this.$('.frame__bar--left').css('left', -40)
+      .velocity({ left: 0 }, { duration: 800 });
+
+    this.$('.frame__bar--right').css('right', -40)
+      .velocity({ right: 0 }, { duration: 800 });
   }
 });
