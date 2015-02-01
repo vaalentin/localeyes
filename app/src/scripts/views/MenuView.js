@@ -96,27 +96,31 @@ export default Backbone.BetterView.extend({
       this.els.$expandable.css('height', 0);
     }
 
-    if (!this.iconHeight)
-      this.iconHeight = this.els.$icon.outerHeight();
+    if (!this.iconHeight) this.iconHeight = this.els.$icon.outerHeight();
     
-    this.els.$expandable.velocity('stop')
+    this.els.$expandable
+      .velocity('stop')
       .velocity({ height: this.expandableHeight }, 300);
 
-    this.els.$icon.velocity('stop')
+    this.els.$icon
+      .velocity('stop')
       .velocity({ marginBottom: -this.iconHeight }, 400);
   },
 
   onShareOut (e) {
-    this.els.$expandable.velocity('stop')
+    this.els.$expandable
+      .velocity('stop')
       .velocity({ height: 0 }, 300);
 
-    this.els.$icon.velocity('stop')
+    this.els.$icon
+      .velocity('stop')
       .velocity({ marginBottom: 0 }, 400);
   },
 
   in () {
     this.$('a').each(function (i) {
-      jQuery(this).css({ opacity: 0, marginTop: 50 })
+      jQuery(this)
+        .css({ opacity: 0, marginTop: 50 })
         .velocity({ opacity: 1, marginTop: 0 }, { duration: 800, delay: i * 300 });
     });
   }

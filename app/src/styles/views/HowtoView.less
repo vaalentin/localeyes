@@ -1,0 +1,230 @@
+.howto {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: table;
+
+  width: 100%;
+  height: 100%;
+
+  color: #fff;
+}
+
+.howto__content {
+  display: table-cell;
+
+  vertical-align: middle;
+  position: relative;
+  z-index: 2;
+}
+
+.howto__background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: #0a0a0a;
+  z-index: 1;
+  opacity: 0;
+}
+
+.howto__title {
+  font-family: 'localeyes', 'sans-serif';
+  font-size: 54px;
+  font-weight: lighter;
+  line-height: 1;
+
+  margin-bottom: 100px;
+
+  text-align: center;
+  letter-spacing: -20px;
+
+  color: #fff;
+
+  opacity: 0;
+}
+
+// columns
+.howto__columns {
+  max-width: 760px;
+  margin: 0 auto;
+
+  .clear;
+}
+
+.howto__column {
+  float: left;
+
+  width: (100% / 3);
+
+  opacity: 0;
+}
+
+// keys
+.howto__keys__wrapper {
+  max-width: 180px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.howto__keys {
+  position: relative;
+
+  padding-bottom: 100%;
+}
+
+.howto__key {
+  position: absolute;
+
+  width: (100% / 3) + 3%;
+
+  opacity: 0.2;
+}
+
+.howto__key--top {
+  top: 0;
+  left: (100% / 3);
+}
+
+.howto__key--right {
+  top: (100% / 3) + 5%;
+  left: ((100% / 3) * 2) + 5%;
+}
+
+.howto__key--bottom {
+  top: (100% / 3) + 5%;
+  left: (100% / 3);
+}
+
+.howto__key--left {
+  top: (100% / 3) + 5%;
+  left: -5%;
+}
+
+// middle
+.howto__column--middle {
+  margin-top: 60px;
+}
+
+// directions
+.howto__directions__wrapper {
+  max-width: 200px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 44px;
+  padding: 0 20px;
+}
+
+.howto__directions {
+  position: relative;
+  max-height: 126px;
+}
+
+.howto__directions__mouse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 15px;
+  height: 20px;
+  margin-top: -(20px / 2);
+  margin-left: -(15px / 2);
+}
+
+// text
+.howto__text {
+  font-family: 'Orator Std', 'sans-serif';
+  font-size: 16px;
+
+  padding: 0 20px;
+
+  text-align: center;
+
+  opacity: 0;
+}
+
+// button
+.howto__buttons {
+  text-align: center;
+}
+
+.howto__button {
+  position: relative;
+
+  .inline-block;
+
+  margin-top: 50px;
+
+  opacity: 0;
+  top: 50px;
+}
+
+.howto__button:hover {
+  background-color: #fff;
+}
+
+.howto__button:hover .howto__link {
+  color: #0a0a0a;
+}
+
+.howto__link {
+  font-family: 'Orator Std', 'sans-serif';
+  font-size: 18px;
+
+  display: block;
+
+  padding: 15px 15px 8px 15px;
+
+  text-decoration: none;
+
+  color: #fff;
+}
+
+.howto__border {
+  position: absolute;
+
+  display: block;
+
+  background: #fff;
+}
+
+.howto__border--top,
+.howto__border--bottom {
+  width: 0;
+  height: 1px;
+}
+
+.howto__border--left,
+.howto__border--right {
+  width: 1px;
+  height: 0;
+}
+
+.howto__border--top {
+  top: 0;
+  left: 0;
+}
+
+.howto__border--bottom {
+  right: 0;
+  bottom: 0;
+}
+
+.howto__border--left {
+  top: 0;
+  left: 0;
+}
+
+.howto__border--right {
+  right: 0;
+  bottom: 0;
+}
+
+// responsive
+@media @phone {
+  .howto__column {
+    width: 100%;
+  }
+}

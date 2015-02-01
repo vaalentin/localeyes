@@ -7,36 +7,46 @@ import AppRouter from '../routers/AppRouter';
 import Store from '../modules/StoreModule';
 
 import LoaderView from '../views/LoaderView';
+import WelcomeView from '../views/WelcomeView';
 import CitiesView from '../views/CitiesView';
 import LocalView from '../views/LocalView';
+import HowtoView from '../views/HowtoView';
 
 export default Backbone.ContentView.extend({
   content: '.app__content',
 
   didInitialize () {
-    this.router = new AppRouter();
-    this.citiesView = null;
+    var router = new AppRouter();
+    var citiesView = null;
 
-    new LoaderView({ el: '.loader' });
+    var loader = new LoaderView({ el: '.loader' });
+    loader.out();
 
-    this.router.on('route:default', () => {
-      this.router.navigate('/welcome', { trigger: true });
+    router.on('route:default', () => {
+      router.navigate('/welcome', { trigger: true });
     });
 
-    this.router.on('route:welcome', () => {
-
+    router.on('route:welcome', () => {
+      var welcomeView = new WelcomeView();
+      this.changeContent(welcomeView);
     });
 
-    this.router.on('route:city', slug => {
-      if (this.currentView && this.currentView.name === 'cities' && this.citiesView) {
-        this.citiesView.changeCity(slug);
+    router.on('route:howto', () => {
+      var howtoView = new HowtoView();
+      this.changeContent(howtoView);
+    });
+
+    router.on('route:city', slug => {
+      if (this.currentView && this.currentView.name === 'cities' && citiesView) {
+        citiesView.changeCity(slug);
       } else {
-        this.citiesView = new CitiesView({ collection: Store.getCities(), activeCity: slug });
-        this.changeContent(this.citiesView);
+        citiesView = new CitiesView({ collection: Store.getCities(), activeCity: slug });
+        this.listenTo(citiesView, 'router:navigate', router.navigate);
+        this.changeContent(citiesView);
       }
     });
 
-    this.router.on('route:local', slug => {
+    router.on('route:local', slug => {
       var localModel = Store.getLocals().findWhere({ slug: slug });
 
       if (localModel) {
@@ -44,8 +54,6 @@ export default Backbone.ContentView.extend({
         this.changeContent(localView);
       }
     });
-
-    Backbone.on('router:navigate', url => this.router.navigate(url));
 
     Backbone.history.start();
   }

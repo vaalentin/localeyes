@@ -1,3 +1,6 @@
+/* jshint curly: false */
+/* jshint laxbreak: true */
+
 'use strict';
 
 import jQuery from 'jquery';
@@ -240,7 +243,7 @@ export default Backbone.ContentView.extend({
 
   disable () {
     this.els.$content.velocity({ opacity: 0.5 }, 1000);
-    this.frame.disable();
+    // this.frame.disable();
     
     // touch screen
     this.hammer.off('panleft panright', this.onPanHorizontal);
@@ -250,7 +253,7 @@ export default Backbone.ContentView.extend({
 
   enable () {
     this.els.$content.velocity({ opacity: 1 }, 1000);
-    this.frame.enable();
+    // this.frame.enable();
 
     // touch screen
     this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
@@ -284,7 +287,7 @@ export default Backbone.ContentView.extend({
     this.activeCity = slug;
     this.setPosition({
       transition: true,
-      complete: () => { if (previousView) previousView.out() },
+      complete: () => { if (previousView) previousView.reset(); },
       easing: easing
     });
     this.setDirections();
@@ -327,7 +330,7 @@ export default Backbone.ContentView.extend({
         complete: () => {
           this.isSliding = false;
           if (params.complete) params.complete();
-          Backbone.trigger('router:navigate', `/city/${this.activeCity}`);
+          this.trigger('router:navigate', `/city/${this.activeCity}`);
         }
       });
   },
@@ -345,5 +348,21 @@ export default Backbone.ContentView.extend({
     this.setCity();
     this.menu.in();
     this.frame.in();
+  },
+
+  out (done) {
+    var previousModel = this.collection.findWhere({ slug: this.activeCity });
+    var previousView = _.findWhere(this.cities, { model: previousModel });
+
+    return new Promise((resolve, reject) => {
+      if (previousView) previousView.out();
+      this.frame.out();
+
+      setTimeout(done, 600);
+      
+      this.$el
+        .velocity('stop')
+        .velocity({ opacity: 0 }, { duration: 1500, complete: resolve });
+    });
   }
 });

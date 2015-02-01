@@ -19,7 +19,8 @@ Backbone.PageView = Backbone.BetterView.extend({
    * @method in
    */
   in () {
-    this.$el.velocity('stop')
+    this.$el
+      .velocity('stop')
       .velocity({ opacity: 1}, { duration: 800 });
   },
 
@@ -33,8 +34,9 @@ Backbone.PageView = Backbone.BetterView.extend({
   out (done) {
     return new Promise((resolve, reject) => {
       setTimeout(done, 400);
-      this.$el.velocity('stop')
-        .velocity({ opacity: 0 }, { duration: 800, complete: () => { resolve(); } });
+      this.$el
+        .velocity('stop')
+        .velocity({ opacity: 0 }, { duration: 800, complete: resolve });
     });
   }
 });
