@@ -77,6 +77,13 @@ export default Backbone.BetterView.extend({
     'mouseout .frame__bar': 'onMouseout'
   },
 
+  els: {
+    '$barTop': '.frame__bar--top',
+    '$barLeft': '.frame__bar--left',
+    '$barBottom': '.frame__bar--bottom',
+    '$barRight': '.frame__bar--right'
+  },
+
   didInitialize () {
     this.listenTo(this.model, 'change', this.onChange);
   },
@@ -112,12 +119,7 @@ export default Backbone.BetterView.extend({
     if (this.previousValues) return false;
 
     this.previousValues = this.model.toJSON();
-    this.model.set({
-      north: undefined,
-      east: undefined,
-      south: undefined,
-      west: undefined
-    });
+    this.model.set({ north: undefined, east: undefined, south: undefined, west: undefined });
   },
 
   enable () {
@@ -128,16 +130,38 @@ export default Backbone.BetterView.extend({
   },
 
   in () {
-    this.$('.frame__bar--top').css('top', -40)
+    this.els.$barTop
+      .css('top', -40)
       .velocity({ top: 0 }, { duration: 800 });
-
-    this.$('.frame__bar--bottom').css('bottom', -40)
+    
+    this.els.$barBottom
+      .css('bottom', -40)
       .velocity({ bottom: 0 }, { duration: 800 });
-
-    this.$('.frame__bar--left').css('left', -40)
+    
+    this.els.$barLeft
+      .css('left', -40)
       .velocity({ left: 0 }, { duration: 800 });
-
-    this.$('.frame__bar--right').css('right', -40)
+    
+    this.els.$barRight
+      .css('right', -40)
       .velocity({ right: 0 }, { duration: 800 });
+  },
+
+  out () {
+    this.els.$barTop
+      .velocity('stop')
+      .velocity({ top: -40 }, { duration: 800 });
+
+    this.els.$barBottom
+      .velocity('stop')
+      .velocity({ bottom: -40 }, { duration: 800 });
+
+    this.els.$barLeft
+      .velocity('stop')
+      .velocity({ left: -40 }, { duration: 800 });
+
+    this.els.$barRight
+      .velocity('stop')
+      .velocity({ right: -40 }, { duration: 800 });  
   }
 });

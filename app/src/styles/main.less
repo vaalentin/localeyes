@@ -1,20 +1,22 @@
+// normalize
 @import 'node_modules/normalize.less/normalize.less';
 
+// mixins
+@import 'node_modules/lesshat/build/lesshat.less';
+@import './mixins/inlineBlock';
+@import './mixins/clear';
+
+// utils
+@import './utils/video';
 @import './utils/consts';
 
-@import './mixins/backgroundSize';
-@import './mixins/clear';
-@import './mixins/inlineBlock';
-@import './mixins/perspective';
-@import './mixins/transform';
-@import './mixins/transition';
-@import './mixins/willChange';
-
+// fonts
 @import './fonts/localeyesFont';
 
+// views
 @import './views/AppView';
 @import './views/MenuView';
-@import './views/HelpView';
+@import './views/HowtoView';
 @import './views/LoaderView';
 @import './views/LocalView';
 @import './views/ExploreView';
@@ -25,3 +27,17 @@
 @import './views/CityView';
 @import './views/InfosView';
 @import './views/MapView';
+@import './views/WelcomeView';
+
+.video-js {padding-top: 56.25%}
+.vjs-fullscreen {padding-top: 0px}
+
+.videojs-background-wrap {
+    overflow:hidden;
+    position:absolute;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    z-index: -998;
+  }

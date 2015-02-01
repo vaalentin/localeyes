@@ -43,10 +43,7 @@ export default Backbone.PageView.extend({
   out (done) {
     setTimeout(done, 200);
     return new Promise((resolve, reject) => {
-      this.$el.velocity({ translateY: -200, opacity: 0 }, {
-        duration: 500,
-        complete: resolve
-      });
+      this.$el.velocity({ translateY: -200, opacity: 0 }, { duration: 500, complete: resolve });
     });
   }
 });

@@ -39,7 +39,7 @@
 
   .transform(scale(1.2));
   .background-size(cover);
-  .will-change(transform);
+  will-change: transform;
 }
 
 .ie .city__content {
@@ -160,12 +160,12 @@
 .city__button {
   position: relative;
 
-  display: inline-block;
+  .inline-block;
 
   margin-top: 50px;
 
   opacity: 0;
-  top: 50;
+  top: 50px;
 }
 
 .city__button:hover {

@@ -58,5 +58,10 @@ Backbone.ContentView = Backbone.PageView.extend({
       this.currentView.remove();
       this.currentView = null;
     });
+  },
+
+  remove () {
+    this.removeContent();
+    Backbone.PageView.prototype.remove.apply(this, arguments);
   }
 });
