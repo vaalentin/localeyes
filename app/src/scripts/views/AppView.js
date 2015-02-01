@@ -17,7 +17,8 @@ export default Backbone.ContentView.extend({
     this.router = new AppRouter();
     this.citiesView = null;
 
-    new LoaderView({ el: '.loader' });
+    var loader = new LoaderView({ el: '.loader' });
+    loader.out();
 
     this.router.on('route:default', () => {
       this.router.navigate('/welcome', { trigger: true });
