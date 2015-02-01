@@ -8,6 +8,7 @@ export default Backbone.Model.extend({
   defaults: {
     name: undefined,
     slug: undefined,
+    video: undefined,
     images: []
   },
 

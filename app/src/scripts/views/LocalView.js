@@ -1,9 +1,12 @@
+/* jshint curly: false */
+
 'use strict';
 
 import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 import skrollr from 'skrollr';
+import videojs from 'videojs';
 
 import Store from '../modules/StoreModule';
 import Loader from '../modules/Loader';
@@ -13,34 +16,67 @@ export default Backbone.PageView.extend({
   className: 'local',
 
   template: `
-    <div class="local__content"></div>
-    <div class="local__next" style="background-image:url(<%= cityBackground %>);"></div>
+    <% if (video) { %>
+      <div class='local__video'>
+        <div class='local__video__overlay'>
+          <% if (video.markers) _.each(video.markers, function (marker) { %>
+            <div class='local__marker'
+              style='left:<%= marker.position.x || 0 %>;top:<%= marker.position.y || 0 %>'>
+              <% if (marker.text) { %>
+                <div class="local__marker__link" data-time='<%= marker.time || 0 %>'>
+                  <%= marker.text.toUpperCase() %>
+                </div>
+              <% } %>
+              <div class="local__marker__icon">
+                <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 30 48">
+                  <path stroke='none'
+                    fill='#fff'
+                    d='M15,0C6.7,0,0,7.4,0,16.6c0,2.9,0.7,5.6,1.8,7.9c0,0.2,11.7,22.6,11.7,22.6c0.3,0.6,0.8,0.9,1.4,0.9c0.6,0,1.1-0.4,1.4-0.9  c0,0,11.7-22.4,11.7-22.6c1.2-2.4,1.8-5.1,1.8-7.9C30,7.4,23.3,0,15,0 M15,23.2c-4.1,0-7.5-3.3-7.5-7.4s3.4-7.4,7.5-7.4  c4.1,0,7.5,3.3,7.5,7.4C22.5,19.9,19.1,23.2,15,23.2'/>
+                </svg>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+        <video class='local__video__video video-js vjs-default-skin'
+          data-setup='{ "techOrder": ["youtube"], "src": "<%= video.url %>" }'
+          classover='<%= video.cover || "" %>'
+          controls='controls'
+          width='auto'
+          height='auto'
+          preload='auto'
+          autoplay
+          cover=''>
+        </video>
+      </div>
+    <% } %>
+    <div class='local__content'></div>
+    <a href='#city/<%= citySlug %>' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
   `,
 
   blocksTemplates: {
     1: _.template(`
-      <div class="local__block local__block--type1">
-        <img class="local__image" src="<%= urls[0] %>">
+      <div class='local__block local__block--type1'>
+        <img class='local__image' src='<%= urls[0] %>'>
       </div>
     `),
 
     2: _.template(`
-      <div class="local__block local__block--type2">
-        <div class="local__column local__column--half local__column--left">
-          <div class="local__column__content">
-            <img class="local__image" src="<%= urls[0] %>"
-              data-bottom-top="left:-100%;opacity:0;"
-              data-center-center="left:0%;opacity:1;top:0px;"
-              data-top-bottom="top:50px;"
+      <div class='local__block local__block--type2'>
+        <div class='local__column local__column--half local__column--left'>
+          <div class='local__column__content'>
+            <img class='local__image' src='<%= urls[0] %>'
+              data-bottom-top='left:-100%;opacity:0;'
+              data-center-center='left:0%;opacity:1;top:0px;'
+              data-top-bottom='top:50px;'
               >
           </div>
         </div>
-        <div class="local__column local__column--half local__column--right">
-          <div class="local__column__content">
-            <img class="local__image" src="<%= urls[1] %>"
-              data-bottom-top="left:100%;opacity:0;;"
-              data-center-center="left:0%;opacity:1;top:0px"
-              data-top-bottom="top:-20px;"
+        <div class='local__column local__column--half local__column--right'>
+          <div class='local__column__content'>
+            <img class='local__image' src='<%= urls[1] %>'
+              data-bottom-top='left:100%;opacity:0;;'
+              data-center-center='left:0%;opacity:1;top:0px'
+              data-top-bottom='top:-20px;'
               >
           </div>
         </div>
@@ -48,11 +84,11 @@ export default Backbone.PageView.extend({
     `),
 
     3: _.template(`
-      <div class="local__block local__block--type3">
-        <div class="local__column local__column--mask">
-          <img class="local__image" src="<%= urls[0] %>"
-            data-bottom-top="transform:scale(1.5);"
-            data-center-bottom="transform:scale(1);"
+      <div class='local__block local__block--type3'>
+        <div class='local__column local__column--mask'>
+          <img class='local__image' src='<%= urls[0] %>'
+            data-bottom-top='transform:scale(1.5);'
+            data-center-bottom='transform:scale(1);'
             >
         </div>
       </div>
@@ -67,13 +103,15 @@ export default Backbone.PageView.extend({
   },
 
   willRemove () {
+    if (this.video) this.video.dispose();
     this.$win.off('scroll', this.onScroll);
+    this.$('.local__marker__link').off('click');
     skrollr.init().destroy();
   },
 
   in () {
     if (!this.loaded) return false;
-    Backbone.PageView.prototype.in.call(this);
+    this.$el.velocity({ opacity: 1 }, 2000);
   },
 
   out (done) {
@@ -109,17 +147,50 @@ export default Backbone.PageView.extend({
   },
 
   render () {
-    this.$el.html(this.template({ cityBackground: this.city.get('background')}));
+    var data = this.model.toJSON();
+    data.citySlug = this.city.get('slug');
+    data.cityBackground = this.city.get('background');
+
+    this.$el.html(this.template(data));
     this.$('.local__content').html(this.renderBlocks());
-    this.didRender();
+    _.defer(this.didRender.bind(this));
     return this;
   },
 
-  didRender () {
-    var images = [];
-    this.model.get('images').forEach(image => {
-      image.urls.forEach(url => images.push(url));
+  onMarkerClick (e) {
+    if (!this.video) return false;
+
+    var time = jQuery(e.currentTarget).attr('data-time') || 0;
+    this.video.currentTime(time);
+  },
+
+  setupVideo () {
+    var $video = this.$('.local__video__video');
+
+    if (!$video.length) return false;
+
+    this.video = videojs($video[0]);
+    this.video.one('play', this.videoIn.bind(this));
+    this.$('.local__marker__link').on('click', this.onMarkerClick.bind(this));
+  },
+
+  videoIn () {
+    this.$('.local__video')
+      .velocity({ translateY: 50, opacity: 0 }, 0)
+      .velocity({ translateY: 0, opacity: 1 }, { duration: 800, delay: 100 });
+
+    this.$('.local__marker').each(function (i, el) {
+      jQuery(this).velocity({ translateY: 50, opacity: 0 }, 0)
+        .velocity({ translateY: 0, opacity: 1 }, { duration: 500, delay: (i * 200) + 600 });
     });
+  },
+
+  didRender () {
+    this.setupVideo();
+
+    var images = this.model.get('images').reduce((out, image) => {
+      return out.concat(image.urls || []);
+    }, []);
 
     this.loaded = false;
     this.loader = new Loader(images);

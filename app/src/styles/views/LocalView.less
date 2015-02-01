@@ -3,6 +3,52 @@
   opacity: 0;
 }
 
+// video
+.local__video {
+  position: relative;
+  opacity: 0;
+}
+
+// .local__video .vjs-poster {
+//   display: none;
+// }
+
+.local__marker {
+  position: absolute;
+  z-index: 2;
+}
+
+.local__marker__icon {
+  width: 30px;
+  height: 48px;
+  position: relative;
+  left: 50%;
+  margin-left: -(30px / 2);
+  margin-top: 10px;
+}
+
+.local__marker__link {
+  font-family: 'Orator Std', 'sans-serif';
+  font-size: 18px;
+
+  display: block;
+
+  padding: 15px 15px 8px 15px;
+
+  text-decoration: none;
+
+  color: #fff;
+  border: 1px solid #fff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.local__marker__link:hover {
+  background-color: #fff;
+  color: #0a0a0a;
+}
+
+// content
 .local__content {
   max-width: 1080px;
   margin: 0 auto;
@@ -46,15 +92,30 @@
 
 // columns content
 .local__column--left .local__column__content {
-  margin: 20px 10px 20px 0;
+  margin: 20px 25px 20px 0;
 }
 
 .local__column--right .local__column__content {
-  margin: 20px 0 20px 10px;
+  margin: 20px 0 20px 25px;
 }
 
 // next
 .local__next {
+  display: block;
   height: 150px;
   .background-size(cover);
+}
+
+@media @phone {
+  .local__block {
+    margin: 30px 0;
+  }
+
+  .local__column--left .local__column__content {
+    margin: 0px 15px 0px 0;
+  }
+
+  .local__column--right .local__column__content {
+    margin: 0px 0 0px 15px;
+  }
 }
