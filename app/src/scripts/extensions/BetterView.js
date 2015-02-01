@@ -123,8 +123,11 @@ Backbone.BetterView = Backbone.View.extend({
       this.els = cache;
     }
     
-    if (this.didRender)
-      this.didRender.apply(this, arguments);
+    if (this.didRender) {
+      _.defer(() => {
+        this.didRender.apply(this, arguments);
+      });
+    }
 
     return this;
   },
