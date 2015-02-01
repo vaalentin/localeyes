@@ -1,19 +1,18 @@
+// normalize
 @import 'node_modules/normalize.less/normalize.less';
 
 @import 'node_modules/video.js/dist/video-js/video-js.less';
+// mixins
+@import 'node_modules/lesshat/build/lesshat.less';
+@import './mixins/inlineBlock';
+@import './mixins/clear';
 
 @import './utils/consts';
 
-@import './mixins/backgroundSize';
-@import './mixins/clear';
-@import './mixins/inlineBlock';
-@import './mixins/perspective';
-@import './mixins/transform';
-@import './mixins/transition';
-@import './mixins/willChange';
-
+// fonts
 @import './fonts/localeyesFont';
 
+// views
 @import './views/AppView';
 @import './views/MenuView';
 @import './views/HelpView';
