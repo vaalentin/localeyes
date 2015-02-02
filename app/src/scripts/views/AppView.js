@@ -37,6 +37,8 @@ export default Backbone.ContentView.extend({
     });
 
     router.on('route:city', slug => {
+      if (!slug) slug = Store.getCities().first().get('slug');
+
       if (this.currentView && this.currentView.name === 'cities' && citiesView) {
         citiesView.changeCity(slug);
       } else {
