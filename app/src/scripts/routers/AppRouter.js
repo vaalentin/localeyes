@@ -8,7 +8,9 @@ export default Backbone.Router.extend({
     'welcome': 'welcome',
     'howto': 'howto',
     'local/:slug': 'local',
+    'local/:slug/:language': 'local',
     'city': 'city',
-    'city/:slug': 'city'
+    'city/:slug': 'city',
+    'city/:slug/:language': 'city'
   }
 });
