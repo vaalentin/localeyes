@@ -1,7 +1,11 @@
+/* jshint curly: false */
+
 'use strict';
 
 import jQuery from 'jquery';
+import _ from 'underscore';
 import Backbone from 'backbone';
+
 export default Backbone.PageView.extend({
   name: 'map',
   className: 'map',
@@ -44,64 +48,21 @@ export default Backbone.PageView.extend({
   },
 
   buildMap () {
-    var mapOptions = {
-      zoom: 4,
-      styles: [
-        {
-          'featureType': 'water',
-          'stylers': [
-            { 'color': '#ffffff' }
-          ]
-        },
-        {
-          'featureType': 'landscape',
-          'stylers': [
-            { 'saturation': -100 },
-            { 'color': '#424242' }
-          ]
-        },
-        {
-          'featureType': 'road.highway',
-          'stylers': [
-            { 'saturation': -100 },
-            { 'lightness': -74 }
-          ]
-        },
-        {
-          'featureType': 'water',
-          'stylers': [
-            { 'color': '#969696' }
-          ]
-        },
-        {
-          'featureType': 'road.arterial',
-          'stylers': [
-            { 'visibility': 'off' }
-          ]
-        },
-        {
-          'featureType': 'poi',
-          'stylers': [
-            { 'saturation': -100 },
-            { 'lightness': -54 }
-          ]
-        }
-      ]
-    };
+    var mapOptions = { zoom: 4 };
 
-    var map = new google.maps.Map(this.$('.map__content__container')[0], mapOptions);
+    var map = new window.google.maps.Map(this.$('.map__content__container')[0], mapOptions);
 
-    var geocoder = new google.maps.Geocoder();
-    var markerBounds = new google.maps.LatLngBounds();
+    var geocoder = new window.google.maps.Geocoder();
+    var markerBounds = new window.google.maps.LatLngBounds();
 
-    var icon = new google.maps.MarkerImage('../app/public/images/map-marker.png', null, null, null, new google.maps.Size(22, 35));
+    var icon = new window.google.maps.MarkerImage('./app/public/images/map-marker.png', null, null, null, new window.google.maps.Size(22, 35));
 
     this.collection.each((city, i) => {
       var name = city.get('name');
       var country = city.get('country');
       var slug = city.get('slug');
 
-      var animation = slug === this.activeCity ? google.maps.Animation.BOUNCE : google.maps.Animation.DROP;
+      var animation = slug === this.activeCity ? window.google.maps.Animation.BOUNCE : window.google.maps.Animation.DROP;
 
       geocoder.geocode({ 'address': `${name}, ${country}` }, (results, status) => {
         var coords = results[0].geometry.location;
@@ -112,7 +73,7 @@ export default Backbone.PageView.extend({
         map.fitBounds(markerBounds);
 
         setTimeout(() => {  
-          var marker = new google.maps.Marker({
+          var marker = new window.google.maps.Marker({
             position: coords,
             map: map,
             title: name,
@@ -120,7 +81,7 @@ export default Backbone.PageView.extend({
             icon: icon
           });
 
-          google.maps.event.addListener(marker, 'click', () => {
+          window.google.maps.event.addListener(marker, 'click', () => {
             this.trigger('marker:click', slug);
           });
         }, i * 300);
@@ -139,7 +100,7 @@ export default Backbone.PageView.extend({
       this.$el.velocity({ translateY: -200, opacity: 0 }, {
         duration: 500,
         complete: resolve
-      })
+      });
     });
   }
 });
