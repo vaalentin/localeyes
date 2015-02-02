@@ -37,14 +37,21 @@ export default Backbone.ContentView.extend({
   },
 
   didInitialize (options) {
-    _.extend(this, _.pick(options, 'activeCity'));
+    _.extend(this, _.pick(options, 'activeCity', 'language'));
     
     this.map = new MapModel({ collection: this.collection });
 
     this.menu = new MenuView();
-    this.frame = new FrameView({ model: new FrameModel() });
+    this.frame = new FrameView({
+      model: new FrameModel(),
+      language: this.language
+    });
     this.cities = this.collection.map(city => {
-      return new CityView({ model: city, position: this.map.getPosition(city.get('slug')) });
+      return new CityView({
+        model: city,
+        position: this.map.getPosition(city.get('slug')),
+        language: this.language
+      });
     });
 
     this.listenTo(this.menu, 'click', this.onMenuClick);
@@ -330,7 +337,12 @@ export default Backbone.ContentView.extend({
         complete: () => {
           this.isSliding = false;
           if (params.complete) params.complete();
-          this.trigger('router:navigate', `/city/${this.activeCity}`);
+
+          var url = this.language
+            ? `/city/${this.activeCity}/${this.language}`
+            : `/city/${this.activeCity}`;
+
+          this.trigger('router:navigate', url);
         }
       });
   },

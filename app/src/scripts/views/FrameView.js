@@ -84,7 +84,8 @@ export default Backbone.BetterView.extend({
     '$barRight': '.frame__bar--right'
   },
 
-  didInitialize () {
+  didInitialize (options) {
+    _.extend(this, _.pick(options, 'language'));
     this.listenTo(this.model, 'change', this.onChange);
   },
 
@@ -104,7 +105,11 @@ export default Backbone.BetterView.extend({
       var direction = $el.attr('data-direction');
       
       if (this.model.has(direction)) {
-        $el.attr('href', `#city/${this.model.get(direction)}`).removeClass('is-inactive');
+        var href = this.language
+          ? `#city/${this.model.get(direction)}/${this.language}`
+          : `#city/${this.model.get(direction)}`;
+
+        $el.attr('href', href).removeClass('is-inactive');
       } else {
         $el.attr('href', null).addClass('is-inactive');
       }

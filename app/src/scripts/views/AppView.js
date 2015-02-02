@@ -36,13 +36,13 @@ export default Backbone.ContentView.extend({
       this.changeContent(howtoView);
     });
 
-    router.on('route:city', slug => {
+    router.on('route:city', (slug, language) => {
       if (!slug) slug = Store.getCities().first().get('slug');
 
       if (this.currentView && this.currentView.name === 'cities' && citiesView) {
         citiesView.changeCity(slug);
       } else {
-        citiesView = new CitiesView({ collection: Store.getCities(), activeCity: slug });
+        citiesView = new CitiesView({ collection: Store.getCities(), activeCity: slug, language: language });
         this.listenTo(citiesView, 'router:navigate', router.navigate);
         this.changeContent(citiesView);
       }

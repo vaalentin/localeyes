@@ -39,9 +39,15 @@ export default Backbone.BetterView.extend({
       <% if (localSlug) { %>
       <div class="city__content__section city__content__section--button">
         <div class="city__button">
-          <a href="#local/<%= localSlug %>" class="city__link">
-            DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>
-          </a>
+          <% if (language === 'en') { %>
+            <a href="#local/<%= localSlug %>/en" class="city__link">
+              DISCOVER <span class="city__local"> <% print(local.toUpperCase()); %> </span>
+            </a>
+          <% } else { %>
+            <a href="#local/<%= localSlug %>" class="city__link">
+              DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>
+            </a>
+          <% } %>
           <div class="city__border city__border--top"></div>
           <div class="city__border city__border--left"></div>
           <div class="city__border city__border--bottom"></div>
@@ -72,7 +78,7 @@ export default Backbone.BetterView.extend({
   },
 
   didInitialize (options) {
-    _.extend(this, _.pick(options, 'position'));
+    _.extend(this, _.pick(options, 'position', 'language'));
   },
 
   onLoad () {
@@ -247,6 +253,12 @@ export default Backbone.BetterView.extend({
         }, 0);
       });
     });
+  },
+
+  render () {
+    var data = _.extend(this.model.toJSON(), { language: this.language });
+    Backbone.BetterView.prototype.render.call(this, data);
+    return this;
   },
 
   didRender () {

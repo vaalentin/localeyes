@@ -101,16 +101,12 @@ Backbone.BetterView = Backbone.View.extend({
       views.forEach(view => this.$(selector).prepend(view.render().el));
   },
 
-  render () {
+  render (data) {
     if (this.willRender)
       this.willRender.apply(this, arguments);
 
-    if (this.template) {
-      if (this.model)
-        this.$el.html(this.template(this.model.toJSON()));
-      else
-        this.$el.html(this.template());
-    }
+    if (!data) data = this.model? this.model.toJSON() : {};
+    this.$el.html(this.template(data));
 
     // cache DOM elements
     if (this.els) {
