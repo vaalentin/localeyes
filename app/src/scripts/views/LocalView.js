@@ -92,7 +92,34 @@ export default Backbone.PageView.extend({
             >
         </div>
       </div>
-    `)
+    `),
+
+    4: _.template(`
+      <div class='local__block local__block--type4'>
+        <img class='local__image' src='<%= urls[0] %>'
+          data-bottom-top='left:-100%;opacity:0;'
+          data-center-center='left:0;opacity:1;'
+          >
+      </div>
+    `),
+
+    5: _.template(`
+      <div class='local__block local__block--type5'>
+        <img class='local__image' src='<%= urls[0] %>'
+          data-bottom-top='left:100%;opacity:0;'
+          data-center-center='left:0;opacity:1;'
+          >
+      </div>
+    `),
+
+    6: _.template(`
+      <div class='local__block local__block--type6'>
+        <img class='local__image' src='<%= urls[0] %>'
+          data-bottom-top='top:300px;opacity:0;'
+          data-center-center='top:0px;opacity:1;'
+          >
+      </div>
+    `),
   },
 
   didInitialize () {
