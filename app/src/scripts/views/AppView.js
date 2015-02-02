@@ -48,11 +48,11 @@ export default Backbone.ContentView.extend({
       }
     });
 
-    router.on('route:local', slug => {
+    router.on('route:local', (slug, language) => {
       var localModel = Store.getLocals().findWhere({ slug: slug });
 
       if (localModel) {
-        var localView = new LocalView({ model: localModel });
+        var localView = new LocalView({ model: localModel, language: language });
         this.changeContent(localView);
       }
     });

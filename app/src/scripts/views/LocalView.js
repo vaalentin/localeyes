@@ -24,7 +24,15 @@ export default Backbone.PageView.extend({
               style='left:<%= marker.position.x || 0 %>;top:<%= marker.position.y || 0 %>'>
               <% if (marker.text) { %>
                 <div class="local__marker__link" data-time='<%= marker.time || 0 %>'>
-                  <%= marker.text.toUpperCase() %>
+                  <% if (_.isString(marker.text)) { %>
+                    <%= marker.text.toUpperCase() %>
+                  <% } else { %>
+                    <% if (language === 'en') { %>
+                      <%= marker.text.en.toUpperCase() %>
+                    <% } else { %>
+                      <%= marker.text.fr.toUpperCase() %>
+                    <% } %>
+                  <% } %>
                 </div>
               <% } %>
               <div class="local__marker__icon">
@@ -50,7 +58,11 @@ export default Backbone.PageView.extend({
       </div>
     <% } %>
     <div class='local__content'></div>
-    <a href='#city/<%= citySlug %>' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
+    <% if (language === 'en') { %>
+      <a href='#city/<%= citySlug %>/en' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
+    <% } else { %>
+      <a href='#city/<%= citySlug %>' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
+    <% } %>
   `,
 
   blocksTemplates: {
@@ -122,7 +134,9 @@ export default Backbone.PageView.extend({
     `),
   },
 
-  didInitialize () {
+  didInitialize (options) {
+    _.extend(this, _.pick(options, 'language'));
+
     this.$win = jQuery(window); // keep track of the scrollTop to restore it on out
     this.$win.on('scroll', this.onScroll.bind(this));
 
@@ -174,9 +188,11 @@ export default Backbone.PageView.extend({
   },
 
   render () {
-    var data = this.model.toJSON();
-    data.citySlug = this.city.get('slug');
-    data.cityBackground = this.city.get('background');
+    var data = _.extend(this.model.toJSON(), {
+      language: this.language,
+      citySlug: this.city.get('slug'),
+      cityBackground: this.city.get('background')
+    });
 
     this.$el.html(this.template(data));
     this.$('.local__content').html(this.renderBlocks());
