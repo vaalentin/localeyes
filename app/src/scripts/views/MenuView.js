@@ -76,6 +76,7 @@ export default Backbone.BetterView.extend({
   },
 
   els: {
+    '$buttons': '.menu__button',
     '$expandable': '.menu__expandable',
     '$icon': '.menu__icon--share'
   },
@@ -86,8 +87,22 @@ export default Backbone.BetterView.extend({
   },
 
   onClick (e) {
-    var button = jQuery(e.currentTarget).attr('data-button');
+    var $el = jQuery(e.currentTarget);
+    var button = $el.attr('data-button');
     if (button) this.trigger('click', button);
+  },
+
+  setActive (name) {
+    this.els.$buttons.removeClass('is-active');
+    this.els.$buttons.each((i, el) => {
+      var $el = jQuery(el);
+      if ($el.attr('data-button') === name)
+        $el.addClass('is-active');
+    });
+  },
+
+  removeActive () {
+    this.els.$buttons.removeClass('is-active');
   },
 
   onShareOver (e) {

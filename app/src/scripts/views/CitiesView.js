@@ -129,9 +129,11 @@ export default Backbone.ContentView.extend({
 
     this.disable();
     this.changeContent(view);
+    this.menu.setActive(name);
     this.listenTo(view, 'close', () => {
       this.enable();
       this.removeContent();
+      this.menu.removeActive();
     });
   },
 
