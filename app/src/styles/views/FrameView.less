@@ -211,11 +211,36 @@
 }
 
 @media @phone {
+  .frame__text--horizontal,
+  .frame__text--vertical {
+    font-size: 14px;
+  }
+
+  .frame__text--horizontal {
+    line-height: 25px;
+  }
+
   .frame__bar--left, .frame__bar--right {
     width: 25px;
   }
 
   .frame__bar--top, .frame__bar--bottom {
     height: 25px;
+  }
+
+  .frame__arrow__container--top {
+    bottom: -5px;
+  }
+
+  .frame__arrow__container--right {
+    left: -5px;
+  }
+
+  .frame__arrow__container--bottom {
+    top: -5px;
+  }
+
+  .frame__arrow__container--left {
+    right: -5px;
   }
 }
