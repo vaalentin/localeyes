@@ -171,7 +171,7 @@ export default Backbone.PageView.extend({
 
   onLoad () {
     this.loaded = true;
-    _.defer(() => {
+    setImmediate(() => {
       this.skrollr = skrollr.init({ forceHeight: false });
     });
     this.in();
@@ -196,7 +196,7 @@ export default Backbone.PageView.extend({
 
     this.$el.html(this.template(data));
     this.$('.local__content').html(this.renderBlocks());
-    _.defer(this.didRender.bind(this));
+    setImmediate(this.didRender.bind(this));
     return this;
   },
 

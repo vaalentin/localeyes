@@ -120,7 +120,7 @@ Backbone.BetterView = Backbone.View.extend({
     }
     
     if (this.didRender) {
-      _.defer(() => {
+      setImmediate(() => {
         this.didRender.apply(this, arguments);
       });
     }
