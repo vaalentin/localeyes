@@ -42,6 +42,10 @@
   will-change: transform;
 }
 
+.is-mobile .city__background {
+  .transform(scale(1));
+}
+
 .ie .city__content {
   display: inline-block; // IE6-IE7 fix
 }
@@ -83,6 +87,11 @@
   top: -90px;
 }
 
+.mobile .city__name {
+  opacity: 1;
+  top: 0;  
+}
+
 .city__country {
   font-size: 30px;
   font-weight: lighter;
@@ -101,6 +110,11 @@
   letter-spacing: -10px;
 }
 
+.mobile .city__country {
+  opacity: 1;
+  top: 0;  
+}
+
 // icon
 .city__icon {
   position: absolute;
@@ -112,6 +126,11 @@
   margin-left: -45px;
 
   opacity: 0;
+}
+
+.mobile .city__icon {
+  top: -90px;
+  opacity: 1;
 }
 
 // squares
@@ -141,9 +160,19 @@
   left: 50%;
 }
 
+.mobile .city__square--topLeft {
+  left: 0;
+  top: 0;
+}
+
 .city__square--topRight {
   top: 50%;
   right: 50%;
+}
+
+.mobile .city__square--topRight {
+  right: 0;
+  top: 0;
 }
 
 .city__square--bottomLeft {
@@ -151,9 +180,19 @@
   right: 50%;
 }
 
+.mobile .city__square--bottomLeft {
+  left: 0;
+  bottom: 0;
+}
+
 .city__square--bottomRight {
   bottom: 50%;
   right: 50%;
+}
+
+.mobile .city__square--topRight {
+  right: 0;
+  top: 0;
 }
 
 // button
@@ -166,6 +205,11 @@
 
   opacity: 0;
   top: 50px;
+}
+
+.mobile .city__button {
+  opacity: 1;
+  top: 0;
 }
 
 .city__button:hover {
@@ -205,10 +249,20 @@
   height: 1px;
 }
 
+.mobile .city__border--top,
+.mobile .city__border--bottom {
+  width: 100%;
+}
+
 .city__border--left,
 .city__border--right {
   width: 1px;
   height: 0;
+}
+
+.mobile .city__border--left,
+.mobile .city__border--right {
+  height: 100%;
 }
 
 .city__border--top {

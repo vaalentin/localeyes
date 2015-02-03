@@ -4,6 +4,7 @@ import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 
+import Features from '../modules/Features';
 import Loader from '../modules/Loader';
 
 export default Backbone.BetterView.extend({
@@ -93,7 +94,7 @@ export default Backbone.BetterView.extend({
   },
 
   in () {
-    this.$el.css('z-index', 2);
+    if (Features.mobile) return false;
 
     this.els.$squareTopLeft
       .velocity('stop')
@@ -170,6 +171,8 @@ export default Backbone.BetterView.extend({
   },
 
   out () {
+    if (Features.mobile) return false;
+
     this.els.$background
       .velocity('stop')
       .velocity({ scale: 1.2 }, 600);
@@ -185,7 +188,7 @@ export default Backbone.BetterView.extend({
    * @methd reset
    */
   reset () {
-    this.$el.css('z-index', 1);
+    if (Features.mobile) return false;
     
     this.els.$squareTopLeft
       .velocity('stop')

@@ -8,6 +8,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Hammer from 'hammer';
 
+import Features from '../modules/Features';
 import Store from '../modules/StoreModule';
 
 import MapModel from '../models/MapModel';
@@ -58,34 +59,56 @@ export default Backbone.ContentView.extend({
     this.listenTo(this.frame, 'mouseover', this.onFrameOver);
     this.listenTo(this.frame, 'mouseout', this.onFrameOut);
     jQuery(document).on('keydown', this.onKeydown.bind(this));
+    jQuery(window).on('resisze', this.onResize.bind(this));
 
     this.isSliding = false;
     this.isOpen = false;
 
     // touch screen
-    this.hammer = new Hammer.Manager(this.$el[0], { dragLockToAxis: true });
-    this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
+    if (Features.mobile) {
+      this.hammer = new Hammer.Manager(this.$el[0], { dragLockToAxis: true });
+      this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
 
-    this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
-    this.hammer.on('panup pandown', this.onPanVertical.bind(this));
-    this.hammer.on('panend', this.onPanend.bind(this));
-    jQuery(window).on('resisze', this.onResize.bind(this));
+      this.dragFactorA = null;
+      this.dragFactorB = null;
+      this.translateX = null;
+      this.translateY = null;
+      this.width = null;
+      this.height = null;
+      this.panY = false;
+      this.panX = false;
 
-    this.dragFactorA = null;
-    this.dragFactorB = null;
-    this.translateX = null;
-    this.translateY = null;
-    this.width = null;
-    this.height = null;
-    this.panY = false;
-    this.panX = false;
+      this.enableTouch();
+    }
   },
 
   willRemove () {
     this.cities.forEach(city => city.remove());
     jQuery(document).off('keydown', this.onKeydown);
     jQuery(window).off('resize', this.onResize);
-    this.hammer.destroy();
+    if (this.hammer) this.hammer.destroy();
+  },
+
+  /**
+   * Enable all touch related events
+   *
+   * @method enableTouch
+   */
+  enableTouch () {
+    this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
+    this.hammer.on('panup pandown', this.onPanVertical.bind(this));
+    this.hammer.on('panend', this.onPanend.bind(this));
+  },
+
+  /**
+   * Disable all touch related events
+   *
+   * @method disableTouch
+   */
+  disableTouch () {
+    this.hammer.off('panleft panright', this.onPanHorizontal);
+    this.hammer.off('panup pandown', this.onPanVertical);
+    this.hammer.off('panend', this.onPanend);
   },
 
   onMenuClick (name) {
@@ -250,22 +273,14 @@ export default Backbone.ContentView.extend({
 
   disable () {
     this.els.$content.velocity({ opacity: 0.5 }, 1000);
+    if (this.hammer) this.disableTouch();
     // this.frame.disable();
-    
-    // touch screen
-    this.hammer.off('panleft panright', this.onPanHorizontal);
-    this.hammer.off('panup pandown', this.onPanVertical);
-    this.hammer.off('panend', this.onPanend);
   },
 
   enable () {
     this.els.$content.velocity({ opacity: 1 }, 1000);
+    if (this.hammer) this.enableTouch();
     // this.frame.enable();
-
-    // touch screen
-    this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
-    this.hammer.on('panup pandown', this.onPanVertical.bind(this));
-    this.hammer.on('panend', this.onPanend.bind(this));
   },
 
   setCity () {
