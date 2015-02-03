@@ -57,7 +57,7 @@ export default Backbone.PageView.extend({
         </video>
       </div>
     <% } %>
-    <div class='local__content'></div>
+    <div class='local__content'  id='skrollr-body'></div>
     <% if (language === 'en') { %>
       <a href='#city/<%= citySlug %>/en' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
     <% } else { %>
