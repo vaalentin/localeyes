@@ -35,15 +35,18 @@ Backbone.ContentView = Backbone.PageView.extend({
     var next = function () {
       this.prepend(view, this.content);
       this.currentView = view;
+      this.currentView.$el.css('z-index', 2);
       view.in();
     }.bind(this);
 
     var previousView = this.currentView || null;
 
-    if (previousView)
+    if (previousView) {
+      previousView.$el.css('z-index', 1);
       previousView.out(next).then(() => previousView.remove());
-    else
+    } else {
       next();
+    }
   },
 
   /**
