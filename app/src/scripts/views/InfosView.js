@@ -20,7 +20,12 @@ export default Backbone.PageView.extend({
             </svg>
           </a>
           <div class="infos__content__container">
-            ${jQuery('#infosContent').html()}
+            <div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
+            <div class="viewport">
+              <div class="overview">
+                ${jQuery('#infosContent').html()}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -29,6 +34,18 @@ export default Backbone.PageView.extend({
 
   events: {
     'click .infos__icon--close': 'onCloseClick'
+  },
+
+  els: {
+    '$scrollBar': '.infos__content__container'
+  },
+
+  willRemove () {
+    jQuery(window).off('resize', this.onResize);
+  },
+
+  onResize (e) {
+    this.scrollbar.update();
   },
 
   onCloseClick (e) {
@@ -45,5 +62,12 @@ export default Backbone.PageView.extend({
     return new Promise((resolve, reject) => {
       this.$el.velocity({ translateY: -200, opacity: 0 }, { duration: 500, complete: resolve });
     });
+  },
+
+  didRender () {
+    this.els.$scrollBar.tinyscrollbar();
+    this.scrollbar = this.els.$scrollBar.data('plugin_tinyscrollbar');
+    
+    jQuery(window).on('resize', this.onResize.bind(this));
   }
 });

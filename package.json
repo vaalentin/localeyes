@@ -27,6 +27,7 @@
     "hammer": "./node_modules/hammerjs/hammer.js",
     "polyfills": "./node_modules/6to5/browser-polyfill.js",
     "jquery.velocity": "./node_modules/velocity-animate/velocity.js",
+    "jquery.tinyscrollbar": "./node_modules/tinyscrollbar/lib/jquery.tinyscrollbar.js",
     "skrollr": "./node_modules/skrollr/src/skrollr.js",
     "videojs": "./node_modules/video.js/dist/video-js/video.js",
     "videojs.youtube": "./node_modules/videojs-youtube/dist/vjs.youtube.js",
@@ -36,7 +37,8 @@
     "jquery": {
       "exports": "global:jQuery",
       "depends": [
-        "jquery.velocity"
+        "jquery.velocity",
+        "jquery.tinyscrollbar"
       ]
     },
     "underscore": "global:_",
@@ -66,6 +68,7 @@
     "normalize.less": "^1.0.0",
     "npm": "^2.2.0",
     "skrollr": "^0.6.26",
+    "tinyscrollbar": "^2.2.4",
     "underscore": "^1.7.0",
     "velocity-animate": "^1.1.0",
     "video.js": "^4.11.4",
