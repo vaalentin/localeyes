@@ -5,9 +5,9 @@
  * eg: Los Angeles => los_angeles
  *
  * @function slug
- * @param {String} [string='']
+ * @param {String} [str='']
  * @return {String}
  */
-export default function slug (string='') {
-  return string.toLowerCase().replace(' ', '_');
+export default function slug (str='') {
+  return str.toLowerCase().replace(' ', '_');
 }

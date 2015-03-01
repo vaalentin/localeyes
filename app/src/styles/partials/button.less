@@ -1,0 +1,81 @@
+// button
+.button:extend(.inline-block) {
+  position: relative;
+  top: 50px;
+
+  margin-top: 50px;
+
+  opacity: 0;
+}
+
+// link
+.button__link {
+  padding: 15px 15px 8px 15px;
+}
+
+// border
+.button__border {
+  position: absolute;
+
+  display: block;
+
+  background: #fff;
+}
+
+.button__border--top:extend(.button__border) {
+  top: 0;
+  left: 0;
+}
+
+.button__border--bottom:extend(.button__border) {
+  right: 0;
+  bottom: 0;
+}
+
+.button__border--left:extend(.button__border) {
+  top: 0;
+  left: 0;
+}
+
+.button__border--right:extend(.button__border) {
+  right: 0;
+  bottom: 0;
+}
+
+.button__border--top,
+.button__border--bottom {
+  width: 0;
+  height: 1px;
+}
+
+.button__border--left,
+.button__border--right {
+  width: 1px;
+  height: 0;
+}
+
+// hover
+.button:hover {
+  background-color: #fff;
+  
+  .button__link {
+    color: #0a0a0a;
+  }
+}
+
+// mobile
+.mobile {
+  .button {
+    top: 0;
+
+    opacity: 1;
+  }
+  .city__border--top,
+  .city__border--bottom {
+    width: 100%;
+  }
+  .city__border--left,
+  .city__border--right {
+    height: 100%;
+  }
+}

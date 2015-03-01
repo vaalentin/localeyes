@@ -1,16 +1,21 @@
+@city-background-color: #424242;
+@city-icon-size: 90px;
+@city-square-size: 6px;
+
 .city {
   position: absolute;
   top: 0;
   left: 0;
 
   display: table;
-  table-layout: fixed;
   overflow: hidden;
 
   width: 100%;
   height: 100%;
 
-  background-color: #424242;
+  table-layout: fixed;
+
+  background-color: @city-background-color;
 }
 
 // content
@@ -24,6 +29,10 @@
 
   text-align: center;
   vertical-align: middle;
+}
+
+.ie .city__content {
+  display: inline-block; // IE6-IE7 fix
 }
 
 // background
@@ -40,79 +49,64 @@
   .transform(scale(1.2));
   .background-size(cover);
   will-change: transform;
+
+  // opacity: 0;
 }
 
 .is-mobile .city__background {
   .transform(scale(1));
 }
 
-.ie .city__content {
-  display: inline-block; // IE6-IE7 fix
+// sections
+.city__content__section {
 }
 
-// sections
-.city__content__section--button {
+.city__content__section--button:extend(.city__content__section) {
   position: absolute;
 
   width: 100%;
 }
 
 // title
-.city__title {
-  font-family: 'localeyes', 'sans-serif';
-
+.city__title:extend(.inline-block) {
   position: relative;
 
   text-align: center;
-
-  .inline-block;
 }
 
 // text
 .city__name {
-  font-size: 104px;
-  font-weight: lighter;
-
   position: relative;
+  top: -90px;
 
   margin: 0;
   margin-right: -20px; // letter spacing fix
   padding: 40px 0 0 0;
 
-  letter-spacing: -50px;
-
-  color: #fff;
-
   opacity: 0;
-  top: -90px;
 }
 
 .mobile .city__name {
+  top: 0;
+
   opacity: 1;
-  top: 0;  
 }
 
 .city__country {
-  font-size: 30px;
-  font-weight: lighter;
-
   position: relative;
+  top: 50px;
 
   margin: 0;
   margin-top: 20px;
   margin-left: 20px; // leter spacing fix
 
-  color: #fff;
-
   opacity: 0;
-  top: 50px;
-
-  letter-spacing: -10px;
 }
 
 .mobile .city__country {
+  top: 0;
+
   opacity: 1;
-  top: 0;  
 }
 
 // icon
@@ -121,15 +115,16 @@
   top: -150px;
   left: 50%;
 
-  width: 90px;
-  height: 90px;
+  width: @city-icon-size;
+  height: @city-icon-size;
   margin-left: -45px;
 
   opacity: 0;
 }
 
 .mobile .city__icon {
-  top: -90px;
+  top: -@city-icon-size;
+
   opacity: 1;
 }
 
@@ -137,158 +132,66 @@
 .city__square {
   position: absolute;
 
-  width: 6px;
-  height: 6px;
-
-  background-color: #fff;
+  width: @city-square-size;
+  height: @city-square-size;
 
   opacity: 0;
+  background-color: #fff;
 }
 
-.city__square--topLeft,
-.city__square--topRight {
-  margin-top: -3px;
-}
-
-.city__square--bottomLeft,
-.city__square--bottomRight {
-  margin-bottom: -3px;
-}
-
-.city__square--topLeft {
+.city__square--topLeft:extend(.city__square) {
   top: 50%;
   left: 50%;
 }
 
-.mobile .city__square--topLeft {
-  left: 0;
-  top: 0;
-}
-
-.city__square--topRight {
+.city__square--topRight:extend(.city__square) {
   top: 50%;
   right: 50%;
 }
 
-.mobile .city__square--topRight {
-  right: 0;
-  top: 0;
+.city__square--bottomLeft:extend(.city__square) {
+  right: 50%;
+  bottom: 50%;
 }
 
-.city__square--bottomLeft {
-  bottom: 50%;
+.city__square--bottomRight:extend(.city__square) {
   right: 50%;
+  bottom: 50%;
+}
+
+.city__square--topLeft,
+.city__square--topRight {
+  margin-top: -(@city-square-size / 2);
+}
+
+.city__square--bottomLeft,
+.city__square--bottomRight {
+  margin-bottom: -(@city-square-size / 2);
+}
+
+.mobile .city__square--topRight {
+  top: 0;
+  right: 0;
 }
 
 .mobile .city__square--bottomLeft {
-  left: 0;
   bottom: 0;
-}
-
-.city__square--bottomRight {
-  bottom: 50%;
-  right: 50%;
+  left: 0;
 }
 
 .mobile .city__square--topRight {
+  top: 0;
   right: 0;
-  top: 0;
 }
 
-// button
-.city__button {
-  position: relative;
-
-  .inline-block;
-
-  margin-top: 50px;
-
-  opacity: 0;
-  top: 50px;
-}
-
-.mobile .city__button {
-  opacity: 1;
-  top: 0;
-}
-
-.city__button:hover {
-  background-color: #fff;
-}
-
-.city__button:hover .city__link {
-  color: #0a0a0a;
-}
-
-// link
-.city__link {
-  font-family: 'Orator Std', 'sans-serif';
-  font-size: 18px;
-
-  display: block;
-
-  padding: 15px 15px 8px 15px;
-
-  text-decoration: none;
-
-  color: #fff;
-}
-
-// border
-.city__border {
-  position: absolute;
-
-  display: block;
-
-  background: #fff;
-}
-
-.city__border--top,
-.city__border--bottom {
-  width: 0;
-  height: 1px;
-}
-
-.mobile .city__border--top,
-.mobile .city__border--bottom {
-  width: 100%;
-}
-
-.city__border--left,
-.city__border--right {
-  width: 1px;
-  height: 0;
-}
-
-.mobile .city__border--left,
-.mobile .city__border--right {
-  height: 100%;
-}
-
-.city__border--top {
+.mobile .city__square--topLeft {
   top: 0;
   left: 0;
 }
 
-.city__border--bottom {
-  right: 0;
-  bottom: 0;
-}
-
-.city__border--left {
-  top: 0;
-  left: 0;
-}
-
-.city__border--right {
-  right: 0;
-  bottom: 0;
-}
-
+// responsive
 @media @phone {
   .city__name {
-    font-size: 80px;
-    letter-spacing: -40px;
     margin-right: -10px; // letter spacing fix
   }
 

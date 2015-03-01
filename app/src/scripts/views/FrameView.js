@@ -90,8 +90,8 @@ export default Backbone.BetterView.extend({
   },
 
   onMouseover (e) {
-    var $el = jQuery(e.currentTarget);
-    var direction = $el.attr('data-direction');
+    const $el = jQuery(e.currentTarget);
+    const direction = $el.attr('data-direction');
     if (direction) this.trigger('mouseover', direction);
   },
 
@@ -101,11 +101,11 @@ export default Backbone.BetterView.extend({
 
   onChange () {
     ['top', 'right', 'bottom', 'left'].forEach(position => {
-      var $el = this.$(`.frame__bar--${position}`);
-      var direction = $el.attr('data-direction');
+      const $el = this.$(`.frame__bar--${position}`);
+      const direction = $el.attr('data-direction');
       
       if (this.model.has(direction)) {
-        var href = this.language
+        const href = this.language
           ? `#city/${this.model.get(direction)}/${this.language}`
           : `#city/${this.model.get(direction)}`;
 

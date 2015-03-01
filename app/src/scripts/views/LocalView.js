@@ -6,10 +6,11 @@ import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 import skrollr from 'skrollr';
-import videojs from 'videojs';
 
 import Store from '../modules/StoreModule';
 import Loader from '../modules/Loader';
+
+import { ResponsiveVideo } from './VideoView';
 
 export default Backbone.PageView.extend({
   name: 'local',
@@ -17,13 +18,13 @@ export default Backbone.PageView.extend({
 
   template: `
     <% if (video) { %>
-      <div class='local__video'>
+      <div class="local__video">
         <div class='local__video__overlay'>
           <% if (video.markers) _.each(video.markers, function (marker) { %>
             <div class='local__marker'
               style='left:<%= marker.position.x || 0 %>;top:<%= marker.position.y || 0 %>'>
               <% if (marker.text) { %>
-                <div class="local__marker__link" data-time='<%= marker.time || 0 %>'>
+                <a class="local__marker__link" data-time='<%= marker.time || 0 %>'>
                   <% if (_.isString(marker.text)) { %>
                     <%= marker.text.toUpperCase() %>
                   <% } else { %>
@@ -33,7 +34,7 @@ export default Backbone.PageView.extend({
                       <%= marker.text.fr.toUpperCase() %>
                     <% } %>
                   <% } %>
-                </div>
+                </a>
               <% } %>
               <div class="local__marker__icon">
                 <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 30 48">
@@ -45,18 +46,9 @@ export default Backbone.PageView.extend({
             </div>
           <% }); %>
         </div>
-        <video class='local__video__video video-js vjs-default-skin'
-          data-setup='{ "techOrder": ["youtube"], "src": "<%= video.url %>" }'
-          classover='<%= video.cover || "" %>'
-          controls='controls'
-          width='auto'
-          height='auto'
-          preload='auto'
-          autoplay
-          cover=''>
-        </video>
       </div>
     <% } %>
+    
     <div class='local__content'  id='skrollr-body'></div>
     <% if (language === 'en') { %>
       <a href='#city/<%= citySlug %>/en' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
@@ -134,6 +126,10 @@ export default Backbone.PageView.extend({
     `),
   },
 
+  events: {
+    'click .local__marker__link': 'onMarkerClick'
+  },
+
   didInitialize (options) {
     _.extend(this, _.pick(options, 'language'));
 
@@ -141,18 +137,21 @@ export default Backbone.PageView.extend({
     this.$win.on('scroll', this.onScroll.bind(this));
 
     this.city = Store.getCities().findWhere({ localSlug: this.model.get('slug') });
+    if (this.model.has('video')) {
+      this.video = new ResponsiveVideo({ videoId: this.model.get('video').id, autoplay: 0 });
+      this.listenTo(this.video, 'ready', this.markersIn);
+    }
   },
 
   willRemove () {
-    if (this.video) this.video.dispose();
+    if (this.video) this.video.remove();
     this.$win.off('scroll', this.onScroll);
-    this.$('.local__marker__link').off('click');
     skrollr.init().destroy();
   },
 
   in () {
     if (!this.loaded) return false;
-    this.$el.velocity({ opacity: 1 }, 2000);
+    this.$el.velocity({ opacity: 1 }, 1500);
   },
 
   out (done) {
@@ -178,17 +177,13 @@ export default Backbone.PageView.extend({
   },
 
   renderBlocks () {
-    var string = '';
-
-    this.model.get('images').forEach(image => {
-      string += this.blocksTemplates[image.type](image);
-    });
-
-    return string;
+    return this.model.get('images').reduce((out, image) => {
+      return out += this.blocksTemplates[image.type](image);
+    }, '');
   },
 
   render () {
-    var data = _.extend(this.model.toJSON(), {
+    const data = _.extend(this.model.toJSON(), {
       language: this.language,
       citySlug: this.city.get('slug'),
       cityBackground: this.city.get('background')
@@ -203,40 +198,29 @@ export default Backbone.PageView.extend({
   onMarkerClick (e) {
     if (!this.video) return false;
 
-    var time = jQuery(e.currentTarget).attr('data-time') || 0;
-    this.video.currentTime(time);
+    const time = jQuery(e.currentTarget).attr('data-time') || 0;
+    this.video.goTo(time);
   },
 
-  setupVideo () {
-    var $video = this.$('.local__video__video');
-
-    if (!$video.length) return false;
-
-    this.video = videojs($video[0]);
-    this.video.one('play', this.videoIn.bind(this));
-    this.$('.local__marker__link').on('click', this.onMarkerClick.bind(this));
-  },
-
-  videoIn () {
-    this.$('.local__video')
-      .velocity({ translateY: 50, opacity: 0 }, 0)
-      .velocity({ translateY: 0, opacity: 1 }, { duration: 800, delay: 100 });
-
-    this.$('.local__marker').each(function (i, el) {
-      jQuery(this).velocity({ translateY: 50, opacity: 0 }, 0)
+  markersIn () {
+    this.$('.local__marker').each((i, el) => {
+      jQuery(el)
+        .velocity({ translateY: 50, opacity: 0 }, 0)
         .velocity({ translateY: 0, opacity: 1 }, { duration: 500, delay: (i * 200) + 600 });
     });
   },
 
   didRender () {
-    this.setupVideo();
-
-    var images = this.model.get('images').reduce((out, image) => {
+    const images = this.model.get('images').reduce((out, image) => {
       return out.concat(image.urls || []);
     }, []);
 
     this.loaded = false;
     this.loader = new Loader(images);
     this.loader.load().then(this.onLoad.bind(this));
+
+    if (this.video) {
+      this.append(this.video, '.local__video');
+    }
   },
 });

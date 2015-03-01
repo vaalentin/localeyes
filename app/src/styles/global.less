@@ -1,0 +1,64 @@
+.localeyesFont {
+  font-family: localeyes, sans-serif;
+}
+
+.oratorFont {
+  font-family: 'Orator Std', sans-serif;
+}
+
+.whiteFont {
+  color: #fff;
+}
+
+.blackFont {
+  color: #0a0a0a;
+}
+
+h1:extend(.localeyesFont, .whiteFont) {
+  font-size: 104px;
+  font-weight: lighter;
+  line-height: 0.5;
+
+  letter-spacing: -50px;
+}
+
+h2:extend(.localeyesFont, .whiteFont) {
+  font-size: 54px;
+  font-weight: lighter;
+  line-height: 1;
+
+  letter-spacing: -20px;
+}
+
+h3:extend(.localeyesFont, .whiteFont) {
+  font-size: 30px;
+  font-weight: lighter;
+  line-height: 1;
+
+  letter-spacing: -10px;
+}
+
+a:extend(.oratorFont, .whiteFont) {
+  font-size: 18px;
+  line-height: 1;
+
+  display: block;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  color: #fff;
+}
+
+p:extend(.oratorFont, .blackFont) {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+@media @phone {
+  h1 {
+    font-size: 80px;
+
+    letter-spacing: -40px;
+  }
+}

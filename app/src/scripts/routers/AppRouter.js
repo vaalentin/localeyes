@@ -4,8 +4,7 @@ import Backbone from 'backbone';
 
 export default Backbone.Router.extend({
   routes: {
-    '': 'default',
-    'welcome': 'welcome',
+    '': 'welcome',
     'howto': 'howto',
     'local/:slug': 'local',
     'local/:slug/:language': 'local',

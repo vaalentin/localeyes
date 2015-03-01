@@ -11,10 +11,10 @@ import jQuery from 'jquery';
  * @return {String} [data.className] Classname to be added to html (can be empty)
  */
 
-var features = {};
-
 function mobile () {
-  var result;
+  const name = 'mobile';
+  let result;
+  let className;
 
   if (navigator.userAgent.match(/Android/i)
     || navigator.userAgent.match(/webOS/i)
@@ -23,20 +23,25 @@ function mobile () {
     || navigator.userAgent.match(/iPod/i)
     || navigator.userAgent.match(/BlackBerry/i)
     || navigator.userAgent.match(/Windows Phone/i)
-    || false)
+    || false) {
     result = true;
-  else
+  }
+  else {
     result = false;
+  }
 
-  return { name: 'mobile', result: result, className: result ? 'mobile' : '' };
+  className = result ? 'mobile' : '';
+
+  return { name, result, className };
 }
 
-var tests = [mobile];
+let features = {};
+const tests = [mobile];
 
-var className = tests.map(t => {
-  var data = t();
-  features[data.name] = data.result;
-  return data.className;
+let className = tests.map(test => {
+  let { name, result, className } = test();
+  features[name] = result;
+  return className;
 }).join(' ');
 
 jQuery('html').addClass(className);

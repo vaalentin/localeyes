@@ -41,31 +41,28 @@ export default Backbone.PageView.extend({
   },
 
   didRender () {
-    jQuery.ajaxSetup({ cache: true });
     jQuery.getScript('https://www.google.com/jsapi', () => {
       window.google.load('maps', '3', { other_params: 'sensor=false', callback: this.buildMap.bind(this) });
     });
   },
 
   buildMap () {
-    var mapOptions = { zoom: 4 };
+    const map = new window.google.maps.Map(this.$('.map__content__container')[0], { zoom: 4 });
 
-    var map = new window.google.maps.Map(this.$('.map__content__container')[0], mapOptions);
+    const geocoder = new window.google.maps.Geocoder();
+    const markerBounds = new window.google.maps.LatLngBounds();
 
-    var geocoder = new window.google.maps.Geocoder();
-    var markerBounds = new window.google.maps.LatLngBounds();
-
-    var icon = new window.google.maps.MarkerImage('./app/public/images/map-marker.png', null, null, null, new window.google.maps.Size(22, 35));
+    const icon = new window.google.maps.MarkerImage('./app/public/images/map-marker.png', null, null, null, new window.google.maps.Size(22, 35));
 
     this.collection.each((city, i) => {
-      var name = city.get('name');
-      var country = city.get('country');
-      var slug = city.get('slug');
-
-      var animation = slug === this.activeCity ? window.google.maps.Animation.BOUNCE : window.google.maps.Animation.DROP;
+      const name = city.get('name');
+      const country = city.get('country');
+      const slug = city.get('slug');
+      
+      const animation = slug === this.activeCity ? window.google.maps.Animation.BOUNCE : window.google.maps.Animation.DROP;
 
       geocoder.geocode({ 'address': `${name}, ${country}` }, (results, status) => {
-        var coords = results[0].geometry.location;
+        const coords = results[0].geometry.location;
 
         if (!coords) return false;
 
@@ -73,12 +70,12 @@ export default Backbone.PageView.extend({
         map.fitBounds(markerBounds);
 
         setTimeout(() => {  
-          var marker = new window.google.maps.Marker({
+          const marker = new window.google.maps.Marker({
+            map,
+            icon,
+            animation,
             position: coords,
-            map: map,
-            title: name,
-            animation: animation,
-            icon: icon
+            title: name
           });
 
           window.google.maps.event.addListener(marker, 'click', () => {

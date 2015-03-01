@@ -11,7 +11,7 @@ export default Backbone.BetterView.extend({
     <a href="#/city/<%= slug %>" class="cover__link">
       <div class="cover__title">
         <h1 class="cover__name"> <% print(name.toUpperCase()); %> </h1>
-        <h2 class="cover__country"> <% print(country.toUpperCase()); %> </h2>
+        <h3 class="cover__country"> <% print(country.toUpperCase()); %> </h3>
       </div>
     </a>
     <% if (cover) { %>
@@ -25,18 +25,25 @@ export default Backbone.BetterView.extend({
     'mouseout': 'onMouseout'
   },
 
+  els: {
+    '$overlay': '.cover__overlay',
+    '$background': '.cover__background',
+    '$name': '.cover__name',
+    '$country': '.cover__country'
+  },
+
   onMouseover () {
-    this.$('.cover__overlay').velocity('stop').velocity({ opacity: 0.6 }, 400);
-    this.$('.cover__background').velocity('stop').velocity({ scale: 1.1 }, 400);
-    this.$('.cover__name').velocity('stop').velocity({ opacity: 1, top: 0 }, 300);
-    this.$('.cover__country').velocity('stop').velocity({ opacity: 1, top: 0 }, 200);
+    this.els.$overlay.velocity('stop').velocity({ opacity: 0.6 }, 400);
+    this.els.$background.velocity('stop').velocity({ scale: 1.1 }, 400);
+    this.els.$name.velocity('stop').velocity({ opacity: 1, top: 0 }, 300);
+    this.els.$country.velocity('stop').velocity({ opacity: 1, top: 0 }, 200);
   },
 
   onMouseout () {
-    this.$('.cover__overlay').velocity('stop').velocity({ opacity: 0 }, 400);
-    this.$('.cover__background').velocity('stop').velocity({ scale: 1 }, 400);
-    this.$('.cover__name').velocity('stop').velocity({ opacity: 0, top: -30 }, 300);
-    this.$('.cover__country').velocity('stop').velocity({ opacity: 0, top: 30 }, 200);
+    this.els.$overlay.velocity('stop').velocity({ opacity: 0 }, 400);
+    this.els.$background.velocity('stop').velocity({ scale: 1 }, 400);
+    this.els.$name.velocity('stop').velocity({ opacity: 0, top: -30 }, 300);
+    this.els.$country.velocity('stop').velocity({ opacity: 0, top: 30 }, 200);
   },
 
   in (delay) {

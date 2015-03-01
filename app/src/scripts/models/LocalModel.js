@@ -13,12 +13,14 @@ export default Backbone.Model.extend({
   },
 
   initialize: function () {
-    if (!this.has('slug'))
+    if (!this.has('slug')) {
       this.set({ slug: slug(this.get('name')) });
+    }
   },
 
   validate (attrs, options) {
-    if (!attrs.name)
+    if (!attrs.name) {
       return 'Local must have a name.';
+    }
   }
 });

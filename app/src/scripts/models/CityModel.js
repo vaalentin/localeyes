@@ -27,15 +27,18 @@ export default Backbone.Model.extend({
   initialize: function () {
     var attrs = {};
 
-    if (!this.has('slug'))
+    if (!this.has('slug')) {
       attrs.slug = slug(this.get('name'));
+    }
 
-    if (!this.has('localSlug') && this.has('local'))
+    if (!this.has('localSlug') && this.has('local')) {
       attrs.localSlug = slug(this.get('local'));
+    }
 
     ['north', 'east', 'south', 'west'].forEach(direction => {
-      if (this.has(direction) && !this.has(`${direction}Slug`))  
+      if (this.has(direction) && !this.has(`${direction}Slug`)) {
         attrs[`${direction}Slug`] = slug(this.get(direction));
+      }
     });
 
     this.set(attrs);

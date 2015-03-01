@@ -1,10 +1,11 @@
+/**
+ * App bootstrap
+ */
+ 
 'use strict';
 
 import jQuery from 'jquery';
-import Backbone from 'backbone';
-import './extensions/BetterView';
-import './extensions/PageView';
-import './extensions/ContentView';
+jQuery.ajaxSetup({ cache: true });
 
 import AppView from './views/AppView';
 

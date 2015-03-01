@@ -1,6 +1,13 @@
+/**
+ * App main logic
+ */
+
 'use strict';
 
 import Backbone from 'backbone';
+import '../extensions/BetterView';
+import '../extensions/PageView';
+import '../extensions/ContentView';
 
 import AppRouter from '../routers/AppRouter';
 
@@ -16,27 +23,29 @@ export default Backbone.ContentView.extend({
   content: '.app__content',
 
   didInitialize () {
-    var router = new AppRouter();
-    var citiesView = null;
+    const router = new AppRouter();
+    let citiesView = null;
 
-    var loader = new LoaderView({ el: '.loader' });
+    const loader = new LoaderView({ el: '.loader' });
     loader.out();
 
-    router.on('route:default', () => {
-      router.navigate('/welcome', { trigger: true });
-    });
-
     router.on('route:welcome', () => {
-      var welcomeView = new WelcomeView();
+      const welcomeView = new WelcomeView();
+      this.listenTo(welcomeView, 'router:navigate', router.navigate);
       this.changeContent(welcomeView);
     });
 
     router.on('route:howto', () => {
-      var howtoView = new HowtoView();
+      const howtoView = new HowtoView();
       this.changeContent(howtoView);
     });
 
     router.on('route:city', (slug, language) => {
+      if (slug === 'en') {
+        language = slug;
+        slug = null;
+      }
+      
       if (!slug) slug = Store.getCities().first().get('slug');
 
       if (this.currentView && this.currentView.name === 'cities' && citiesView) {
@@ -49,10 +58,10 @@ export default Backbone.ContentView.extend({
     });
 
     router.on('route:local', (slug, language) => {
-      var localModel = Store.getLocals().findWhere({ slug: slug });
+      const localModel = Store.getLocals().findWhere({ slug: slug });
 
       if (localModel) {
-        var localView = new LocalView({ model: localModel, language: language });
+        const localView = new LocalView({ model: localModel, language: language });
         this.changeContent(localView);
       }
     });

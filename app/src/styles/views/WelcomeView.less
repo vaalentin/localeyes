@@ -1,7 +1,19 @@
+.welcome__video {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  overflow: hidden;
+
+  width: 100%;
+  height: 100%;
+}
+
 .welcome__video__video {
   opacity: 0;
 }
 
+// logo
 .welcome__logo {
   position: absolute;
   top: 50%;
@@ -22,15 +34,29 @@
   height: 100%;
 }
 
-.welcome__logo__part--eyes {
+.welcome__logo__part--eyes:extend(.welcome__logo__part) {
   top: -50px;
 
   opacity: 0;
 }
 
-.welcome__logo__part--firstLine,
-.welcome__logo__part--secondLine {
+.welcome__logo__part--firstLine:extend(.welcome__logo__part),
+.welcome__logo__part--secondLine:extend(.welcome__logo__part) {
   top: 100px;
 
   opacity: 0;
+}
+
+// baseline
+.welcome__baseline {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+
+  width: 100%;
+  margin-top: 100px;
+
+  text-align: center;
+
+  opacity: 1;
 }

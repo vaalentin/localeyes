@@ -1,6 +1,3 @@
-/* jshint curly: false */
-/* jshint laxbreak: true */
-
 'use strict';
 
 import jQuery from 'jquery';
@@ -37,6 +34,7 @@ export default Backbone.ContentView.extend({
     '$content': '.cities__content'
   },
 
+  // lifecycles methods
   didInitialize (options) {
     _.extend(this, _.pick(options, 'activeCity', 'language'));
     
@@ -47,6 +45,7 @@ export default Backbone.ContentView.extend({
       model: new FrameModel(),
       language: this.language
     });
+
     this.cities = this.collection.map(city => {
       return new CityView({
         model: city,
@@ -65,21 +64,19 @@ export default Backbone.ContentView.extend({
     this.isOpen = false;
 
     // touch screen
-    if (Features.mobile) {
-      this.hammer = new Hammer.Manager(this.$el[0], { dragLockToAxis: true });
-      this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
+    this.hammer = new Hammer.Manager(this.$el[0], { dragLockToAxis: true });
+    this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
 
-      this.dragFactorA = null;
-      this.dragFactorB = null;
-      this.translateX = null;
-      this.translateY = null;
-      this.width = null;
-      this.height = null;
-      this.panY = false;
-      this.panX = false;
+    this.dragFactorA = null;
+    this.dragFactorB = null;
+    this.translateX = null;
+    this.translateY = null;
+    this.width = null;
+    this.height = null;
+    this.panY = false;
+    this.panX = false;
 
-      this.enableTouch();
-    }
+    this.enableTouch();
   },
 
   willRemove () {
@@ -89,22 +86,23 @@ export default Backbone.ContentView.extend({
     if (this.hammer) this.hammer.destroy();
   },
 
-  /**
-   * Enable all touch related events
-   *
-   * @method enableTouch
-   */
+  didRender () {
+    this.append(this.cities, '.cities__content');
+    this.assign(this.menu, '.cities__menu');
+    this.assign(this.frame, '.cities__frame');
+
+    this.setCity();
+    this.menu.in();
+    this.frame.in();
+  },
+
+  // touch methods
   enableTouch () {
     this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
     this.hammer.on('panup pandown', this.onPanVertical.bind(this));
     this.hammer.on('panend', this.onPanend.bind(this));
   },
 
-  /**
-   * Disable all touch related events
-   *
-   * @method disableTouch
-   */
   disableTouch () {
     this.hammer.off('panleft panright', this.onPanHorizontal);
     this.hammer.off('panup pandown', this.onPanVertical);
@@ -112,7 +110,7 @@ export default Backbone.ContentView.extend({
   },
 
   onMenuClick (name) {
-    var view;
+    let view;
 
     if (name === 'infos') {
       view = new InfosView();
@@ -142,16 +140,16 @@ export default Backbone.ContentView.extend({
     this.panX = true;
 
     if (!this.dragFactorA || !this.dragFactorB) {
-      var directions = this.map.getDirections(this.activeCity);
+      const directions = this.map.getDirections(this.activeCity);
       this.dragFactorA = directions.west ? 1 : 0.2;
       this.dragFactorB = directions.east ? 1 : 0.2;
     }
 
     if (!this.width || !this.height) this.onResize();
 
-    var factor = e.direction === 2 ? this.dragFactorB : this.dragFactorA;
-    var dragDistance = ((100 / this.width) * e.deltaX) * factor;
-    var dragged = this.translateX + dragDistance;
+    const factor = e.direction === 2 ? this.dragFactorB : this.dragFactorA;
+    const dragDistance = ((100 / this.width) * e.deltaX) * factor;
+    const dragged = this.translateX + dragDistance;
 
     this.els.$content.velocity({ translateX: dragged + '%' }, 0);
   },
@@ -161,22 +159,22 @@ export default Backbone.ContentView.extend({
     this.panY = true;
 
     if (!this.dragFactorA || !this.dragFactorB) {
-      var directions = this.map.getDirections(this.activeCity);
+      const directions = this.map.getDirections(this.activeCity);
       this.dragFactorA = directions.north ? 1 : 0.2;
       this.dragFactorB = directions.south ? 1 : 0.2;
     }
 
     if (!this.width || !this.height) this.onResize();
 
-    var factor = e.direction === 8 ? this.dragFactorB : this.dragFactorA;
-    var dragDistance = ((100 / this.height) * e.deltaY) * factor;
-    var dragged = this.translateY + dragDistance;
+    const factor = e.direction === 8 ? this.dragFactorB : this.dragFactorA;
+    const dragDistance = ((100 / this.height) * e.deltaY) * factor;
+    const dragged = this.translateY + dragDistance;
 
     this.els.$content.velocity({ translateY: dragged + '%' }, 0);
   },
 
   onPanend (e) {
-    var dragDistance = this.panX
+    const dragDistance = this.panX
       ? (100 / this.width) * e.deltaX
       : (100 / this.height) * e.deltaY;
 
@@ -186,7 +184,7 @@ export default Backbone.ContentView.extend({
       return this.setPosition({ easing: 'ease-out' });
     }
 
-    var directions = this.map.getDirections(this.activeCity);
+    const directions = this.map.getDirections(this.activeCity);
 
     if (this.panX) {
       if (dragDistance < 0) {
@@ -211,10 +209,10 @@ export default Backbone.ContentView.extend({
   onFrameOver (direction) {
     if (this.isSliding) return false;
 
-    var position = this.map.getPosition(this.activeCity);
-    var directions = this.map.getDirections(this.activeCity);
+    const position = this.map.getPosition(this.activeCity);
+    const directions = this.map.getDirections(this.activeCity);
 
-    var props;
+    let props;
 
     if (direction === 'north' && directions.north) {
       props = { translateY: (-1 * (position.top * 100)) + 10 + '%' };
@@ -235,9 +233,9 @@ export default Backbone.ContentView.extend({
   onFrameOut () {
     if (this.isSliding || !this.isOpen) return false;
 
-    var position = this.map.getPosition(this.activeCity);
+    const position = this.map.getPosition(this.activeCity);
 
-    var props = {
+    const props = {
       translateX: `${-1 * (position.left * 100)}%`,
       translateY: `${-1 * (position.top * 100)}%`
     };
@@ -248,9 +246,9 @@ export default Backbone.ContentView.extend({
   onKeydown (e) {
     if (this.isSliding) return;
 
-    var directions = this.map.getDirections(this.activeCity);
+    const directions = this.map.getDirections(this.activeCity);
 
-    var charcode = e.charcode ? e.charcode : e.keyCode;
+    const charcode = e.charcode ? e.charcode : e.keyCode;
 
     switch (charcode) {
       case 38:
@@ -286,8 +284,8 @@ export default Backbone.ContentView.extend({
   },
 
   setCity () {
-    var model = this.collection.findWhere({ slug: this.activeCity });
-    var view = _.findWhere(this.cities, { model: model });
+    const model = this.collection.findWhere({ slug: this.activeCity });
+    const view = _.findWhere(this.cities, { model: model });
     if (view) view.in();
 
     this.setPosition({ transition: false });
@@ -297,21 +295,23 @@ export default Backbone.ContentView.extend({
   changeCity (slug, easing='ease-in-out') {
     if (!slug || slug === this.activeCity) return false;
 
-    var model = this.collection.findWhere({ slug: slug });
-    var view = _.findWhere(this.cities, { model: model });
+    const model = this.collection.findWhere({ slug: slug });
+    const view = _.findWhere(this.cities, { model: model });
     if (view) view.in();
 
-    var previousView;
+    let previousView;
 
     if (this.activeCity) {
-      var previousModel = this.collection.findWhere({ slug: this.activeCity });
+      let previousModel = this.collection.findWhere({ slug: this.activeCity });
       previousView = _.findWhere(this.cities, { model: previousModel });
     }
 
     this.activeCity = slug;
     this.setPosition({
       transition: true,
-      complete: () => { if (previousView) previousView.reset(); },
+      complete: () => {
+        if (previousView) previousView.reset();
+      },
       easing: easing
     });
     this.setDirections();
@@ -327,22 +327,24 @@ export default Backbone.ContentView.extend({
   setPosition (options) {
     if (this.isSliding) return false;
 
-    var params = _.extend({
+    const params = _.extend({
       transition: true,
       duration: 800,
       easing: 'ease-in-out'
     }, options);
 
-    var position = this.map.getPosition(this.activeCity);
+    const position = this.map.getPosition(this.activeCity);
+    const target = {
+      left: -1 * (position.left * 100),
+      top: -1 * (position.top * 100)
+    }
 
-    if (!position) return false;
+    this.translateX = target.left;
+    this.translateY = target.top;
 
-    this.translateX = -1 * (position.left * 100);
-    this.translateY = -1 * (position.top * 100);
-
-    var props = {
-      translateX: this.translateX + '%',
-      translateY: this.translateY + '%'
+    const props = {
+      translateX: `${target.left}%`,
+      translateY: `${target.top}%`
     };
 
     this.isSliding = true;
@@ -355,7 +357,7 @@ export default Backbone.ContentView.extend({
           this.isSliding = false;
           if (params.complete) params.complete();
 
-          var url = this.language
+          const url = this.language
             ? `/city/${this.activeCity}/${this.language}`
             : `/city/${this.activeCity}`;
 
@@ -365,23 +367,35 @@ export default Backbone.ContentView.extend({
   },
 
   setDirections () {
-    var directions = this.map.getDirections(this.activeCity);
+    const directions = this.map.getDirections(this.activeCity);
+    
+    // load images
+
+    // active city
+    const model = this.collection.findWhere({ slug: this.activeCity });
+    const city = _.findWhere(this.cities, { model: model });
+    if (city) {
+      city.load();
+    }
+
+    // sourounding cities
+    for (let direction in directions) {
+      if (directions.hasOwnProperty(direction)) {
+        const model = this.collection.findWhere({ slug: directions[direction] });
+        const city = _.findWhere(this.cities, { model: model });
+        if (city) {
+          city.load();
+        }
+      }
+    }
+
     this.frame.model.set(directions);
   },
 
-  didRender () {
-    this.append(this.cities, '.cities__content');
-    this.assign(this.menu, '.cities__menu');
-    this.assign(this.frame, '.cities__frame');
-
-    this.setCity();
-    this.menu.in();
-    this.frame.in();
-  },
-
+  // animations
   out (done) {
-    var previousModel = this.collection.findWhere({ slug: this.activeCity });
-    var previousView = _.findWhere(this.cities, { model: previousModel });
+    const previousModel = this.collection.findWhere({ slug: this.activeCity });
+    const previousView = _.findWhere(this.cities, { model: previousModel });
 
     return new Promise((resolve, reject) => {
       if (previousView) previousView.out();

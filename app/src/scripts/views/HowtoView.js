@@ -5,36 +5,38 @@
 import jQuery from 'jquery';
 import Backbone from 'backbone';
 
+import { buttonPartial, buttonAnimation } from '../partials/button';
+
 export default Backbone.PageView.extend({
   name: 'howto',
   className: 'howto',
 
   template: `
     <div class='howto__content'>
-      <h1 class='howto__title'> POUR VOYAGER ENTRE CHAQUE PAYS </h1>
+      <h2 class='howto__title'> POUR VOYAGER ENTRE CHAQUE PAYS </h2>
       <div class='howto__columns'>
         <div class='howto__column'>
           <div class='howto__keys__wrapper'>
             <div class='howto__keys'>
-              <div class='howto__key howto__key--top'>
+              <div class='howto__key--top'>
                 <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                   <path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="   M48,46.032C48,47.119,47.114,48,46.021,48H3.979C2.886,48,2,47.119,2,46.032V3.968C2,2.881,2.886,2,3.979,2h42.043   C47.114,2,48,2.881,48,3.968V46.032z"/>
                   <polyline fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="   12.882,31.027 25,18.973 37.118,31.027  "/>
                 </svg>
               </div>
-              <div class='howto__key howto__key--right'>
+              <div class='howto__key--right'>
                 <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                   <path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="   M48,46.032C48,47.119,47.114,48,46.021,48H3.979C2.886,48,2,47.119,2,46.032V3.968C2,2.881,2.886,2,3.979,2h42.043   C47.114,2,48,2.881,48,3.968V46.032z"/>
                   <polyline fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="   18.973,12.882 31.027,25 18.973,37.118  "/>
                 </svg>
               </div>
-              <div class='howto__key howto__key--bottom'>
+              <div class='howto__key--bottom'>
                 <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                   <path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="   M48,46.032C48,47.119,47.114,48,46.021,48H3.979C2.886,48,2,47.119,2,46.032V3.968C2,2.881,2.886,2,3.979,2h42.043   C47.114,2,48,2.881,48,3.968V46.032z"/>
                   <polyline fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="   37.118,18.973 25,31.027 12.882,18.973  "/>
                 </svg>
               </div>
-              <div class='howto__key howto__key--left'>
+              <div class='howto__key--left'>
                 <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                   <path fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="   M48,46.032C48,47.119,47.114,48,46.021,48H3.979C2.886,48,2,47.119,2,46.032V3.968C2,2.881,2.886,2,3.979,2h42.043   C47.114,2,48,2.881,48,3.968V46.032z"/>
                   <polyline fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="   31.027,37.118 18.973,25 31.027,12.882  "/>
@@ -43,13 +45,15 @@ export default Backbone.PageView.extend({
             </div>
           </div>
           <div class='howto__text'>
-            DIRIGEZ VOUS GRÂCE AUX FLÊCHES DE VOTRE CLAVIER
+            <p> DIRIGEZ VOUS GRÂCE AUX FLÊCHES DE VOTRE CLAVIER </p>
+          </div>
+          <div class='howto__text'>
+            <p> TO DIRECT YOURSELF USE THE KEYBOARD ARROWS </p>
           </div>
         </div>
         <div class='howto__column howto__column--middle'>
-          <div class='howto__text'>
-            OR
-          </div>        
+          <div class='howto__text'> <p> OU </p> </div>
+          <div class='howto__text'> <p> OR </p> </div>
         </div>
         <div class='howto__column'>
           <div class='howto__directions__wrapper'>
@@ -71,20 +75,24 @@ export default Backbone.PageView.extend({
             </div>
           </div>
           <div class='howto__text'>
-            UTILISEZ VOTRE SOURIS POUR CLIQUER SUR LES DIRRECTIONS
+            <p> UTILISEZ VOTRE SOURIS POUR CLIQUER SUR LES DIRRECTIONS </p>
+          </div>
+          <div class='howto__text'>
+            <p> USE YOUR MOUSE TO CLICK ON THE DIFFERENT DIRECTIONS </p>
           </div>
         </div>
       </div>
       <div class='howto__buttons'>
-        <div class="howto__button">
-          <a href="#city/london" class="howto__link">
-            COMMENCER
-          </a>
-          <div class="howto__border howto__border--top"></div>
-          <div class="howto__border howto__border--left"></div>
-          <div class="howto__border howto__border--bottom"></div>
-          <div class="howto__border howto__border--right"></div>
-        </div>
+        ${buttonPartial({
+          className: 'howto__button--fr',
+          link: '#city',
+          text: 'COMMENCER'
+        })}
+        ${buttonPartial({
+          className: 'howto__button--en',
+          link: '#city/en',
+          text: 'LET\'S GO'
+        })}
       </div>
     </div>
     <div class='howto__background'></div>
@@ -94,11 +102,10 @@ export default Backbone.PageView.extend({
     '$background': '.howto__background',
     '$title': '.howto__title',
     '$columns': '.howto__column',
-    '$keys': '.howto__key',
+    '$keys': '.howto__key--top, .howto__key--right, .howto__key--bottom, .howto__key--left',
     '$mouse': '.howto__directions__mouse',
-    '$button': '.howto__button',
-    '$bordersTopBottom': '.howto__border--top, .howto__border--bottom',
-    '$bordersLeftRight': '.howto__border--left, .howto__border--right'
+    '$buttonFr': '.howto__button--fr',
+    '$buttonEn': '.howto__button--en'
   },
 
   willRemove () {
@@ -111,10 +118,10 @@ export default Backbone.PageView.extend({
     this.idlePlaying = true;
 
     // keys
-    var totalKeys = this.els.$keys.length;
-    var currentKey = 0;
+    const totalKeys = this.els.$keys.length;
+    let currentKey = 0;
 
-    var nextKey = () => {
+    const nextKey = () => {
       if (!this.idlePlaying) return false;
 
       currentKey++;
@@ -128,15 +135,16 @@ export default Backbone.PageView.extend({
     nextKey();
 
     // mouse
-    var currentDirection = 0;
-    var directions = {
+    const directions = {
       0: { top: '54%', left: '13%' }, // left
       1: { top: '20%', left: '54%' }, // top
       2: { top: '90%', left: '54%' }, // bottom
       3: { top: '54%', left: '94%' } // right
     };
+    
+    let currentDirection = 0;
 
-    var nextDirection = () => {
+    const nextDirection = () => {
       if (!this.idlePlaying) return false;
 
       currentDirection++;
@@ -161,16 +169,16 @@ export default Backbone.PageView.extend({
       .velocity({ opacity: 1, translateY: 0 }, { duration: 500, delay: 1000 });
 
     this.els.$columns.each(function (i) {
-      var $column = jQuery(this);
+      const $column = jQuery(this);
 
-      var baseDelay = i * 300;
+      const baseDelay = i * 300;
 
       $column
         .velocity({ opacity: 0, translateY: '50px' }, 0)
         .velocity({ opacity: 1, translateY: 0 }, { duration: 500, delay: baseDelay + 1000 });
 
       $column.find('.howto__text').each(function () {
-        var $text = jQuery(this);
+        const $text = jQuery(this);
 
         $text.each(function (j) {
           jQuery(this)
@@ -180,17 +188,8 @@ export default Backbone.PageView.extend({
       });
     });
 
-    this.els.$button
-      .velocity('stop')
-      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1400 });
-
-    this.els.$bordersTopBottom
-      .velocity('stop')
-      .velocity({ width: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
-
-    this.els.$bordersLeftRight
-      .velocity('stop')
-      .velocity({ height: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
+    buttonAnimation(this.els.$buttonFr, { delay: 1400 });
+    buttonAnimation(this.els.$buttonEn, { delay: 1500 });
 
     this.startIdleAnimations();
   }

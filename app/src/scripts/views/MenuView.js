@@ -82,22 +82,22 @@ export default Backbone.BetterView.extend({
   },
 
   didInitialize () {
-    this.expandableHeight = null;
-    this.iconHeight = null;
+    this.expandableHeight = this.iconHeight = null;
   },
 
   onClick (e) {
-    var $el = jQuery(e.currentTarget);
-    var button = $el.attr('data-button');
+    const $el = jQuery(e.currentTarget);
+    const button = $el.attr('data-button');
     if (button) this.trigger('click', button);
   },
 
   setActive (name) {
     this.els.$buttons.removeClass('is-active');
     this.els.$buttons.each((i, el) => {
-      var $el = jQuery(el);
-      if ($el.attr('data-button') === name)
+      const $el = jQuery(el);
+      if ($el.attr('data-button') === name) {
         $el.addClass('is-active');
+      }
     });
   },
 

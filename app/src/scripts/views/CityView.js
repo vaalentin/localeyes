@@ -7,6 +7,8 @@ import Backbone from 'backbone';
 import Features from '../modules/Features';
 import Loader from '../modules/Loader';
 
+import { buttonPartial, buttonAnimation } from '../partials/button';
+
 export default Backbone.BetterView.extend({
   className: 'city',
 
@@ -17,49 +19,60 @@ export default Backbone.BetterView.extend({
           <div class="city__icon">
             <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
               <% _.each(icon, function(el) { %>
-              <path fill="#ffffff"
-                stroke="#ffffff"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="<%= el.path %>"
-                <% if (el.length) { %>
-                data-length="<%= el.length %>"
-                <% } %>/>
+                <% if (el.path) { %>
+                  <path fill="#ffffff"
+                    stroke="#ffffff"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="<%= el.path %>"
+                    <% if (el.length) { %>
+                      data-length="<%= el.length %>"
+                    <% } %>/>
+                  <% } else if (el.line) { %>
+                    <line fill="none"
+                      stroke="#ffffff"
+                      stroke-miterlimit="10"
+                      <%= el.line %>
+                      <% if (el.length) { %>
+                        data-length="<%= el.length %>"
+                      <% } %>/>
+                  <% } else if (el.rect) { %>
+                    <rect fill="#ffffff"
+                      <%= el.rect %>
+                      <% if (el.length) { %>
+                        data-length="<%= el.length %>"
+                      <% } %>/>
+                  <% } %>
               <% }); %>
             </svg>
           </div>
           <h1 class="city__name"> <% print(name.toUpperCase()); %> </h1>
-          <h2 class="city__country"> <% print(country.toUpperCase()); %> </h2>
-          <div class="city__square city__square--topLeft"></div>
-          <div class="city__square city__square--topRight"></div>
-          <div class="city__square city__square--bottomLeft"></div>
-          <div class="city__square city__square--bottomRight"></div>
+          <h3 class="city__country"> <% print(country.toUpperCase()); %> </h3>
+          <div class="city__square--topLeft"></div>
+          <div class="city__square--topRight"></div>
+          <div class="city__square--bottomLeft"></div>
+          <div class="city__square--bottomRight"></div>
         </div>
       </div>
       <% if (localSlug) { %>
-      <div class="city__content__section city__content__section--button">
-        <div class="city__button">
-          <% if (language === 'en') { %>
-            <a href="#local/<%= localSlug %>/en" class="city__link">
-              DISCOVER <span class="city__local"> <% print(local.toUpperCase()); %> </span>
-            </a>
-          <% } else { %>
-            <a href="#local/<%= localSlug %>" class="city__link">
-              DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>
-            </a>
-          <% } %>
-          <div class="city__border city__border--top"></div>
-          <div class="city__border city__border--left"></div>
-          <div class="city__border city__border--bottom"></div>
-          <div class="city__border city__border--right"></div>
-        </div>
+      <div class="city__content__section--button">
+        <% if (language === 'en') { %>
+          ${buttonPartial({
+            link: '#local/<%= localSlug %>/en',
+            text: 'DISCOVER <span class="city__local"> <% print(local.toUpperCase()); %> </span>'
+          })}
+        <% } else { %>
+          ${buttonPartial({
+            link: '#local/<%= localSlug %>',
+            text: 'DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>'
+          })}
+        <% } %>
       </div>
       <% } %>
     </div>
     <% if (background) { %>
-      <div class="city__background"
-        style="background-image:url(<%= background %>)"></div>
+      <div class="city__background"></div>
     <% } %>
   `,
 
@@ -71,19 +84,15 @@ export default Backbone.BetterView.extend({
     '$name': '.city__name',
     '$country': '.city__country',
     '$icon': '.city__icon',
-    '$button': '.city__button',
-    '$bordersTopBottom': '.city__border--top, .city__border--bottom',
-    '$bordersLeftRight': '.city__border--left, .city__border--right',
+    '$button': '.button',
+    '$bordersTopBottom': '.button__border--top, .button__border--bottom',
+    '$bordersLeftRight': '.button__border--left, .button__border--right',
     '$background': '.city__background',
     '$svgs': 'svg'
   },
 
   didInitialize (options) {
     _.extend(this, _.pick(options, 'position', 'language'));
-  },
-
-  onLoad () {
-    this.loaded = true;
   },
 
   setPosition () {
@@ -128,17 +137,7 @@ export default Backbone.BetterView.extend({
       .velocity('stop')
       .velocity({ top: -90, opacity: 1 }, { duration: 1500, delay: 500 });
 
-    this.els.$button
-      .velocity('stop')
-      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1400 });
-
-    this.els.$bordersTopBottom
-      .velocity('stop')
-      .velocity({ width: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
-
-    this.els.$bordersLeftRight
-      .velocity('stop')
-      .velocity({ height: '100%' }, { duration: 1000, delay: 1400, display: 'block' });
+    buttonAnimation(this.els.$button, { withBorders: true, delay: 1400 });
 
     this.els.$background
       .velocity('stop')
@@ -147,10 +146,10 @@ export default Backbone.BetterView.extend({
 
     this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
-        var $path = jQuery(this);
-        var data = $path.attr('data-length');
+        const $path = jQuery(this);
+        const data = $path.attr('data-length');
         
-        var length;
+        let length;
         if (data) {
           length = parseFloat(data);
         } else {
@@ -185,7 +184,7 @@ export default Backbone.BetterView.extend({
   /**
    * Instantly reset the view (ready to animate in)
    *
-   * @methd reset
+   * @method reset
    */
   reset () {
     if (Features.mobile) return false;
@@ -236,10 +235,10 @@ export default Backbone.BetterView.extend({
       
     this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
-        var $path = jQuery(this);
-        var data = $path.attr('data-length');
+        const $path = jQuery(this);
+        const data = $path.attr('data-length');
         
-        var length;
+        let length;
         if (data) {
           length = parseFloat(data);
         } else {
@@ -259,16 +258,30 @@ export default Backbone.BetterView.extend({
   },
 
   render () {
-    var data = _.extend(this.model.toJSON(), { language: this.language });
+    const data = _.extend(this.model.toJSON(), { language: this.language });
     Backbone.BetterView.prototype.render.call(this, data);
     return this;
   },
 
+  setBackground () {
+    this.els.$background.css('background-image', `url(${this.model.get("background")})`);
+  },
+
+  onLoad () {
+    this.loaded = true;
+    // this.els.$background.velocity({ opacity: 1 }, { duration: 400 });
+  },
+
+  load () {
+    if (this.loaded) return false;
+    this.setBackground();
+    this.onLoad();
+
+    // this.loader = new Loader([ this.model.get('background')]);
+    // this.loader.load().then(this.onLoad.bind(this));
+  },
+
   didRender () {
     this.setPosition();
-
-    this.loaded = false;
-    this.loader = new Loader([ this.model.get('background')]);
-    this.loader.load().then(this.onLoad.bind(this));
   }
 });

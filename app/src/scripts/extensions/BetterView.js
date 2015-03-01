@@ -20,26 +20,31 @@ import Backbone from 'backbone';
  */
 Backbone.BetterView = Backbone.View.extend({
   initialize () {
-    if (this.willInitialize)
+    if (this.willInitialize) {
       this.willInitialize.apply(this.arguments);
+    }
 
-    if (this.template)
+    if (this.template) {
       this.template = _.template(this.template);
+    }
     
     Backbone.View.prototype.initialize.apply(this, arguments);
 
-    if (this.didInitialize)
+    if (this.didInitialize) {
       this.didInitialize.apply(this, arguments);
+    }
   },
 
   remove () {
-    if (this.willRemove)
+    if (this.willRemove) {
       this.willRemove.apply(this, arguments);
+    }
 
     Backbone.View.prototype.remove.apply(this, arguments);
 
-    if (this.didRemove)
+    if (this.didRemove) {
       this.didRemove.apply(this, arguments);
+    }
   },
 
   /**
@@ -50,10 +55,12 @@ Backbone.BetterView = Backbone.View.extend({
    * @param {String} [selector]
    */
   assign (view, selector) {
-    if (!selector)
+    if (!selector) {
       view.setElement(this.$el.render());
-    else
+    }
+    else {
       view.setElement(this.$(selector)).render()
+    }
   },
 
   /**
@@ -75,13 +82,16 @@ Backbone.BetterView = Backbone.View.extend({
    * @param {String} [selector]
    */
   append (views, selector) {
-    if (!_.isArray(views))
+    if (!_.isArray(views)) {
       views = [views];
+    }
 
-    if (!selector)
+    if (!selector) {
       views.forEach(view => this.$el.append(view.render().el));
-    else
+    }
+    else {
       views.forEach(view => this.$(selector).append(view.render().el));
+    }
   },
 
   /**
@@ -92,18 +102,22 @@ Backbone.BetterView = Backbone.View.extend({
    * @param {String} [selector]
    */
   prepend (views, selector) {
-    if (!_.isArray(views))
+    if (!_.isArray(views)) {
       views = [views];
+    }
 
-    if (!selector)
+    if (!selector) {
       views.forEach(view => this.$el.prepend(view.render().el));
-    else
+    }
+    else {
       views.forEach(view => this.$(selector).prepend(view.render().el));
+    }
   },
 
   render (data) {
-    if (this.willRender)
+    if (this.willRender) {
       this.willRender.apply(this, arguments);
+    }
 
     if (!data) data = this.model? this.model.toJSON() : {};
     this.$el.html(this.template(data));

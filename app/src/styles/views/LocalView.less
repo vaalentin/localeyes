@@ -1,75 +1,75 @@
 .local {
   overflow: hidden;
+
   opacity: 0;
 }
 
 // video
 .local__video {
   position: relative;
-  opacity: 0;
 }
 
-// .local__video .vjs-poster {
-//   display: none;
-// }
+.local__video__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
 
+// markers
 .local__marker {
   position: absolute;
   z-index: 2;
 }
 
 .local__marker__icon {
-  width: 30px;
-  height: 48px;
   position: relative;
   left: 50%;
-  margin-left: -(30px / 2);
+
+  width: 30px;
+  height: 48px;
   margin-top: 10px;
+  margin-left: -(30px / 2);
 }
 
 .local__marker__link {
-  font-family: 'Orator Std', 'sans-serif';
-  font-size: 18px;
-
-  display: block;
-
   padding: 15px 15px 8px 15px;
-
-  text-decoration: none;
+  text-align: center;
 
   color: #fff;
   border: 1px solid #fff;
-  text-align: center;
-  cursor: pointer;
 }
 
 .local__marker__link:hover {
-  background-color: #fff;
   color: #0a0a0a;
+  background-color: #fff;
 }
 
 // content
 .local__content {
   max-width: 1080px;
   margin: 0 auto;
+
   text-align: center;
 }
 
 // blocks
-.local__block {
-  padding: 0 50px;
+.local__block:extend(.clear) {
   margin: 50px 0;
-  .clear;
+  padding: 0 50px;
 }
 
 // images
 .local__image {
-  max-width: 100%;
   position: relative;
   top: 0;
-  left: 0;
   right: 0;
   bottom: 0;
+  left: 0;
+
+  max-width: 100%;
+  max-height: 1080px;
 }
 
 // columns
@@ -85,9 +85,11 @@
   float: right;
 }
 
-.local__column--mask {
+.local__column--mask:extend(.inline-block) {
   overflow: hidden;
-  .inline-block;
+
+  max-width: 100%;
+  max-height: 100%;
 }
 
 // columns content
@@ -102,7 +104,9 @@
 // next
 .local__next {
   display: block;
+
   height: 150px;
+
   .background-size(cover);
 }
 
@@ -112,10 +116,10 @@
   }
 
   .local__column--left .local__column__content {
-    margin: 0px 15px 0px 0;
+    margin: 0 15px 0 0;
   }
 
   .local__column--right .local__column__content {
-    margin: 0px 0 0px 15px;
+    margin: 0 0 0 15px;
   }
 }
