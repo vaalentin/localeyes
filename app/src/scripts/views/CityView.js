@@ -72,7 +72,9 @@ export default Backbone.BetterView.extend({
       <% } %>
     </div>
     <% if (background) { %>
-      <div class="city__background"></div>
+      <div class="city__background__container">
+        <div class="city__background"></div>
+      </div>
     <% } %>
   `,
 
