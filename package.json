@@ -24,7 +24,6 @@
     "jquery": "./node_modules/jquery/dist/jquery.js",
     "underscore": "./node_modules/underscore/underscore.js",
     "backbone": "./node_modules/backbone/backbone.js",
-    "hammer": "./node_modules/hammerjs/hammer.js",
     "polyfills": "./node_modules/6to5/browser-polyfill.js",
     "jquery.velocity": "./node_modules/velocity-animate/velocity.js",
     "jquery.tinyscrollbar": "./node_modules/tinyscrollbar/lib/jquery.tinyscrollbar.js",
@@ -46,12 +45,10 @@
         "underscore"
       ]
     },
-    "hammer": "global:Hammer",
     "skrollr": "global:skrollr"
   },
   "dependencies": {
     "backbone": "^1.1.2",
-    "hammerjs": "^2.0.4",
     "install": "^0.1.8",
     "jquery": "^2.1.3",
     "lesshat": "^3.0.2",

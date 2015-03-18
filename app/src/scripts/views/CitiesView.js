@@ -3,7 +3,6 @@
 import jQuery from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
-import Hammer from 'hammer';
 
 import Features from '../modules/Features';
 import Store from '../modules/StoreModule';
@@ -62,28 +61,12 @@ export default Backbone.ContentView.extend({
 
     this.isSliding = false;
     this.isOpen = false;
-
-    // touch screen
-    this.hammer = new Hammer.Manager(this.$el[0], { dragLockToAxis: true });
-    this.hammer.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL }));
-
-    this.dragFactorA = null;
-    this.dragFactorB = null;
-    this.translateX = null;
-    this.translateY = null;
-    this.width = null;
-    this.height = null;
-    this.panY = false;
-    this.panX = false;
-
-    this.enableTouch();
   },
 
   willRemove () {
     this.cities.forEach(city => city.remove());
     jQuery(document).off('keydown', this.onKeydown);
     jQuery(window).off('resize', this.onResize);
-    if (this.hammer) this.hammer.destroy();
   },
 
   didRender () {
@@ -94,19 +77,6 @@ export default Backbone.ContentView.extend({
     this.setCity();
     this.menu.in();
     this.frame.in();
-  },
-
-  // touch methods
-  enableTouch () {
-    this.hammer.on('panleft panright', this.onPanHorizontal.bind(this));
-    this.hammer.on('panup pandown', this.onPanVertical.bind(this));
-    this.hammer.on('panend', this.onPanend.bind(this));
-  },
-
-  disableTouch () {
-    this.hammer.off('panleft panright', this.onPanHorizontal);
-    this.hammer.off('panup pandown', this.onPanVertical);
-    this.hammer.off('panend', this.onPanend);
   },
 
   onMenuClick (name) {
@@ -133,77 +103,6 @@ export default Backbone.ContentView.extend({
       this.removeContent();
       this.menu.removeActive();
     });
-  },
-
-  onPanHorizontal (e) {
-    if (this.panY) return false;
-    this.panX = true;
-
-    if (!this.dragFactorA || !this.dragFactorB) {
-      const directions = this.map.getDirections(this.activeCity);
-      this.dragFactorA = directions.west ? 1 : 0.2;
-      this.dragFactorB = directions.east ? 1 : 0.2;
-    }
-
-    if (!this.width || !this.height) this.onResize();
-
-    const factor = e.direction === 2 ? this.dragFactorB : this.dragFactorA;
-    const dragDistance = ((100 / this.width) * e.deltaX) * factor;
-    const dragged = this.translateX + dragDistance;
-
-    this.els.$content.velocity({ translateX: dragged + '%' }, 0);
-  },
-
-  onPanVertical (e) {
-    if (this.panX) return false;
-    this.panY = true;
-
-    if (!this.dragFactorA || !this.dragFactorB) {
-      const directions = this.map.getDirections(this.activeCity);
-      this.dragFactorA = directions.north ? 1 : 0.2;
-      this.dragFactorB = directions.south ? 1 : 0.2;
-    }
-
-    if (!this.width || !this.height) this.onResize();
-
-    const factor = e.direction === 8 ? this.dragFactorB : this.dragFactorA;
-    const dragDistance = ((100 / this.height) * e.deltaY) * factor;
-    const dragged = this.translateY + dragDistance;
-
-    this.els.$content.velocity({ translateY: dragged + '%' }, 0);
-  },
-
-  onPanend (e) {
-    const dragDistance = this.panX
-      ? (100 / this.width) * e.deltaX
-      : (100 / this.height) * e.deltaY;
-
-    if (Math.abs(dragDistance) < 40) {
-      this.dragFactorA = this.dragFactorB = null;
-      this.panX = this.panY = false;
-      return this.setPosition({ easing: 'ease-out' });
-    }
-
-    const directions = this.map.getDirections(this.activeCity);
-
-    if (this.panX) {
-      if (dragDistance < 0) {
-        this.changeCity(directions.east, 'ease-out');
-      } else {
-        this.changeCity(directions.west, 'ease-out');
-      }
-    } else {
-      if (dragDistance < 0) {
-        this.changeCity(directions.south, 'ease-out');
-      } else {
-        this.changeCity(directions.north, 'ease-out');
-      }
-    }
-
-    this.setPosition({ easing: 'ease-out' });
-
-    this.dragFactorA = this.dragFactorB = null;
-    this.panX = this.panY = false;
   },
 
   onFrameOver (direction) {
@@ -273,13 +172,11 @@ export default Backbone.ContentView.extend({
 
   disable () {
     // this.els.$content.velocity({ opacity: 0.5 }, 1000);
-    if (this.hammer) this.disableTouch();
     // this.frame.disable();
   },
 
   enable () {
     // this.els.$content.velocity({ opacity: 1 }, 1000);
-    if (this.hammer) this.enableTouch();
     // this.frame.enable();
   },
 
