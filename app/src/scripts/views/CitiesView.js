@@ -272,13 +272,13 @@ export default Backbone.ContentView.extend({
   },
 
   disable () {
-    this.els.$content.velocity({ opacity: 0.5 }, 1000);
+    // this.els.$content.velocity({ opacity: 0.5 }, 1000);
     if (this.hammer) this.disableTouch();
     // this.frame.disable();
   },
 
   enable () {
-    this.els.$content.velocity({ opacity: 1 }, 1000);
+    // this.els.$content.velocity({ opacity: 1 }, 1000);
     if (this.hammer) this.enableTouch();
     // this.frame.enable();
   },
