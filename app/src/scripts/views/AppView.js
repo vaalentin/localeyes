@@ -19,6 +19,14 @@ import CitiesView from '../views/CitiesView';
 import LocalView from '../views/LocalView';
 import HowtoView from '../views/HowtoView';
 
+window.easings = {
+  Expo: {
+    easeIn: [0.745, 0.045, 0.855, 0.295],
+    easeOut: [0.190, 1.000, 0.220, 1.000],
+    easeInOut: [0.665, 0.005, 0.325, 1.000]
+  }
+}
+
 export default Backbone.ContentView.extend({
   content: '.app__content',
 
@@ -49,9 +57,9 @@ export default Backbone.ContentView.extend({
       if (!slug) slug = Store.getCities().first().get('slug');
 
       if (this.currentView && this.currentView.name === 'cities' && citiesView) {
-        citiesView.changeCity(slug);
+        citiesView.setCity(slug);
       } else {
-        citiesView = new CitiesView({ collection: Store.getCities(), activeCity: slug, language: language });
+        citiesView = new CitiesView({ collection: Store.getCities(), currentCity: slug, language: language });
         this.listenTo(citiesView, 'router:navigate', router.navigate);
         this.changeContent(citiesView);
       }

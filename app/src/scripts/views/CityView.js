@@ -73,7 +73,7 @@ export default Backbone.BetterView.extend({
     </div>
     <% if (background) { %>
       <div class="city__background__container">
-        <div class="city__background"></div>
+        <div class="city__background" style="background-image: url(<%= background %>)"></div>
       </div>
     <% } %>
   `,
@@ -172,16 +172,19 @@ export default Backbone.BetterView.extend({
   },
 
   out () {
-    if (Features.mobile) return false;
 
-    this.els.$background
-      .velocity('stop')
-      .velocity({ scale: 1.2 }, 600);
-
-    this.$el
-      .velocity('stop')
-      .velocity({ opacity: 0 }, { duration: 600 });
   },
+  // out () {
+  //   if (Features.mobile) return false;
+
+  //   this.els.$background
+  //     .velocity('stop')
+  //     .velocity({ scale: 1.2 }, 600);
+
+  //   this.$el
+  //     .velocity('stop')
+  //     .velocity({ opacity: 0 }, { duration: 600 });
+  // },
 
   /**
    * Instantly reset the view (ready to animate in)
@@ -263,24 +266,6 @@ export default Backbone.BetterView.extend({
     const data = _.extend(this.model.toJSON(), { language: this.language });
     Backbone.BetterView.prototype.render.call(this, data);
     return this;
-  },
-
-  setBackground () {
-    this.els.$background.css('background-image', `url(${this.model.get("background")})`);
-  },
-
-  onLoad () {
-    this.loaded = true;
-    // this.els.$background.velocity({ opacity: 1 }, { duration: 400 });
-  },
-
-  load () {
-    if (this.loaded) return false;
-    this.setBackground();
-    this.onLoad();
-
-    // this.loader = new Loader([ this.model.get('background')]);
-    // this.loader.load().then(this.onLoad.bind(this));
   },
 
   didRender () {

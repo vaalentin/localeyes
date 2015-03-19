@@ -11,12 +11,6 @@
   opacity: 0;
 }
 
-.mobile .cities {
-  cursor: move;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
-
 .cities__content {
   position: absolute;
   top: 0;
@@ -26,4 +20,15 @@
   height: 100%;
 
   will-change: transform;
+
+  cursor: hand;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.cities__content.is-dragging {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }

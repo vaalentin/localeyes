@@ -168,5 +168,15 @@ export default Backbone.BetterView.extend({
     this.els.$barRight
       .velocity('stop')
       .velocity({ right: -40 }, { duration: 800 });  
+  },
+
+  getHref (direction) {
+    const $el = this.els[`$bar${direction}`];
+
+    if ($el) {
+      return $el.attr("href");
+    } else {
+      return null;
+    }
   }
 });
