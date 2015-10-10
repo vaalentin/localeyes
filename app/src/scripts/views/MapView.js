@@ -58,45 +58,64 @@ export default Backbone.PageView.extend({
       const name = city.get('name');
       const country = city.get('country');
       const slug = city.get('slug');
-      
+
+      let coords = city.get('coords');
       const animation = slug === this.activeCity ? window.google.maps.Animation.BOUNCE : window.google.maps.Animation.DROP;
 
-      geocoder.geocode({ 'address': `${name}, ${country}` }, (results, status) => {
-        const coords = results[0].geometry.location;
-
-        if (!coords) return false;
-
+      if (coords) {
+        coords = new google.maps.LatLng(coords.k, coords.D);
         markerBounds.extend(coords);
         map.fitBounds(markerBounds);
 
-        setTimeout(() => {  
-          const marker = new window.google.maps.Marker({
-            map,
-            icon,
-            animation,
-            position: coords,
-            title: name
-          });
+        const marker = new window.google.maps.Marker({
+          map,
+          icon,
+          animation,
+          position: coords,
+          title: name
+        });
 
-          window.google.maps.event.addListener(marker, 'click', () => {
-            this.trigger('marker:click', slug);
-          });
-        }, i * 300);
-      });
+        window.google.maps.event.addListener(marker, 'click', () => {
+          this.trigger('marker:click', slug);
+        });
+      }
+
+      // geocoder.geocode({ 'address': `${name}, ${country}` }, (results, status) => {
+      //     if (!results || !results[0].geometry || !results[0].geometry.location) return false;
+
+      //     const coords = results[0].geometry.location;
+          // console.log(coords);
+
+          // markerBounds.extend(coords);
+          // map.fitBounds(markerBounds);
+
+          // const marker = new window.google.maps.Marker({
+          //   map,
+          //   icon,
+          //   animation,
+          //   position: coords,
+          //   title: name
+          // });
+
+          // window.google.maps.event.addListener(marker, 'click', () => {
+          //   this.trigger('marker:click', slug);
+          // });
+        // });  
     });
   },
 
   in () {
     this.$el.velocity({ translateY: 200, opacity: 0 }, 0)
-      .velocity({ translateY: 0, opacity: 1 }, 500);
+      .velocity({ translateY: 0, opacity: 1 }, { duration: 1200, easing: window.easings.Expo.easeOut });
   },
 
   out (done) {
     setTimeout(done, 200);
     return new Promise((resolve, reject) => {
       this.$el.velocity({ translateY: -200, opacity: 0 }, {
-        duration: 500,
-        complete: resolve
+        duration: 1200,
+        complete: resolve,
+        easing: window.easings.Expo.easeOut
       });
     });
   }

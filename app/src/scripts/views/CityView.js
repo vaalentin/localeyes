@@ -1,3 +1,4 @@
+
 'use strict';
 
 import jQuery from 'jquery';
@@ -16,7 +17,7 @@ export default Backbone.BetterView.extend({
     <div class="city__content">
       <div class="city__content__section">
         <div class="city__title">
-          <div class="city__icon">
+          <div class="city__icon city__icon--<%= slug %>">
             <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 90 90">
               <% _.each(icon, function(el) { %>
                 <% if (el.path) { %>
@@ -47,7 +48,11 @@ export default Backbone.BetterView.extend({
               <% }); %>
             </svg>
           </div>
-          <h1 class="city__name"> <% print(name.toUpperCase()); %> </h1>
+          <h1 class="city__name">
+            <% _.each(name.toUpperCase().split(' '), function (word) { %>
+              <span> <%= word %> </span>
+            <% }); %>
+          </h1>
           <h3 class="city__country"> <% print(country.toUpperCase()); %> </h3>
           <div class="city__square--topLeft"></div>
           <div class="city__square--topRight"></div>
@@ -60,12 +65,14 @@ export default Backbone.BetterView.extend({
         <% if (language === 'en') { %>
           ${buttonPartial({
             link: '#local/<%= localSlug %>/en',
-            text: 'DISCOVER <span class="city__local"> <% print(local.toUpperCase()); %> </span>'
+            text: 'DISCOVER',
+            className: 'city__button'
           })}
         <% } else { %>
           ${buttonPartial({
             link: '#local/<%= localSlug %>',
-            text: 'DÉCOUVRIR <span class="city__local"> <% print(local.toUpperCase()); %> </span>'
+            text: 'DÉCOUVRIR',
+            className: 'city__button'
           })}
         <% } %>
       </div>
@@ -107,44 +114,61 @@ export default Backbone.BetterView.extend({
   in () {
     if (Features.mobile) return false;
 
+    // square top left
     this.els.$squareTopLeft
-      .velocity('stop')
-      .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
-      .velocity({ top: 0 }, { duration: 400, delay: 200 });
+      .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500, easing: window.easings.Expo.easeOut })
+      .velocity({ top: 0 }, { duration: 400, delay: 200, easing: window.easings.Expo.easeInOut });
+
+    this.els.$squareTopLeft
+      .velocity({ width: 75 }, { duration: 200, delay: 100, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ width: 7 }, { duration: 400, delay: 600, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 25 }, { duration: 200, delay: 1200, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 7 }, { duration: 400, delay: 1400, queue: false, easing: window.easings.Expo.easeOut });
+
+    // square top right
+    this.els.$squareTopRight
+      .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500, easing: window.easings.Expo.easeOut })
+      .velocity({ top: 0 }, { duration: 400, delay: 200, easing: window.easings.Expo.easeInOut });
 
     this.els.$squareTopRight
-      .velocity('stop')
-      .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
-      .velocity({ top: 0 }, { duration: 400, delay: 200 });
+      .velocity({ width: 75 }, { duration: 200, delay: 100, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ width: 7 }, { duration: 400, delay: 600, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 25 }, { duration: 200, delay: 1200, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 7 }, { duration: 400, delay: 1400, queue: false, easing: window.easings.Expo.easeOut });
+
+    // square bottom left
+    this.els.$squareBottomLeft
+      .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500, easing: window.easings.Expo.easeOut })
+      .velocity({ bottom: 0 }, { duration: 400, delay: 200, easing: window.easings.Expo.easeInOut });
 
     this.els.$squareBottomLeft
-      .velocity('stop')
-      .velocity({ left: 0, opacity: 1 }, { duration: 400, delay: 500 })
-      .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
+      .velocity({ width: 75 }, { duration: 200, delay: 100, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ width: 7 }, { duration: 400, delay: 600, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 25 }, { duration: 200, delay: 1200, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 7 }, { duration: 400, delay: 1400, queue: false, easing: window.easings.Expo.easeOut });
+
+    // square bottom right
+    this.els.$squareBottomRight
+      .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500, easing: window.easings.Expo.easeOut })
+      .velocity({ bottom: 0 }, { duration: 400, delay: 200, easing: window.easings.Expo.easeInOut });
 
     this.els.$squareBottomRight
-      .velocity('stop')
-      .velocity({ right: 0, opacity: 1 }, { duration: 400, delay: 500 })
-      .velocity({ bottom: 0 }, { duration: 400, delay: 300 });
+      .velocity({ width: 75 }, { duration: 200, delay: 100, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ width: 7 }, { duration: 400, delay: 600, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 25 }, { duration: 200, delay: 1200, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ height: 7 }, { duration: 400, delay: 1400, queue: false, easing: window.easings.Expo.easeOut });
 
+    // name
     this.els.$name
-      .velocity('stop')
-      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1100 });
+      .velocity({ opacity: 1, top: 0 }, { duration: 800, delay: 1000, easing: window.easings.Expo.easeInOut });
 
+    // country
     this.els.$country
-      .velocity('stop')
-      .velocity({ opacity: 1, top: 0 }, { duration: 500, delay: 1200 });
+      .velocity({ opacity: 1, top: 0 }, { duration: 800, delay: 1100, easing: window.easings.Expo.easeInOut });
 
+    // icon
     this.els.$icon
-      .velocity('stop')
-      .velocity({ top: -90, opacity: 1 }, { duration: 1500, delay: 500 });
-
-    buttonAnimation(this.els.$button, { withBorders: true, delay: 1400 });
-
-    this.els.$background
-      .velocity('stop')
-      .velocity({ scale: 1.2 }, 0)
-      .velocity({ scale: 1 }, 2500);
+      .velocity({ top: -90, opacity: 1 }, { duration: 800, delay: 1150, easing: window.easings.Expo.easeInOut });
 
     this.els.$svgs.each(function () {
       jQuery('path', this).each(function () {
@@ -169,22 +193,34 @@ export default Backbone.BetterView.extend({
           .velocity({ fillOpacity: 1 }, { duration: 500, delay: 2000, queue: false });
       });
     });
+
+    // button
+    this.els.$button
+      .velocity({ top: 0, opacity: 1 }, { duration: 500, delay: 1200, easing: window.easings.Expo.easeInOut });
+
+    this.els.$button
+      .velocity({ paddingTop: 15 }, { duration: 200, delay: 1300, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ paddingTop: 0 }, { duration: 500, delay: 1500, queue: false, easing: window.easings.Expo.easeOut });
+
+    this.els.$button
+      .velocity({ paddingBottom: 15 }, { duration: 200, delay: 1350, queue: false, easing: window.easings.Expo.easeOut })
+      .velocity({ paddingBottom: 0 }, { duration: 600, delay: 1550, queue: false, easing: window.easings.Expo.easeOut });
+
+    // buttonAnimation(this.els.$button, { withBorders: true, duration: 800, delay: 1300, easing: window.easings.Expo.easeInOut });
+
+    this.els.$background
+      .velocity('stop')
+      .velocity({ scale: 1.2 }, 0)
+      .velocity({ scale: 1 }, 2500);
   },
 
   out () {
+    if (Features.mobile) return false;
 
+    this.els.$background
+      .velocity('stop')
+      .velocity({ scale: 1.2 }, { duration: 1000, easing: easings.Expo.easeInOut });
   },
-  // out () {
-  //   if (Features.mobile) return false;
-
-  //   this.els.$background
-  //     .velocity('stop')
-  //     .velocity({ scale: 1.2 }, 600);
-
-  //   this.$el
-  //     .velocity('stop')
-  //     .velocity({ opacity: 0 }, { duration: 600 });
-  // },
 
   /**
    * Instantly reset the view (ready to animate in)
@@ -226,40 +262,40 @@ export default Backbone.BetterView.extend({
       .velocity('stop')
       .css({ opacity: 0, top: 50 });
     
-    this.els.$bordersTopBottom
-      .velocity('stop')
-      .css('width', 0);
+    // this.els.$bordersTopBottom
+    //   .velocity('stop')
+    //   .css('width', 0);
     
-    this.els.$bordersLeftRight
-      .velocity('stop')
-      .css('height', 0);
+    // this.els.$bordersLeftRight
+    //   .velocity('stop')
+    //   .css('height', 0);
     
     this.els.$background
       .velocity('stop')
       .velocity({ scale: 1.2 }, 0);
       
-    this.els.$svgs.each(function () {
-      jQuery('path', this).each(function () {
-        const $path = jQuery(this);
-        const data = $path.attr('data-length');
+    // this.els.$svgs.each(function () {
+    //   jQuery('path', this).each(function () {
+    //     const $path = jQuery(this);
+    //     const data = $path.attr('data-length');
         
-        let length;
-        if (data) {
-          length = parseFloat(data);
-        } else {
-          length = $path[0].getTotalLength();
-          $path.attr('data-length', length);
-        }
+    //     let length;
+    //     if (data) {
+    //       length = parseFloat(data);
+    //     } else {
+    //       length = $path[0].getTotalLength();
+    //       $path.attr('data-length', length);
+    //     }
 
-        $path.velocity('stop')
-          .velocity({
-          'stroke-dashoffset': length,
-          'stroke-dasharray': `${length},${length}`,
-          fillOpacity: 0,
-          strokeOpacity: 1
-        }, 0);
-      });
-    });
+    //     $path.velocity('stop')
+    //       .velocity({
+    //       'stroke-dashoffset': length,
+    //       'stroke-dasharray': `${length},${length}`,
+    //       fillOpacity: 0,
+    //       strokeOpacity: 1
+    //     }, 0);
+    //   });
+    // });
   },
 
   render () {

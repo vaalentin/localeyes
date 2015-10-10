@@ -63,7 +63,8 @@ export default Backbone.ContentView.extend({
     this.cities = this.collection.map(city => {
       return new CityView({
         model: city,
-        position: this.map.getPosition(city.get('slug'))
+        position: this.map.getPosition(city.get('slug')),
+        language: this.language
       });
     });
 
@@ -84,10 +85,20 @@ export default Backbone.ContentView.extend({
     this.setPosition(true);
     this.setDirections();
 
+    this.width = this.els.$content.width();
+    this.height = this.els.$content.height();
+
+    jQuery(window).on('resize.cities', () => {
+      this.width = this.els.$content.width();
+      this.height = this.els.$content.height();      
+    });
+
+    this.menu.in();
     this.in();
   },
 
   willRemove () {
+    jQuery(window).off('.cities');
     this.cities.forEach(city => city.remove());
   },
 
@@ -105,8 +116,8 @@ export default Backbone.ContentView.extend({
       this.els.$content.addClass('is-dragging');
       triggerFlag = false;
 
-      var x = (parseInt(jQuery.Velocity.hook(this.els.$content, 'translateX')) * this.els.$content.width()) / 100;
-      var y = (parseInt(jQuery.Velocity.hook(this.els.$content, 'translateY')) * this.els.$content.height()) / 100;
+      var x = (parseInt(jQuery.Velocity.hook(this.els.$content, 'translateX')) * this.width) / 100;
+      var y = (parseInt(jQuery.Velocity.hook(this.els.$content, 'translateY')) * this.height) / 100;
 
       startOffset = { x, y };
     });
@@ -120,8 +131,8 @@ export default Backbone.ContentView.extend({
       jQuery.Velocity.hook(this.els.$content, "translateY", `${startOffset.y + delta.y}px`);
 
       const percent = this.dragger.way === 'horizontal'
-        ? (delta.x * 100) / this.els.$content.width()
-        : (delta.y * 100) / this.els.$content.height();
+        ? (delta.x * 100) / this.width
+        : (delta.y * 100) / this.height;
 
       let direction;
 
@@ -147,6 +158,8 @@ export default Backbone.ContentView.extend({
         this.easing = 'easeOut';
         this.goTo(direction);
       }
+
+      return false;
     });
 
     this.dragger.on('end', position => {
@@ -277,7 +290,7 @@ export default Backbone.ContentView.extend({
       let view;
 
       if (name === 'infos') {
-        view = new InfosView();
+        view = new InfosView({ language: this.language });
       }
       else if (name === 'map') {
         view = new MapView({ collection: Store.getCities(), activeCity: this.currentCity });
@@ -340,7 +353,7 @@ export default Backbone.ContentView.extend({
     const delay = noDelay ? 0 : this.easing === 'ease-in-out' ? 300 : -400;
 
     if (previousView) {
-      previousView.out(way, delay);
+      // previousView.out(way, delay);
     }
 
     if (currentView) {
@@ -360,7 +373,9 @@ export default Backbone.ContentView.extend({
       complete: () => {
         this.isSliding = false;
         this.trigger('positionSet');
-        previousView.reset();
+        if (previousView) {
+          previousView.reset();
+        }
       }
     }
 
@@ -417,5 +432,23 @@ export default Backbone.ContentView.extend({
     const currentView = _.findWhere(this.cities, { model: currentModel });
 
     return { previousView, currentView };
+  },
+
+  out (done) {
+    const { previousView, currentView } = this.getViews();
+
+    return new Promise((resolve, reject) => {
+      if (currentView) {
+        currentView.out();
+      }
+      
+      this.frame.out();
+
+      setTimeout(done, 600);
+      
+      this.$el
+        .velocity('stop')
+        .velocity({ opacity: 0 }, { duration: 1500, complete: resolve });
+    });
   }
 });

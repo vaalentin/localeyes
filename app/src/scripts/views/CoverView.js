@@ -10,7 +10,11 @@ export default Backbone.BetterView.extend({
     <div class="cover__overlay"></div>
     <a href="#/city/<%= slug %>" class="cover__link">
       <div class="cover__title">
-        <h1 class="cover__name"> <% print(name.toUpperCase()); %> </h1>
+        <h1 class="cover__name">
+          <% _.each(name.toUpperCase().split(' '), function (word) { %>
+            <span> <%= word %> </span>
+          <% }); %>
+        </h1>
         <h3 class="cover__country"> <% print(country.toUpperCase()); %> </h3>
       </div>
     </a>

@@ -9,6 +9,8 @@ export default Backbone.Model.extend({
     name: undefined,
     slug: undefined,
     video: undefined,
+    bonus: undefined,
+    bonusEn: undefined,
     images: []
   },
 

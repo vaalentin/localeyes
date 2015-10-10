@@ -61,18 +61,21 @@ export default Backbone.ContentView.extend({
 
   didInitialize (options) {
     this.video = new FullscreenVideo({
-      videoId: 'dPZxMU876Pw',
+      videoId: 'mgOWAspJXCk',
       autoplay: 1,
       ratio: 16/9,
       markers: [
-        { time: 57.5, fn: () => { this.logoIn(); }},
+        { time: 57.5, fn: () => {
+          this.$('.video__overlay').velocity({ opacity: 0.5 }, 500);
+          this.logoIn();
+        }},
         { time: 62, fn: () => {
           this.logoOut()
           const howtoView = new HowtoView();
           this.changeContent(howtoView);
         }},
-        { time: 70, fn: () => {
-          this.trigger('router:navigate', '#city', { trigger: true });
+        { time: 160, fn: () => {
+          this.video.goTo(65);
         }}
       ]
     });

@@ -7,6 +7,8 @@
 // video
 .local__video {
   position: relative;
+  margin-bottom: 80px;
+  z-index: 3;
 }
 
 .local__video__overlay {
@@ -15,6 +17,17 @@
   height: 100%;
   top: 0;
   left: 0;
+}
+
+.local__video--bonus {
+  max-width: 1080px;
+  margin: 128px auto 50px auto;
+  padding: 0 50px;
+}
+
+.local__video__text {
+  max-width: 410px;
+  margin-bottom: 40px;
 }
 
 // markers
@@ -52,10 +65,13 @@
   margin: 0 auto;
 
   text-align: center;
+
+  padding-top: 1px;
 }
 
 // blocks
-.local__block:extend(.clear) {
+.local__block {
+  .clear;
   margin: 50px 0;
   padding: 0 50px;
 }
@@ -105,9 +121,22 @@
 .local__next {
   display: block;
 
-  height: 150px;
+  text-align: center;
 
-  .background-size(cover);
+  color: #0a0a0a;
+  padding: 50px;
+}
+
+@media @tablet {
+  .local__marker {
+    display: none;
+  }
+
+  .local__video--bonus {
+    max-width: 1080px;
+    margin: 50px auto 50px auto;
+    padding: 0 50px;
+  }
 }
 
 @media @phone {
@@ -122,4 +151,75 @@
   .local__column--right .local__column__content {
     margin: 0 0 0 15px;
   }
+}
+
+// arrow
+@keyframes blink {  
+  0% { opacity: 0.2 }
+  50% { opacity: 1 }
+  100% { opacity: 0.2 }
+}
+
+@-moz-keyframes blink {  
+  0% { opacity: 0.2 }
+  50% { opacity: 1 }
+  100% { opacity: 0.2 }
+}
+
+@-webkit-keyframes blink {  
+  0% { opacity: 0.2 }
+  50% { opacity: 1 }
+  100% { opacity: 0.2 }
+}
+
+@-ms-keyframes blink {  
+  0% { opacity: 0.2 }
+  50% { opacity: 1 }
+  100% { opacity: 0.2 }
+}
+
+@-o-keyframes blink {  
+  0% { opacity: 0.2 }
+  50% { opacity: 1 }
+  100% { opacity: 0.2 }
+}
+
+.local__arrow {
+  position: absolute;
+  z-index: 2;
+  width: 120px;
+  text-align: center;
+  cursor: pointer;
+  
+  p {
+    color: #fff;
+    margin: 0;
+  }
+
+  .icon {
+    width: 45px;
+    height: 53px;
+    margin: 0 auto;
+    background-image: url('../../public/images/arrow.png');
+    -webkit-animation: 1s blink infinite;
+    -moz-animation: 1s blink infinite;
+    -ms-animation: 1s blink infinite;
+    -o-animation: 1s blink infinite;
+    animation: 1s blink infinite;
+  }
+}
+
+.local__arrow--down {
+  bottom: 5%;
+  right: 5%;
+}
+
+.local__arrow--up {
+  position: fixed;
+  height: 50px;
+  width: 50px;
+  background-image: url('../../public/images/arrowup.png');
+  right: 5%;
+  bottom: 5%;
+  opacity: 0;
 }

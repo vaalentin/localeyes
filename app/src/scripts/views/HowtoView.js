@@ -45,7 +45,7 @@ export default Backbone.PageView.extend({
             </div>
           </div>
           <div class='howto__text'>
-            <p> DIRIGEZ VOUS GRÂCE AUX FLÊCHES DE VOTRE CLAVIER </p>
+            <p> DIRIGEZ-VOUS GRÂCE AUX FLÊCHES DE VOTRE CLAVIER </p>
           </div>
           <div class='howto__text'>
             <p> TO DIRECT YOURSELF USE THE KEYBOARD ARROWS </p>
@@ -75,7 +75,7 @@ export default Backbone.PageView.extend({
             </div>
           </div>
           <div class='howto__text'>
-            <p> UTILISEZ VOTRE SOURIS POUR CLIQUER SUR LES DIRRECTIONS </p>
+            <p> UTILISEZ VOTRE SOURIS POUR CLIQUER SUR LES DIRECTIONS </p>
           </div>
           <div class='howto__text'>
             <p> USE YOUR MOUSE TO CLICK ON THE DIFFERENT DIRECTIONS </p>
@@ -85,12 +85,12 @@ export default Backbone.PageView.extend({
       <div class='howto__buttons'>
         ${buttonPartial({
           className: 'howto__button--fr',
-          link: '#city',
+          link: '#city/anchorage',
           text: 'COMMENCER'
         })}
         ${buttonPartial({
           className: 'howto__button--en',
-          link: '#city/en',
+          link: '#city/anchorage/en',
           text: 'LET\'S GO'
         })}
       </div>
@@ -158,6 +158,8 @@ export default Backbone.PageView.extend({
 
   stopIdleAnimations () {
     this.idlePlaying = false;
+    this.els.$mouse.velocity('stop');
+    this.els.$keys.velocity('stop');
   },
 
   in () {

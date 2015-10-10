@@ -78,10 +78,10 @@ export default Backbone.BetterView.extend({
   },
 
   els: {
-    '$barTop': '.frame__bar--top',
-    '$barLeft': '.frame__bar--left',
-    '$barBottom': '.frame__bar--bottom',
-    '$barRight': '.frame__bar--right'
+    '$barnorth': '.frame__bar--top',
+    '$barwest': '.frame__bar--left',
+    '$barsouth': '.frame__bar--bottom',
+    '$bareast': '.frame__bar--right'
   },
 
   didInitialize (options) {
@@ -135,39 +135,39 @@ export default Backbone.BetterView.extend({
   },
 
   in () {
-    this.els.$barTop
+    this.els.$barnorth
       .css('top', -40)
       .velocity({ top: 0 }, { duration: 800 });
     
-    this.els.$barBottom
+    this.els.$barsouth
       .css('bottom', -40)
       .velocity({ bottom: 0 }, { duration: 800 });
     
-    this.els.$barLeft
+    this.els.$barwest
       .css('left', -40)
       .velocity({ left: 0 }, { duration: 800 });
     
-    this.els.$barRight
+    this.els.$bareast
       .css('right', -40)
       .velocity({ right: 0 }, { duration: 800 });
   },
 
   out () {
-    this.els.$barTop
+    this.els.$barnorth
       .velocity('stop')
-      .velocity({ top: -40 }, { duration: 800 });
+      .velocity({ top: -40 }, { duration: 800, easing: easings.Expo.easeInOut });
 
-    this.els.$barBottom
+    this.els.$barsouth
       .velocity('stop')
-      .velocity({ bottom: -40 }, { duration: 800 });
+      .velocity({ bottom: -40 }, { duration: 800, easing: easings.Expo.easeInOut });
 
-    this.els.$barLeft
+    this.els.$barwest
       .velocity('stop')
-      .velocity({ left: -40 }, { duration: 800 });
+      .velocity({ left: -40 }, { duration: 800, easing: easings.Expo.easeInOut });
 
-    this.els.$barRight
+    this.els.$bareast
       .velocity('stop')
-      .velocity({ right: -40 }, { duration: 800 });  
+      .velocity({ right: -40 }, { duration: 800, easing: easings.Expo.easeInOut });  
   },
 
   getHref (direction) {

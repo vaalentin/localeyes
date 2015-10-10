@@ -17,50 +17,75 @@ export default Backbone.PageView.extend({
   className: 'local',
 
   template: `
-    <% if (video) { %>
-      <div class="local__video">
-        <div class='local__video__overlay'>
-          <% if (video.markers) _.each(video.markers, function (marker) { %>
-            <div class='local__marker'
-              style='left:<%= marker.position.x || 0 %>;top:<%= marker.position.y || 0 %>'>
-              <% if (marker.text) { %>
-                <a class="local__marker__link" data-time='<%= marker.time || 0 %>'>
-                  <% if (_.isString(marker.text)) { %>
-                    <%= marker.text.toUpperCase() %>
-                  <% } else { %>
-                    <% if (language === 'en') { %>
-                      <%= marker.text.en.toUpperCase() %>
+    <div id='skrollr-body'>
+      <% if (video) { %>
+        <div class="local__video">
+          <div class='local__arrow local__arrow--down'>
+            <% if (language === 'en') { %>
+              <p>TO DISCOVER THE PICTURES</p>
+            <% } else { %>
+              <p>POUR DÉCOUVRIR LES PHOTOS</p>
+            <% } %>
+            <div class="icon"></div>
+          </div>
+          <div class='local__video__overlay'>
+            <% if (video.markers) _.each(video.markers, function (marker) { %>
+              <div class='local__marker'
+                style='left:<%= marker.position.x || 0 %>;top:<%= marker.position.y || 0 %>'>
+                <% if (marker.text) { %>
+                  <a class="local__marker__link" data-time='<%= marker.time || 0 %>'>
+                    <% if (_.isString(marker.text)) { %>
+                      <%= marker.text.toUpperCase() %>
                     <% } else { %>
-                      <%= marker.text.fr.toUpperCase() %>
+                      <% if (language === 'en') { %>
+                        <%= marker.text.en.toUpperCase() %>
+                      <% } else { %>
+                        <%= marker.text.fr.toUpperCase() %>
+                      <% } %>
                     <% } %>
-                  <% } %>
-                </a>
-              <% } %>
-              <div class="local__marker__icon">
-                <svg xmln="http://www.w3.org/2000/svg" viewBox="0 0 30 48">
-                  <path stroke='none'
-                    fill='#fff'
-                    d='M15,0C6.7,0,0,7.4,0,16.6c0,2.9,0.7,5.6,1.8,7.9c0,0.2,11.7,22.6,11.7,22.6c0.3,0.6,0.8,0.9,1.4,0.9c0.6,0,1.1-0.4,1.4-0.9  c0,0,11.7-22.4,11.7-22.6c1.2-2.4,1.8-5.1,1.8-7.9C30,7.4,23.3,0,15,0 M15,23.2c-4.1,0-7.5-3.3-7.5-7.4s3.4-7.4,7.5-7.4  c4.1,0,7.5,3.3,7.5,7.4C22.5,19.9,19.1,23.2,15,23.2'/>
-                </svg>
+                  </a>
+                <% } %>
               </div>
-            </div>
-          <% }); %>
+            <% }); %>
+          </div>
+        </div>
+      <% } %>
+      
+      <div class='local__content'></div>
+
+      <div class='local__arrow local__arrow--up'></div>
+
+      <div class='local__video--bonus'>
+        <div class='local__video__text'>
+          <% if (language === 'en') { %>
+            <p>WE DID THE SAME EXPERIENCE IN PARIS AND ASKED EACH LOCAL TO CHOOSE ONE RANDOM PICTURE AND TO KEEP IT AS A SOUVENIR</p>
+          <% } else { %>
+            <p>NOUS AVONS RÉALISÉ LA MÊME EXPÉRIENCE À PARIS ET AVONS DEMANDÉ À CHAQUE PARTICIPANT DE CHOISIR UNE PHOTO AU HASARD ET DE LA GARDER EN SOUVENIR</p>
+          <% } %>
         </div>
       </div>
-    <% } %>
-    
-    <div class='local__content'  id='skrollr-body'></div>
-    <% if (language === 'en') { %>
-      <a href='#city/<%= citySlug %>/en' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
-    <% } else { %>
-      <a href='#city/<%= citySlug %>' class='local__next' style='background-image:url(<%= cityBackground %>);'></a>
-    <% } %>
+
+      <% if (language === 'en') { %>
+        <a href='#city/<%= citySlug %>/en' class='local__next'> BACK TO <%= cityName.toUpperCase() %> </a>
+      <% } else { %>
+        <a href='#city/<%= citySlug %>' class='local__next'> RETOURNER À <%= cityName.toUpperCase() %> </a>
+      <% } %>
+    </div>
   `,
 
+  // 1 zoom
+  // 2-3 curtains
+  // 4 translate left
+  // 5 normal
   blocksTemplates: {
     1: _.template(`
-      <div class='local__block local__block--type1'>
-        <img class='local__image' src='<%= urls[0] %>'>
+      <div class='local__block local__block--type3'>
+        <div class='local__column local__column--mask'>
+          <img class='local__image' src='<%= urls[0] %>'
+            data-bottom-top='transform:scale(1.5);'
+            data-center-bottom='transform:scale(1);'
+            >
+        </div>
       </div>
     `),
 
@@ -70,30 +95,17 @@ export default Backbone.PageView.extend({
           <div class='local__column__content'>
             <img class='local__image' src='<%= urls[0] %>'
               data-bottom-top='left:-100%;opacity:0;'
-              data-center-center='left:0%;opacity:1;top:0px;'
-              data-top-bottom='top:50px;'
+              data-center-center='left:0%;opacity:1;'
               >
           </div>
         </div>
         <div class='local__column local__column--half local__column--right'>
           <div class='local__column__content'>
             <img class='local__image' src='<%= urls[1] %>'
-              data-bottom-top='left:100%;opacity:0;;'
-              data-center-center='left:0%;opacity:1;top:0px'
-              data-top-bottom='top:-20px;'
+              data-bottom-top='left:100%;opacity:0;'
+              data-center-center='left:0%;opacity:1;'
               >
           </div>
-        </div>
-      </div>
-    `),
-
-    3: _.template(`
-      <div class='local__block local__block--type3'>
-        <div class='local__column local__column--mask'>
-          <img class='local__image' src='<%= urls[0] %>'
-            data-bottom-top='transform:scale(1.5);'
-            data-center-bottom='transform:scale(1);'
-            >
         </div>
       </div>
     `),
@@ -108,29 +120,21 @@ export default Backbone.PageView.extend({
     `),
 
     5: _.template(`
-      <div class='local__block local__block--type5'>
-        <img class='local__image' src='<%= urls[0] %>'
-          data-bottom-top='left:100%;opacity:0;'
-          data-center-center='left:0;opacity:1;'
-          >
+      <div class='local__block local__block--type1'>
+        <img class='local__image' src='<%= urls[0] %>'>
       </div>
-    `),
-
-    6: _.template(`
-      <div class='local__block local__block--type6'>
-        <img class='local__image' src='<%= urls[0] %>'
-          data-bottom-top='top:300px;opacity:0;'
-          data-center-center='top:0px;opacity:1;'
-          >
-      </div>
-    `),
+    `)
   },
 
   events: {
-    'click .local__marker__link': 'onMarkerClick'
+    'click .local__marker__link': 'onMarkerClick',
+    'click .local__arrow--down': 'scrollDown',
+    'click .local__arrow--up': 'scrollUp'
   },
 
   didInitialize (options) {
+    Backbone.trigger('loader:in');
+
     _.extend(this, _.pick(options, 'language'));
 
     this.$win = jQuery(window); // keep track of the scrollTop to restore it on out
@@ -138,9 +142,33 @@ export default Backbone.PageView.extend({
 
     this.city = Store.getCities().findWhere({ localSlug: this.model.get('slug') });
     if (this.model.has('video')) {
-      this.video = new ResponsiveVideo({ videoId: this.model.get('video').id, autoplay: 0 });
+      const video = this.model.get('video');
+      
+      let id;
+      if (this.language === 'en') {
+        id = video.idEn ? video.idEn : video.id;
+      }
+      else {
+        id = video.id;
+      }
+      
+      this.video = new ResponsiveVideo({ videoId: id, autoplay: 1 });
       this.listenTo(this.video, 'ready', this.markersIn);
     }
+
+    if (this.model.has('bonus')) {
+      let bonusId;
+      if (this.language === 'en') {
+        bonusId = this.model.has('videoEn') ? this.model.get('bonus') : this.model.get('bonus');
+      }
+      else {
+        bonusId = this.model.get('bonus');
+      }
+
+      this.bonusVideo = new ResponsiveVideo({ videoId: bonusId, autoplay: 0 });
+    }
+
+    this.arrowHidden = true;
   },
 
   willRemove () {
@@ -164,8 +192,36 @@ export default Backbone.PageView.extend({
     });
   },
 
+  scrollDown () {
+    this.$('.local__content').velocity('scroll', { duration: 1000 });
+  },
+
+  scrollUp () {
+    this.$('.local__video').velocity('scroll', { duration: 1000 });
+  },
+
   onScroll (e) {
-    this.scrollTop = this.$win.scrollTop();
+    const scrollTop = this.$win.scrollTop();
+    this.scrollTop = scrollTop;
+    
+    if (scrollTop > 200 && this.arrowHidden) {
+      this.showArrow();
+      this.arrowHidden = false;
+    }
+    else if (scrollTop <= 200 && !this.arrowHidden) {
+      this.hideArrow();
+      this.arrowHidden = true;
+    }
+  },
+
+  showArrow () {
+    this.$('.local__arrow--up').velocity('stop')
+      .velocity({ opacity: 1 }, 500);
+  },
+
+  hideArrow () {
+    this.$('.local__arrow--up').velocity('stop')
+      .velocity({ opacity: 0 }, 500);
   },
 
   onLoad () {
@@ -173,6 +229,7 @@ export default Backbone.PageView.extend({
     setImmediate(() => {
       this.skrollr = skrollr.init({ forceHeight: false });
     });
+    Backbone.trigger('loader:out');
     this.in();
   },
 
@@ -185,8 +242,8 @@ export default Backbone.PageView.extend({
   render () {
     const data = _.extend(this.model.toJSON(), {
       language: this.language,
-      citySlug: this.city.get('slug'),
-      cityBackground: this.city.get('background')
+      cityName: this.city.get('name'),
+      citySlug: this.city.get('slug')
     });
 
     this.$el.html(this.template(data));
@@ -221,6 +278,10 @@ export default Backbone.PageView.extend({
 
     if (this.video) {
       this.append(this.video, '.local__video');
+    }
+
+    if (this.bonusVideo) {
+      this.append(this.bonusVideo, '.local__video--bonus');
     }
   },
 });

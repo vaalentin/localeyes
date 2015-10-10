@@ -57,6 +57,7 @@
 
   background-position: center center;
 
+  .transform(scale(1.2));
   .background-size(cover);
   will-change: transform;
 }
@@ -92,6 +93,14 @@
   padding: 40px 0 0 0;
 
   opacity: 0;
+}
+
+.city__name span {
+  margin-left: 20px;
+}
+
+.city__name span:first-child {
+  margin-left: 0px;
 }
 
 .mobile .city__name {
@@ -209,5 +218,22 @@
 
   .city__local {
     display: none;
+  }
+}
+
+// cuzco
+.city__icon--cuzco {
+  margin-left: -30px;
+}
+
+.city__button {
+  .button__border--top,
+  .button__border--bottom {
+    width: 100%;
+  }
+
+  .button__border--left,
+  .button__border--right {
+    height: 100%;
   }
 }

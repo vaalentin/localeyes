@@ -1,5 +1,6 @@
 'use strict';
 
+import _ from 'underscore';
 import jQuery from 'jquery';
 import Backbone from 'backbone';
 
@@ -23,7 +24,11 @@ export default Backbone.PageView.extend({
             <div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
             <div class="viewport">
               <div class="overview">
-                ${jQuery('#infosContent').html()}
+                <% if (language) { %>
+                  ${jQuery('#infosContentEn').html()}
+                <% } else { %>
+                  ${jQuery('#infosContent').html()}
+                <% } %>
               </div>
             </div>
           </div>
@@ -40,6 +45,29 @@ export default Backbone.PageView.extend({
     '$scrollBar': '.infos__content__container'
   },
 
+  didInitialize (opts) {
+    _.extend(this, _.pick(opts, 'language'));
+  },
+
+  render () {
+    const data = { language: this.language };
+    this.$el.html(this.template(data));
+    
+    // cache DOM elements
+    if (this.els) {
+      var cache = {};
+      for (var name in this.els) {
+        if (this.els.hasOwnProperty(name)) {
+          cache[name] = this.$(this.els[name]);
+        }
+      }
+      this.els = cache;
+    }
+
+    setImmediate(this.didRender.bind(this));
+    return this;
+  },
+
   willRemove () {
     jQuery(window).off('resize', this.onResize);
   },
@@ -54,13 +82,17 @@ export default Backbone.PageView.extend({
 
   in () {
     this.$el.velocity({ translateY: 200, opacity: 0 }, 0)
-      .velocity({ translateY: 0, opacity: 1 }, 500);
+      .velocity({ translateY: 0, opacity: 1 }, { duration: 1200, easing: window.easings.Expo.easeOut });
   },
 
   out (done) {
     setTimeout(done, 200);
     return new Promise((resolve, reject) => {
-      this.$el.velocity({ translateY: -200, opacity: 0 }, { duration: 500, complete: resolve });
+      this.$el.velocity({ translateY: -200, opacity: 0 }, {
+        duration: 1200,
+        complete: resolve,
+        easing: window.easings.Expo.easeOut
+      });
     });
   },
 

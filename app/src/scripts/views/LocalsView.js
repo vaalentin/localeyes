@@ -58,10 +58,10 @@ export default Backbone.PageView.extend({
 
   in () {
     this.$el.velocity({ translateY: 200, opacity: 0 }, 0)
-      .velocity({ translateY: 0, opacity: 1 }, 500);
+      .velocity({ translateY: 0, opacity: 1 }, { duration: 1200, easing: window.easings.Expo.easeOut });
 
     this.els.$barsLeftRight.css('height', 0)
-      .velocity({ height: '100%' }, { duration: 1000 });
+      .velocity({ height: '100%' }, { duration: 1000, easing: window.easings.Expo.easeInOut });
 
     this.els.$barsTopBottom.css('width', 0)
       .velocity({ width: '100%' }, { duration: 1000, delay: 500 });
@@ -78,8 +78,9 @@ export default Backbone.PageView.extend({
     setTimeout(done, 200);
     return new Promise((resolve, reject) => {
       this.$el.velocity({ translateY: -200, opacity: 0 }, {
-        duration: 500,
-        complete: resolve
+        duration: 1200,
+        complete: resolve,
+        easing: window.easings.Expo.easeOut
       });
     });
   },

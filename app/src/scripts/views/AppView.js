@@ -35,6 +35,8 @@ export default Backbone.ContentView.extend({
     let citiesView = null;
 
     const loader = new LoaderView({ el: '.loader' });
+    Backbone.on('loader:in', () => loader.in());
+    Backbone.on('loader:out', () => loader.out());
     loader.out();
 
     router.on('route:welcome', () => {
@@ -54,12 +56,19 @@ export default Backbone.ContentView.extend({
         slug = null;
       }
       
-      if (!slug) slug = Store.getCities().first().get('slug');
+      if (!slug) {
+        slug = Store.getCities().first().get('slug');
+      }
 
       if (this.currentView && this.currentView.name === 'cities' && citiesView) {
         citiesView.setCity(slug);
       } else {
-        citiesView = new CitiesView({ collection: Store.getCities(), currentCity: slug, language: language });
+        citiesView = new CitiesView({
+          collection: Store.getCities(),
+          currentCity: slug,
+          language: language
+        });
+
         this.listenTo(citiesView, 'router:navigate', router.navigate);
         this.changeContent(citiesView);
       }
@@ -69,7 +78,11 @@ export default Backbone.ContentView.extend({
       const localModel = Store.getLocals().findWhere({ slug: slug });
 
       if (localModel) {
-        const localView = new LocalView({ model: localModel, language: language });
+        const localView = new LocalView({
+          model: localModel,
+          language: language
+        });
+        
         this.changeContent(localView);
       }
     });

@@ -6,6 +6,19 @@ import Backbone from 'backbone';
 
 import { buttonPartial, buttonAnimation } from '../partials/button';
 
+// so dirty :)
+const globalVideos = [];
+
+function globalOnYoutubeReady () {
+  for (let i = globalVideos.length - 1; i >= 0; i--) {
+    const video = globalVideos[i];
+    video.onYoutubeReady();
+    globalVideos.splice(i, 1);
+  }
+}
+
+const id = 0;
+
 export const ResponsiveVideo = Backbone.BetterView.extend({
   className: 'video',
 
@@ -48,7 +61,7 @@ export const ResponsiveVideo = Backbone.BetterView.extend({
         <div class='video__buffer'></div>
       </div>
     </div>
-    <div id='video__player'></div>
+    <div id='video__player--<%= id %>'></div>
   `,
 
   els: {
@@ -75,6 +88,27 @@ export const ResponsiveVideo = Backbone.BetterView.extend({
 
   didInitialize (options) {
     _.extend(this, _.pick(options, 'videoId', 'autoplay'));
+    this.id = id++;
+  },
+
+  render () {
+    const data = { id: this.id };
+
+    this.$el.html(this.template(data));
+
+    if (this.els) {
+      var cache = {};
+      for (var name in this.els) {
+        if (this.els.hasOwnProperty(name)) {
+          cache[name] = this.$(this.els[name]);
+        }
+      }
+      this.els = cache;
+    }
+
+    setImmediate(this.didRender.bind(this));
+
+    return this;
   },
 
   willRemove () {
@@ -191,7 +225,7 @@ export const ResponsiveVideo = Backbone.BetterView.extend({
   },
 
   onYoutubeReady () {
-    this.player = new window.YT.Player('video__player', {
+    this.player = new window.YT.Player(`video__player--${this.id}`, {
       videoId: this.videoId,
       width: '100%',
       height: 'auto',
@@ -204,7 +238,11 @@ export const ResponsiveVideo = Backbone.BetterView.extend({
 
   didRender () {
     if (typeof(window.YT) == 'undefined' || typeof(window.YT.Player) == 'undefined') {
-      window.onYouTubeIframeAPIReady = this.onYoutubeReady.bind(this);
+      // window.onYouTubeIframeAPIReady = this.onYoutubeReady.bind(this);
+
+      window.onYouTubeIframeAPIReady = globalOnYoutubeReady;
+      globalVideos.push(this);
+
       jQuery.getScript('//www.youtube.com/iframe_api');
     } else {
       this.onYoutubeReady();
@@ -226,7 +264,6 @@ export const FullscreenVideo = Backbone.BetterView.extend({
 
   template: `
     ${buttonPartial({
-      link: '#city',
       className: 'video__skip',
       text: 'SKIP'
     })}
@@ -235,6 +272,7 @@ export const FullscreenVideo = Backbone.BetterView.extend({
       text: 'MUTE'
     })}
     <a class='video__skip'> SKIP </div>
+    <div class='video__overlay'></div>
     <div id='video__player'></div>
   `,
 
@@ -244,7 +282,8 @@ export const FullscreenVideo = Backbone.BetterView.extend({
   },
 
   events: {
-    'click .video__mute': 'onButtonMuteClick'
+    'click .video__mute': 'onButtonMuteClick',
+    'click .video__skip': 'onButtonSkipClick'
   },
 
   didInitialize (options) {
@@ -266,6 +305,10 @@ export const FullscreenVideo = Backbone.BetterView.extend({
       this.player.mute();
       this.els.$buttonMute.find('.button__link').html('UNMUTE');
     }
+  },
+
+  onButtonSkipClick () {
+    this.player.seekTo(59, true);
   },
 
   onWindowResize (e) {
@@ -351,5 +394,9 @@ export const FullscreenVideo = Backbone.BetterView.extend({
     } else {
       this.onYoutubeReady();
     }
+  },
+
+  goTo (time) {
+    this.player.seekTo(time, true);
   }
 });
